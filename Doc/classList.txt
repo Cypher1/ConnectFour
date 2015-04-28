@@ -1,0 +1,12 @@
+Classes:
+
+	User Interface
+		BoardRenderer
+		
+		
+	AI - Game Player
+		
+
+	Game Simulation and Processing
+		Board
+		GameSimulator
