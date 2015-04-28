@@ -1,5 +1,5 @@
 #ignore eclipse's bullshit
-.gitignore
+.classpath
 .project
 
 *.class
