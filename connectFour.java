@@ -8,15 +8,21 @@
 		Michelle Phan
 		Joshua Pratt
 */
-
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.awt.FlowLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
  
 public class connectFour implements Runnable {
- 
+
+    private static final int NUM_PLAYERS = 2;
+
     @Override
     public void run() {
         // Create the window
@@ -27,11 +33,30 @@ public class connectFour implements Runnable {
         f.setLayout(new FlowLayout());
         // Add a label and a button
         f.add(new JLabel("Hello, world!"));
+	try{
+	BufferedImage buttonIcon = ImageIO.read(new File("buttonIconPath"));
+	JButton b = new JButton(new ImageIcon(buttonIcon));
+
+	f.add(b);
+	}catch(IOException e){
+		System.out.println("FILE MISSING");
+	}
+
         f.add(new JButton("Press me!"));
         // Arrange the components inside the window
         f.pack();
         // By default, the window is not visible. Make it visible.
         f.setVisible(true);
+
+	//work out how to use events but for now just render the board once
+	BoardRenderer renderer = new BasicBoardRenderer();
+
+	Board startBoard = new BasicBoard(NUM_PLAYERS);
+
+	renderer.setBoard(startBoard);
+	renderer.setFrame(f);
+	
+	renderer.render();
     }
  
     public static void main(String[] args) {

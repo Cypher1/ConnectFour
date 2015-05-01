@@ -5,7 +5,7 @@ Classes:
 		
 		BoardRenderer(Board)
 		MoveInputter() //Needs a better name
-		Main()
+		connectFour()  //Main
 		
 	AI - Game Player
 		Kirsten and Michelle
