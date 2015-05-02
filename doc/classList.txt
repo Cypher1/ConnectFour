@@ -3,7 +3,8 @@ Classes:
 	User Interface
 		Lucy and Josh
 		
-		BoardRenderer(Board)
+		StartPage() //Should we have seperate class for the start page, within connectFour.run call this class and wait to get difficulty/person v. person options?   
+		BoardRenderer(Board)		
 		MoveInputter() //Needs a better name
 		connectFour()  //Main
 		
