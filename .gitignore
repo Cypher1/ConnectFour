@@ -1,5 +1,7 @@
 #ignore eclipse's bullshit
 .classpath
+.metadata
+.recommenders
 .project
 
 *.class
