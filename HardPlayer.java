@@ -1,6 +1,6 @@
 
-public HardPlayer implements Player {
-	int nextMove (GameState current){
+public class HardPlayer implements Player {
+	public int nextMove (GameState current){
 		return 0;
 	}
 }

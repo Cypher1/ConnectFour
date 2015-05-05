@@ -1,6 +1,6 @@
 
-public EasyPlayer implements Player {
-	int nextMove (GameState current){
+public class EasyPlayer implements Player {
+	public int nextMove (GameState current){
 		return 0;
 	}
 }
