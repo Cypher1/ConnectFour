@@ -99,23 +99,26 @@ public class connectFour implements Runnable {
 		
 		BoardRenderer renderer = new BasicBoardRenderer();
 		Board startBoard = new BasicBoard(NUM_PLAYERS);
-		
+
+		// Create the AI
+					
 		// Create the board window
-        JFrame f = new JFrame("Connect Four");
-        // Sets the behavior for when the window is closed
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-        //set the layout to a grid (Change this when graphics are used)
-        f.setLayout(new GridLayout());
-        
+	        JFrame f = new JFrame("Connect Four");
+        	// Sets the behavior for when the window is closed
+	        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+		//set the layout to a grid (Change this when graphics are used)
+		f.setLayout(new GridLayout());
+        	
 		renderer.setBoard(startBoard);
 		renderer.setFrame(f);
 		
 		renderer.render();
 		
+		//set up the input to make moves happen
+				
 		//make the window visible
 		f.setVisible(true);
 		
-		//NB: create AI with difficulty type here? 
 	}
  
 }
