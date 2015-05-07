@@ -1,5 +1,4 @@
 import javax.swing.JFrame;
-
 /**
 An interface for BoardRenderers
 

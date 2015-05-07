@@ -8,15 +8,10 @@
 		Michelle Phan
 		Joshua Pratt
 */
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -49,43 +44,35 @@ public class connectFour implements Runnable {
 
     @Override
     public void run() {
+    	System.out.println("RUNNING");
         // Create the window
-        JFrame f = new JFrame("Hello, !");
-        // Sets the behavior for when the window is closed
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    	JFrame f = new JFrame("Connect Four!");
+    	System.out.println("RUNNING");
         // Add a layout manager so that the button is not placed on top of the label
         f.setLayout(new FlowLayout());
         // Add a label and a button
-        f.add(new JLabel("Hello, world!"));
-		try{
-			BufferedImage buttonIcon = ImageIO.read(new File("buttonIconPath"));
-			JButton b = new JButton(new ImageIcon(buttonIcon));
-		
-			f.add(b);
-		}catch(IOException e){
-			System.out.println("FILE MISSING");
-		}
-		
-		//create a new button (NB: the above button creation wasn't working on my computer so next two lines won't be relevant when that works.)
+        f.add(new JLabel("Connect Four!"));
+	
+
+    	//create a new button (NB: the above button creation wasn't working on my computer so next two lines won't be relevant when that works.)
 		JButton b0 = new JButton("EASY");
 		JButton b1 = new JButton("MEDIUM");
+		JButton b2 = new JButton("HARD");
 		//add button to the window
 		f.add(b0);
 		f.add(b1);
-		
+		f.add(b2);
+
+
 		//add an action listener to the button (NB: need to get rid of magic numbers)
 		b0.addActionListener(new connectFourActionListener(f, 0));
 		b1.addActionListener(new connectFourActionListener(f, 1));
+		b2.addActionListener(new connectFourActionListener(f, 2));
 		
+		f.pack();
+		f.setVisible(true);
 		
-        // Arrange the components inside the window
-        f.pack();
-        // By default, the window is not visible. Make it visible.
-        f.setVisible(true);
-        
-        //NB: created board renderer e.t.c in a new class to make callable by the action listener class. 
-        // not sure if this was the best way to do so...
-        
+		System.out.println("DONE");
     }
  
     public static void main(String[] args) {
@@ -96,29 +83,28 @@ public class connectFour implements Runnable {
     
 
 	public static void initGame(int playType){
-		
-		BoardRenderer renderer = new BasicBoardRenderer();
+		System.out.println("INIT GAME");
+		BasicBoardRenderer renderer = new BasicBoardRenderer();
 		Board startBoard = new BasicBoard(NUM_PLAYERS);
 
 		// Create the AI
-					
+							
 		// Create the board window
-	        JFrame f = new JFrame("Connect Four");
-        	// Sets the behavior for when the window is closed
-	        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+        JFrame f = new JFrame("Connect Four");
+    	// Sets the behavior for when the window is closed
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 		//set the layout to a grid (Change this when graphics are used)
 		f.setLayout(new GridLayout());
         	
 		renderer.setBoard(startBoard);
 		renderer.setFrame(f);
-		
-		renderer.render();
-		
+		//renderer.render();
 		//set up the input to make moves happen
 				
 		//make the window visible
+		f.pack();
 		f.setVisible(true);
-		
+		System.out.println("SHOWN");
 	}
  
 }
