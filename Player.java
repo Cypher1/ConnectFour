@@ -1,3 +1,3 @@
 public interface Player {
-	public int nextMove (GameState current);
+	public int nextMove (Simulator current);
 }

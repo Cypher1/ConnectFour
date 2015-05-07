@@ -1,6 +1,13 @@
+import java.util.Random;
 
 public class EasyPlayer implements Player {
-	public int nextMove (GameState current){
-		return 0;
+	Random generator;
+
+	public EasyPlayer() {
+		generator = new Random();
+	}
+
+	public int nextMove (Simulator current){
+		return generator.nextInt(8);
 	}
 }
