@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 class BasicBoardRenderer extends JPanel implements BoardRenderer{
 	/**
@@ -45,7 +46,6 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
 		render();
 	}
 
-	@Override
 	public void setFrame(JFrame window){
 		this.window = window;
 		this.window.add(this);
@@ -53,17 +53,27 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
 	
     @Override
     public void paintComponent(Graphics g) {
+    	Graphics2D g2d = (Graphics2D) g;
         super.paintComponent(g);
+        
 
         //g.drawString("BLAH", 20, 20);
+		g2d.setColor(new Color(0, 0, 200));//set the background color
+		g2d.fillRect(0, 0, width, height);
 
 		int width = board.getWidth();
 		int height = board.getHeight();
 		for(int y = 0; y < height; y++){
 			for(int x = 0; x < width; x++){
 				int state = board.getState(x,y);
-				g.setColor( Color.getHSBColor(state*100, 100, 100) );
-		        g.drawRect(startX+(sizeX+spacing)*x, startY+(sizeY+spacing)*y, sizeX, sizeY);
+				if(state != 0){
+					g2d.setColor(Color.getHSBColor((float)((state-1)*0.18), (float)1.0, (float)1.0) );
+				} else {
+					g2d.setColor(Color.white);
+				}
+				g2d.fillOval(startX+(sizeX+spacing)*x, startY+(sizeY+spacing)*y, sizeX, sizeY);
+				g2d.setColor( Color.getHSBColor(0, 0, 0) );
+				g2d.drawOval(startX+(sizeX+spacing)*x, startY+(sizeY+spacing)*y, sizeX, sizeY);
 			}
 		}
 		
