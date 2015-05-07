@@ -1,5 +1,4 @@
-package back_end;
- 
+
 public class Simulator 
 {
 	public static final int ROWS=6;  
@@ -8,6 +7,10 @@ public class Simulator
 	public static final int YELLOW=1; 
 	public static final int BACK=2;
 	point [][] map = new point[6][7];
+
+	Simulator(){
+	
+	}
 	
 	void readred()
 	{
