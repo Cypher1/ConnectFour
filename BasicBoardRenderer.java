@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
 
 class BasicBoardRenderer extends JPanel implements BoardRenderer{
 	/**
@@ -48,7 +49,20 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
 
 	public void setFrame(JFrame window){
 		this.window = window;
-		this.window.add(this);
+
+		//create Grid Bag constraints for layout of the window
+        GridBagConstraints c = new GridBagConstraints();
+     	//c.fill = GridBagConstraints.CENTER;
+     	//c.ipady = 10;
+     	//c.ipadx = 10;
+     	//c.weightx = 7;
+     	//c.weighty = 7;
+     	c.gridy = 1;
+     	c.gridx = 0;
+     	c.gridwidth = 7;
+
+     	//add to JFrame
+		this.window.add(this, c);
 	}
 	
     @Override
