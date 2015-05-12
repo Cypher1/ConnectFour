@@ -7,7 +7,7 @@ public class EasyPlayer implements Player {
 		generator = new Random();
 	}
 
-	public int nextMove (Simulator current){
-		return generator.nextInt(8);
+	public int nextMove (Board current){
+		return generator.nextInt(current.getWidth()-1);
 	}
 }

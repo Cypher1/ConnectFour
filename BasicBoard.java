@@ -1,12 +1,15 @@
 //A basic board
+import java.util.LinkedList;
 
-class BasicBoard implements Board{
+class BasicBoard implements Board, Cloneable{
 
-    final static int empty = 0;
+    public final static int EMPTY = -1;
     
-    int boardState[][];
-    int numPlayers;
-    int currentPlayer;
+    private int boardState[][];
+    private int numPlayers;
+    private int currentPlayer;
+
+    private LinkedList<BoardRenderer> renderers;
 
     BasicBoard(int numPlayers){
     	this.numPlayers = numPlayers;
@@ -16,9 +19,15 @@ class BasicBoard implements Board{
 
 	for(int x=0; x < getWidth(); x++){
 	    for(int y=0; y < getHeight(); y++){
-		boardState[x][y] = empty;
+		boardState[x][y] = EMPTY;
             }
 	}
+
+	renderers = new LinkedList<BoardRenderer>();
+    }
+
+    public void addRenderer(BoardRenderer render){
+	renderers.add(render);
     }
 
     public int getWidth(){
@@ -30,14 +39,25 @@ class BasicBoard implements Board{
     }
 
     public int getState(int x, int y){
+	if(x < 0 || x >= getWidth() || y < 0 || y >= getHeight()){
+		return EMPTY;
+	}
         return boardState[x][y];
+
     }
 
     public boolean placeMove(int xPos){
-       	for(int y=getHeight()-1; y >= 0; y--){
-            if(getState(xPos, y) == empty){
+       	if(xPos >= getWidth()){
+		return false;
+	}
+
+	for(int y=getHeight()-1; y >= 0; y--){
+            if(getState(xPos, y) == EMPTY){
                 setBoard(xPos, y, currentPlayer);
                 nextPlayer();
+		for(BoardRenderer render : renderers){
+			render.render();
+		}
                 return true;
             }
         }
@@ -49,11 +69,29 @@ class BasicBoard implements Board{
         return currentPlayer;
     }
 
+    public void setCurrentPlayer(int player){
+	currentPlayer = player;
+    }
+
     private void nextPlayer(){
         currentPlayer = (currentPlayer+1)%numPlayers;//increment the currentPlayer
     }
 
     private void setBoard(int x, int y, int player){
         boardState[x][y] = player;
+    }
+
+    public BasicBoard clone(){
+	BasicBoard newBoard = new BasicBoard(numPlayers);
+
+	newBoard.setCurrentPlayer(getCurrentPlayer());
+
+	for(int x = 0; x < getWidth(); x++){
+		for(int y = 0; y < getHeight(); y++){
+			newBoard.setBoard(x,y, getState(x,y));
+		}
+	}
+
+	return newBoard;
     }
 }

@@ -1,6 +1,6 @@
 
 public class HardPlayer implements Player {
-	public int nextMove (Simulator current){
+	public int nextMove (Board current){
 		return 0;
 	}
 }

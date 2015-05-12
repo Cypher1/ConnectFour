@@ -24,7 +24,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.imageio.ImageIO;
-
+import java.util.LinkedList;
  
 public class connectFour implements Runnable {
 
@@ -39,6 +39,7 @@ public class connectFour implements Runnable {
 
     private JFrame f;
     private int gameMode;
+    private Simulator simulator;
     //renderer
 
     //nested class that deals with button presses
@@ -105,23 +106,28 @@ public class connectFour implements Runnable {
 		
         //create renderer and startboard
         BasicBoardRenderer renderer = new BasicBoardRenderer();
-		Board startBoard = new BasicBoard(NUM_PLAYERS);
 
+	LinkedList<Player> players = new LinkedList<Player>();
+	players.add(new EasyPlayer());
+	players.add(new EasyPlayer());
+
+	simulator = new Simulator(players);
+	
         //Create grid bag constraint for layout of the JFrame
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridy = 0;
         c.weightx = 2;
         
-		// Create the AI
+	// Create the AI
 
         //remove all current buttons etc from frame for the new perspective
         f.getContentPane().removeAll();
 
         //create a button for each column
-        for(int i = 0; i < 7; i++){
+        for(int i = 0; i < simulator.getBoard().getWidth(); i++){
             //create button and set attributes
-            JButton b_temp = new JButton("");
+            JButton b_temp = new JButton("V");
             ConnectFourActionListener l_temp = new ConnectFourActionListener(f, COL_BUTTON_START+i);
             b_temp.addActionListener(l_temp);
             c.gridx = i;
@@ -136,21 +142,23 @@ public class connectFour implements Runnable {
         //create new grid bag layout for display
         c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = 7;
+        c.gridwidth = simulator.getBoard().getWidth();
         c.gridy = 2;
         c.weightx = 0.0;
         f.add(b_restart, c);
 
         //render the start board
-		renderer.setBoard(startBoard);
+		renderer.setBoard(simulator.getBoard());
 		renderer.setFrame(f);
-		//renderer.render();
 		//set up the input to make moves happen
         
 		//make the window visible
 		f.pack();
 		f.setVisible(true);
 		System.out.println("SHOWN");
+	//start the game loop
+
+	simulator.gameLoop();
 	}
 
     public void startScreen(JFrame f){  

@@ -13,10 +13,7 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
 	 * 
 	 */
 	private static final long serialVersionUID = -7656929072530099542L;
-	/**
-	 * 
-	 */
-	private Board board;
+	private BasicBoard board = null;
 	private JFrame window;
 	private int width;
 	private int height;
@@ -36,8 +33,11 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
 	}
 
 	@Override
-	public void setBoard(Board board){
-		this.board = board;
+	public void setBoard(BasicBoard board){
+		if(this.board == null){
+			board.addRenderer(this);
+			this.board = board;
+		}
 
 		width = startX*2+(sizeX+spacing)*board.getWidth();
 		height = startY*2+(sizeY+spacing)*board.getHeight();
@@ -70,28 +70,26 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
     	Graphics2D g2d = (Graphics2D) g;
         super.paintComponent(g);
         
+	g2d.setColor(new Color(0, 0, 200));//set the background color
+	g2d.fillRect(0, 0, width, height);
 
-        //g.drawString("BLAH", 20, 20);
-		g2d.setColor(new Color(0, 0, 200));//set the background color
-		g2d.fillRect(0, 0, width, height);
-
-		int width = board.getWidth();
-		int height = board.getHeight();
-		for(int y = 0; y < height; y++){
-			for(int x = 0; x < width; x++){
-				int state = board.getState(x,y);
-				if(state != 0){
-					g2d.setColor(Color.getHSBColor((float)((state-1)*0.18), (float)1.0, (float)1.0) );
-				} else {
-					g2d.setColor(Color.white);
-				}
-				g2d.fillOval(startX+(sizeX+spacing)*x, startY+(sizeY+spacing)*y, sizeX, sizeY);
-				g2d.setColor( Color.getHSBColor(0, 0, 0) );
-				g2d.drawOval(startX+(sizeX+spacing)*x, startY+(sizeY+spacing)*y, sizeX, sizeY);
+	int width = board.getWidth();
+	int height = board.getHeight();
+	for(int y = 0; y < height; y++){
+		for(int x = 0; x < width; x++){
+			int state = board.getState(x,y);
+			if(state != board.EMPTY){
+				g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
+			} else {
+				g2d.setColor(Color.white);
 			}
+			g2d.fillOval(startX+(sizeX+spacing)*x, startY+(sizeY+spacing)*y, sizeX, sizeY);
+			g2d.setColor( Color.getHSBColor(0, 0, 0) );
+			g2d.drawOval(startX+(sizeX+spacing)*x, startY+(sizeY+spacing)*y, sizeX, sizeY);
 		}
+	}
 		
-    }
+   }
 	
 	@Override
 	public void render(){

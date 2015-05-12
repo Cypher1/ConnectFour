@@ -10,5 +10,5 @@ public interface Board{
 	public int getCurrentPlayer();
 	public int getState(int x, int y);
 	public boolean placeMove(int xPos);
-	
+	public void addRenderer(BoardRenderer render);	
 }
