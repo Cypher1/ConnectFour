@@ -1,3 +1,5 @@
+package back_end;
+
 public interface Player {
-	int nextMove (GameState current);
+	public int nextMove (int [][] p);
 }

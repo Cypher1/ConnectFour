@@ -1,6 +1,6 @@
 
-public MediumPlayer implements Player {
-	int nextMove (GameState current){
+public class MediumPlayer implements Player {
+	public int nextMove (Simulator current){
 		return 0;
 	}
 }
