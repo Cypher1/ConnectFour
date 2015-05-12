@@ -67,6 +67,7 @@ public class connectFour implements Runnable {
                 System.out.println("DIFFICULTY " + button + " CHOSEN"); 
             }else if (button == HUMAN){
                 //initialise a game against a human
+                connectFour.this.gameMode = HUMAN;
                 connectFour.this.initGame(f);
                 System.out.println("HUMAN V HUMAN MODE CHOSEN");
             } else if ((button >= COL_BUTTON_START) && (button <= COL_BUTTON_START+7))
@@ -123,6 +124,7 @@ public class connectFour implements Runnable {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridy = 0;
         c.weightx = 2;
+        c.ipady = 3;
         
 		//Create the AI
         if(gameMode < HUMAN){
@@ -227,13 +229,16 @@ public class connectFour implements Runnable {
         //render the board
         renderer.render();
 
-        //ask AI for their next move and make it
-        int aiCol = player.nextMove(simulator);
-        if (aiCol > 6){
-            aiCol = aiCol%6;
+        if(gameMode != HUMAN)
+        {
+            //ask AI for their next move and make it
+            int aiCol = player.nextMove(simulator);
+            if (aiCol > 6){
+                aiCol = aiCol%6;
+            }
+            board.placeMove(aiCol);
         }
-
-        board.placeMove(aiCol);
+        
         renderer.render();
     }
 }
