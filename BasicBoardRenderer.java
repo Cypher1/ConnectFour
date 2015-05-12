@@ -52,11 +52,6 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
 
 		//create Grid Bag constraints for layout of the window
         GridBagConstraints c = new GridBagConstraints();
-     	//c.fill = GridBagConstraints.CENTER;
-     	//c.ipady = 10;
-     	//c.ipadx = 10;
-     	//c.weightx = 7;
-     	//c.weighty = 7;
      	c.gridy = 1;
      	c.gridx = 0;
      	c.gridwidth = 7;
@@ -81,7 +76,7 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
 			for(int x = 0; x < width; x++){
 				int state = board.getState(x,y);
 				if(state != 0){
-					g2d.setColor(Color.getHSBColor((float)((state-1)*0.18), (float)1.0, (float)1.0) );
+					g2d.setColor(Color.getHSBColor((float)((state%2)*0.18), (float)1.0, (float)1.0) );
 				} else {
 					g2d.setColor(Color.white);
 				}

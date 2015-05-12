@@ -6,19 +6,19 @@ class BasicBoard implements Board{
     
     int boardState[][];
     int numPlayers;
-    int currentPlayer;
+    int currentPlayer; 
 
     BasicBoard(int numPlayers){
     	this.numPlayers = numPlayers;
-	this.currentPlayer = 0;
+    	this.currentPlayer = 1;
 
-	boardState = new int[getWidth()][getHeight()];
+    	boardState = new int[getWidth()][getHeight()];
 
-	for(int x=0; x < getWidth(); x++){
-	    for(int y=0; y < getHeight(); y++){
-		boardState[x][y] = empty;
-            }
-	}
+    	for(int x=0; x < getWidth(); x++){
+    	    for(int y=0; y < getHeight(); y++){
+    		      boardState[x][y] = empty;
+                }
+    	}
     }
 
     public int getWidth(){
@@ -50,7 +50,7 @@ class BasicBoard implements Board{
     }
 
     private void nextPlayer(){
-        currentPlayer = (currentPlayer+1)%numPlayers;//increment the currentPlayer
+        currentPlayer = (currentPlayer)%numPlayers + 1;//increment the currentPlayer
     }
 
     private void setBoard(int x, int y, int player){

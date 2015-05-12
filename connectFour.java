@@ -24,6 +24,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.imageio.ImageIO;
+import java.lang.Thread;
 
  
 public class connectFour implements Runnable {
@@ -39,9 +40,14 @@ public class connectFour implements Runnable {
 
     private JFrame f;
     private int gameMode;
-    //renderer
+    private BasicBoard board;
+    private BasicBoardRenderer renderer;
+    private Player player;
+    private Simulator simulator;
 
-    //nested class that deals with button presses
+    /**
+        A nested class that deals with button press events
+    */
     private class ConnectFourActionListener implements ActionListener {
     	private JFrame f;
     	private int button;
@@ -56,17 +62,18 @@ public class connectFour implements Runnable {
     		//check which button was pressed and call their respective function
             if((button >= EASY) && (button <= HARD)){
                 //initialise game with appropriate difficulty
-                connectFour.this.initGame(button, f); 
+                connectFour.this.gameMode = button;
+                connectFour.this.initGame(f); 
                 System.out.println("DIFFICULTY " + button + " CHOSEN"); 
             }else if (button == HUMAN){
                 //initialise a game against a human
-                connectFour.this.initGame(button, f);
+                connectFour.this.initGame(f);
                 System.out.println("HUMAN V HUMAN MODE CHOSEN");
             } else if ((button >= COL_BUTTON_START) && (button <= COL_BUTTON_START+7))
             {
                 //MAKE A MOVE
-                System.out.println("COLUMN " + (button-COL_BUTTON_START) + " CHOSEN");
                 connectFour.this.moveMade(f, button-COL_BUTTON_START);
+                System.out.println("COLUMN " + (button-COL_BUTTON_START) + " CHOSEN");
             } else if (button == START){
                 //return to start screen
                 connectFour.this.startScreen(f);
@@ -81,13 +88,18 @@ public class connectFour implements Runnable {
         System.out.println("RUNNING");
         // Create the window
         f = new JFrame("Connect Four!");
-        System.out.println("RUNNING");
-        // Add a layout manager so that the button is not placed on top of the label
-        //reinitialise the JFrame for current use
+
+        // Add a layout manager for UI layout
         f.setLayout(new GridBagLayout());
         // Sets the behavior for when the window is closed
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 
+        //create renderer and startboard
+        renderer = new BasicBoardRenderer();
+        board = new BasicBoard(NUM_PLAYERS);
+
+        //go to the start screen. All other running of the program will be 
+        //done through button events.
         startScreen(f);
 		
 		System.out.println("DONE");
@@ -99,13 +111,12 @@ public class connectFour implements Runnable {
         SwingUtilities.invokeLater(gameWindow);
     }
     
-
-	public void initGame(int playType, JFrame f){
+    /**
+        initialises the game of connect four by creating a start board, initialising 
+        AI's and waiting for the first move
+    */  
+	public void initGame(JFrame f){
 		System.out.println("INIT GAME");
-		
-        //create renderer and startboard
-        BasicBoardRenderer renderer = new BasicBoardRenderer();
-		Board startBoard = new BasicBoard(NUM_PLAYERS);
 
         //Create grid bag constraint for layout of the JFrame
         GridBagConstraints c = new GridBagConstraints();
@@ -113,7 +124,10 @@ public class connectFour implements Runnable {
         c.gridy = 0;
         c.weightx = 2;
         
-		// Create the AI
+		//Create the AI
+        if(gameMode < HUMAN){
+            player = new EasyPlayer(); //!!do I send this to the simulator??
+        }
 
         //remove all current buttons etc from frame for the new perspective
         f.getContentPane().removeAll();
@@ -142,7 +156,7 @@ public class connectFour implements Runnable {
         f.add(b_restart, c);
 
         //render the start board
-		renderer.setBoard(startBoard);
+		renderer.setBoard(board);
 		renderer.setFrame(f);
 		//renderer.render();
 		//set up the input to make moves happen
@@ -153,6 +167,10 @@ public class connectFour implements Runnable {
 		System.out.println("SHOWN");
 	}
 
+
+    /**
+        Will show the start screen for connectFour
+    */
     public void startScreen(JFrame f){  
         //remove everything from f to give the new perspective
         f.getContentPane().removeAll();
@@ -161,12 +179,17 @@ public class connectFour implements Runnable {
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
 
-        //Create a board renderer and a new board
-        BasicBoardRenderer renderer = new BasicBoardRenderer();
-        BasicBoard initialBoard = new BasicBoard(NUM_PLAYERS); 
+        //Create a new board renderer and a new board
+        renderer = new BasicBoardRenderer();
+        board = new BasicBoard(NUM_PLAYERS); 
+
+        //initiate simulator
+        simulator = new Simulator();
 
         JLabel label = new JLabel("  Choose a Play Mode:      ");
         //create the easy/medium/hard buttons
+
+        //!! create a menu for play modes?
         JButton b_e = new JButton("EASY");
         JButton b_m = new JButton("MEDIUM");
         JButton b_h = new JButton("HARD");
@@ -186,14 +209,31 @@ public class connectFour implements Runnable {
         f.add(b_2, c);
 
         //initiate renderer attributes
-        renderer.setBoard(initialBoard);
+        renderer.setBoard(board);
         renderer.setFrame(f);
 
         f.pack();
         f.setVisible(true);
     }
 
+    /**
+        Registers when a move has been made, will send details to the simulator and
+        update the board accordingly. If not in 2 player mode it will then wait for AI
+        to make a move and updte board once again.
+    */
     public void moveMade(JFrame f, int column){
+        //send column to the board
+        board.placeMove(column);
+        //render the board
+        renderer.render();
 
+        //ask AI for their next move and make it
+        int aiCol = player.nextMove(simulator);
+        if (aiCol > 6){
+            aiCol = aiCol%6;
+        }
+
+        board.placeMove(aiCol);
+        renderer.render();
     }
 }
