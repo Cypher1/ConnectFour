@@ -8,10 +8,12 @@ class BasicBoard implements Board, Cloneable{
     private int boardState[][];
     private int numPlayers;
     private int currentPlayer;
+    private int winlen;
 
     private LinkedList<BoardRenderer> renderers;
 
-    BasicBoard(int numPlayers){
+    BasicBoard(int numPlayers, int winlen){
+	this.winlen = winlen;
     	this.numPlayers = numPlayers;
 	this.currentPlayer = 0;
 
@@ -81,8 +83,46 @@ class BasicBoard implements Board, Cloneable{
         boardState[x][y] = player;
     }
 
+	public int getWinner(){
+                for(int x=0; x <= getWidth()-winlen; x++){
+                        for(int y=0; y <= getHeight(); y++){
+                                int winner = isWin(x,y,0,1);
+                                if(winner != EMPTY){
+                                        return winner;
+                                }
+                                winner = isWin(x,y,1,1);
+                                if(winner != EMPTY){
+                                        return winner;
+                                }
+                                winner = isWin(x,y,1,0);
+                                if(winner != EMPTY){
+                                        return winner;
+                                }
+                        }
+                }
+                return EMPTY;
+        }
+
+        private int isWin(int x, int y, int dx, int dy){
+                int type = getState(x,y);
+
+                if(type == EMPTY){
+                        return EMPTY;
+                }
+
+                for(int len=0; len < winlen; len++){
+                        if(getState(x,y) != type){
+                                return EMPTY;
+                        }
+                        x+=dx;
+                        y+=dy;
+                }
+
+                return type;
+        }
+
     public BasicBoard clone(){
-	BasicBoard newBoard = new BasicBoard(numPlayers);
+	BasicBoard newBoard = new BasicBoard(numPlayers, winlen);
 
 	newBoard.setCurrentPlayer(getCurrentPlayer());
 

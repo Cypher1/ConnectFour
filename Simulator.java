@@ -11,45 +11,11 @@ public class Simulator
 	
 	Simulator(LinkedList<Player> players){
 		gamestart(players);//start the game
-		board = new BasicBoard(players.size());
+		board = new BasicBoard(players.size(), WINLEN);
 	}
 
 	public int getWinner(){
-		for(int x=0; x <= board.getWidth()-WINLEN; x++){
-			for(int y=0; y <= board.getHeight(); y++){
-				int winner = isWin(x,y,0,1);
-				if(winner != board.EMPTY){
-					return winner;
-				}
-				winner = isWin(x,y,1,1);
-				if(winner != board.EMPTY){
-					return winner;
-				}
-				winner = isWin(x,y,1,0);
-				if(winner != board.EMPTY){
-					return winner;
-				}
-			}
-		}
-		return board.EMPTY;
-	}
-
-	private int isWin(int x, int y, int dx, int dy){
-		int type = board.getState(x,y);
-
-		if(type == board.EMPTY){
-			return board.EMPTY;
-		}
-		
-		for(int len=0; len < WINLEN; len++){
-			if(board.getState(x,y) != type){
-				return board.EMPTY;
-			}
-			x+=dx;
-			y+=dy;
-		}
-
-		return type;	
+		return board.getWinner();
 	}
 
 	public void gameLoop(){
@@ -62,8 +28,10 @@ public class Simulator
 			System.out.println(moveXPos);			
 			boolean legal = board.placeMove(moveXPos);
 			
-			if(legal == false){
-				System.out.println("Not IMPLEMENTED!!!");	
+			while(legal == false){
+				//System.out.println("Not IMPLEMENTED!!!");	
+				moveXPos = curr.nextMove(board.clone());
+				legal = board.placeMove(moveXPos);	
 				break;
 			}
 			
@@ -81,6 +49,6 @@ public class Simulator
 	
 	public void gamestart(LinkedList<Player> players){//restart or start the game
 		this.players = players;
-		this.board = new BasicBoard(2);
+		this.board = new BasicBoard(players.size(), WINLEN);
 	}
 }

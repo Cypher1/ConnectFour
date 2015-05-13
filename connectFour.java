@@ -29,6 +29,7 @@ import java.util.LinkedList;
 public class connectFour implements Runnable {
 
     private static final int NUM_PLAYERS = 2;
+    private static final int WINLEN = 4;
     //define the buttons
     private static final int EASY = 0;
     private static final int MED = 1;
@@ -171,7 +172,7 @@ public class connectFour implements Runnable {
 
         //Create a board renderer and a new board
         BasicBoardRenderer renderer = new BasicBoardRenderer();
-        BasicBoard initialBoard = new BasicBoard(NUM_PLAYERS); 
+        BasicBoard initialBoard = new BasicBoard(NUM_PLAYERS, WINLEN); 
 
         JLabel label = new JLabel("  Choose a Play Mode:      ");
         //create the easy/medium/hard buttons
