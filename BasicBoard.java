@@ -84,7 +84,7 @@ class BasicBoard implements Board, Cloneable{
     }
 
 	public int getWinner(){
-                for(int x=0; x <= getWidth()-winlen; x++){
+                for(int x=0; x <= getWidth(); x++){
                         for(int y=0; y <= getHeight(); y++){
                                 int winner = isWin(x,y,0,1);
                                 if(winner != EMPTY){
