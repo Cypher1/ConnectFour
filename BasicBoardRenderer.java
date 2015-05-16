@@ -34,10 +34,8 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
 
 	@Override
 	public void setBoard(BasicBoard board){
-		if(this.board == null){
-			board.addRenderer(this);
-			this.board = board;
-		}
+		this.board = board;
+		board.addRenderer(this);
 
 		width = startX*2+(sizeX+spacing)*board.getWidth();
 		height = startY*2+(sizeY+spacing)*board.getHeight();
@@ -52,11 +50,6 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
 
 		//create Grid Bag constraints for layout of the window
         GridBagConstraints c = new GridBagConstraints();
-     	//c.fill = GridBagConstraints.CENTER;
-     	//c.ipady = 10;
-     	//c.ipadx = 10;
-     	//c.weightx = 7;
-     	//c.weighty = 7;
      	c.gridy = 1;
      	c.gridx = 0;
      	c.gridwidth = 7;
@@ -69,7 +62,8 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
     public void paintComponent(Graphics g) {
     	Graphics2D g2d = (Graphics2D) g;
         super.paintComponent(g);
-        
+
+       
 	g2d.setColor(new Color(0, 0, 200));//set the background color
 	g2d.fillRect(0, 0, width, height);
 

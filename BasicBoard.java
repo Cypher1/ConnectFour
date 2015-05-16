@@ -29,7 +29,7 @@ class BasicBoard implements Board, Cloneable{
     }
 
     public void addRenderer(BoardRenderer render){
-	renderers.add(render);
+	   renderers.add(render);
     }
 
     public int getWidth(){
@@ -49,17 +49,23 @@ class BasicBoard implements Board, Cloneable{
     }
 
     public boolean placeMove(int xPos){
-       	if(xPos >= getWidth()){
-		return false;
-	}
+        //check if the move is legal
+       	if((xPos >= getWidth()) || (xPos == -1)){
+		    return false;
+	    }
 
-	for(int y=getHeight()-1; y >= 0; y--){
+	    for(int y=getHeight()-1; y >= 0; y--){
             if(getState(xPos, y) == EMPTY){
                 setBoard(xPos, y, currentPlayer);
                 nextPlayer();
-		for(BoardRenderer render : renderers){
-			render.render();
-		}
+                //Couldn't figure out how to  a new board in the renderer inside the
+                //for loop (checkFoeComodification error) will reimplement when I
+                //figure it out
+	            //for(BoardRenderer render : renderers){
+                renderers.get(0).setBoard(this);
+		        renderers.get(0).render();
+	            //}
+    
                 return true;
             }
         }
@@ -86,9 +92,9 @@ class BasicBoard implements Board, Cloneable{
 	public int getWinner(){
                 for(int x=0; x <= getWidth()-winlen; x++){
                         for(int y=0; y <= getHeight(); y++){
+                                        //return winner;
                                 int winner = isWin(x,y,0,1);
                                 if(winner != EMPTY){
-                                        return winner;
                                 }
                                 winner = isWin(x,y,1,1);
                                 if(winner != EMPTY){
