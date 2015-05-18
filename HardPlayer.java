@@ -1,7 +1,12 @@
-
+/** A Hard Player for Connect Four
+ * Uses NegaMax to determine which moves are the best options
+ * Still makes some foolish moves when it cannot look far enough into the future of the game
+ * Written by Joshua Pratt
+ */
 public class HardPlayer implements Player {
 	private int inf = 100000;
 
+    /** Returns the next move that the player will choose to do */
 	public int nextMove (Board current){
 		//Initial call for Player A's root node
 		int move = 0;
@@ -25,7 +30,10 @@ public class HardPlayer implements Player {
 		return move;
 	}
 
-	public double negaMax(Board board, int depth, double alpha, double beta, int player){
+    /** Calculates a value for the best possible action to be chosen (assuming equivalent players)
+    *   Uses negaMax with Alpha Beta Pruning
+    */
+	private double negaMax(Board board, int depth, double alpha, double beta, int player){
 		Integer winner = board.getWinner();//check if the game has ended
 		if(depth == 0 || winner != -1){
 			if(depth == 0){
