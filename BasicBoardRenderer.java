@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
+import java.awt.RenderingHints;
 
 class BasicBoardRenderer extends JPanel implements BoardRenderer{
 	/**
@@ -61,7 +62,10 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
     @Override
     public void paintComponent(Graphics g) {
     	Graphics2D g2d = (Graphics2D) g;
-        super.paintComponent(g);
+	
+	g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
+	super.paintComponent(g);
 
        
 	g2d.setColor(new Color(0, 0, 200));//set the background color
@@ -72,14 +76,16 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
 	for(int y = 0; y < height; y++){
 		for(int x = 0; x < width; x++){
 			int state = board.getState(x,y);
+			
+			g2d.setColor( Color.getHSBColor(0, 0, 0) );
+			g2d.fillOval(startX+(sizeX+spacing)*x-1, startY+(sizeY+spacing)*y-1, sizeX+2, sizeY+2);
+			
 			if(state != board.EMPTY){
 				g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
 			} else {
 				g2d.setColor(Color.white);
 			}
 			g2d.fillOval(startX+(sizeX+spacing)*x, startY+(sizeY+spacing)*y, sizeX, sizeY);
-			g2d.setColor( Color.getHSBColor(0, 0, 0) );
-			g2d.drawOval(startX+(sizeX+spacing)*x, startY+(sizeY+spacing)*y, sizeX, sizeY);
 		}
 	}
 		
