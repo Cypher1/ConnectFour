@@ -58,13 +58,11 @@ class BasicBoard implements Board, Cloneable{
             if(getState(xPos, y) == EMPTY){
                 setBoard(xPos, y, currentPlayer);
                 nextPlayer();
-                //Couldn't figure out how to  a new board in the renderer inside the
-                //for loop (checkFoeComodification error) will reimplement when I
-                //figure it out
-	            //for(BoardRenderer render : renderers){
-                renderers.get(0).setBoard(this);
-		        renderers.get(0).render();
-	            //}
+		
+		for(BoardRenderer render : renderers){
+                	render.setBoard(this.clone());
+		        render.render();
+	        }
     
                 return true;
             }
