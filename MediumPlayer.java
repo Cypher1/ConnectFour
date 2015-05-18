@@ -1,6 +1,5 @@
 
 public class MediumPlayer implements Player {
-	
 	public int nextMove (Board current){
 		return minMax(current, 10, 1);
 	}
@@ -19,15 +18,8 @@ public class MediumPlayer implements Player {
 				Board child = board.clone();
 				if(child.placeMove(i)) {
 					val = -minMax(child, depth - 1, -player);
-				
-					if(bestValue < val){
-						bestValue = val;
-					}
 				}
-				
 				bestValue = Math.max(bestValue, val);
-
-				//bestValue = max(bestValue, val);
 			}
 			return bestValue;
 		} else {
@@ -36,13 +28,8 @@ public class MediumPlayer implements Player {
 				Board child = board.clone();
 				if(child.placeMove(i)) {
 					val = minMax(child, depth - 1, player);
-				
-					if(bestValue > val){
-						bestValue = val;
-					}
 				}
 				bestValue = Math.min(bestValue, val);
-				//bestValue = min(bestValue, val);
 			}
 			return bestValue;
 		}
@@ -69,6 +56,8 @@ public class MediumPlayer implements Player {
 				}
 			}
 		}
-	return heuristicValue;
+
+
+		return heuristicValue;
 	}
 }
