@@ -1,6 +1,6 @@
 import java.util.LinkedList;
 
-public class Simulator 
+public class Simulator implements Runnable
 {
 	private LinkedList<Player> players;
 	private BasicBoard board;
@@ -14,9 +14,19 @@ public class Simulator
 		board = new BasicBoard(players.size(), WINLEN);
 	}
 
+	public int getCurrentPlayer()
+	{
+		return this.currentPlayer;
+	}
+
 	public int getWinner(){
 		return board.getWinner();
 	}
+
+	@Override
+    public void run() {
+    	gameLoop();
+    }
 
 	public void gameLoop(){
 		while(getWinner() == board.EMPTY){
@@ -24,19 +34,20 @@ public class Simulator
 			Player curr = players.get(currentPlayer);
 			System.out.println("YOUR MOVE PLAYER"+(currentPlayer+1));
 			int moveXPos = curr.nextMove(board.clone());
-			//enact the move
-			System.out.println(moveXPos);			
+			//enact the move			
 			boolean legal = board.placeMove(moveXPos);
 			
 			while(legal == false){
 				//System.out.println("Not IMPLEMENTED!!!");	
 				moveXPos = curr.nextMove(board.clone());
 				legal = board.placeMove(moveXPos);	
-				break;
+			}
+			if (legal){
+				System.out.println(moveXPos);
 			}
 			
 			//update the board Renderer / UI
-			//next turn (assuming that there is no winner
+			//next turn (assuming that there is no winner)
 			currentPlayer = (currentPlayer+1)%players.size();
 		}
 
