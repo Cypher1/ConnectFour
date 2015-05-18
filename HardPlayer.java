@@ -35,7 +35,11 @@ public class HardPlayer implements Player {
     */
 	private double negaMax(Board board, int depth, double alpha, double beta, int player){
 		Integer winner = board.getWinner();//check if the game has ended
+<<<<<<< HEAD
 		if(depth == 0 || (winner != null && winner != -1)){
+=======
+		if(depth == 0 || winner != null){
+>>>>>>> e162006b313da660e74c3d18c684f0a716546fe4
 			if(depth == 0){
 				return 0.1;
 			}
