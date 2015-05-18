@@ -3,7 +3,7 @@ import java.util.LinkedList;
 public class Simulator implements Runnable
 {
 	private LinkedList<Player> players;
-	private BasicBoard board;
+	private Board board;
 
 	private int currentPlayer = 0;
 
@@ -11,25 +11,22 @@ public class Simulator implements Runnable
 	
 	Simulator(LinkedList<Player> players){
 		gamestart(players);//start the game
-		board = new BasicBoard(players.size(), WINLEN);
 	}
 
-	public int getCurrentPlayer()
-	{
+	public int getCurrentPlayer(){
 		return this.currentPlayer;
 	}
 
-	public int getWinner(){
+	public Integer getWinner(){
 		return board.getWinner();
 	}
 
-	@Override
     public void run() {
     	gameLoop();
     }
 
 	public void gameLoop(){
-		while(getWinner() == board.EMPTY){
+		while(getWinner() == null){
 			//get the move of the player
 			Player curr = players.get(currentPlayer);
 			System.out.println("YOUR MOVE PLAYER"+(currentPlayer+1));
@@ -54,7 +51,7 @@ public class Simulator implements Runnable
 		System.out.println("WINNER == PLAYER"+(getWinner()+1));
 	}
 
-	public BasicBoard getBoard(){
+	public Board getBoard(){
 		return board;
 	}
 	

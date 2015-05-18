@@ -71,8 +71,8 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
 	int height = board.getHeight();
 	for(int y = 0; y < height; y++){
 		for(int x = 0; x < width; x++){
-			int state = board.getState(x,y);
-			if(state != board.EMPTY){
+			Integer state = board.getState(x,y);
+			if(state != null){
 				g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
 			} else {
 				g2d.setColor(Color.white);
