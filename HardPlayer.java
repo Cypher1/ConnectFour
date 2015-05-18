@@ -29,7 +29,7 @@ public class HardPlayer implements Player {
 		Integer winner = board.getWinner();//check if the game has ended
 		if(depth == 0 || winner != -1){
 			if(depth == 0){
-				return 0;
+				return 0.1;
 			}
 
 			if(winner == player){

@@ -80,8 +80,8 @@ public class connectFour implements Runnable {
         {
         case EASY:  players.add(new EasyPlayer());
             break;
-        //case MED:   players.add(new MediumPlayer()); // my compiler couldn't find MediumPlayer class for some reason...
-        //    break;
+        case MED:   players.add(new MediumPlayer()); // my compiler couldn't find MediumPlayer class for some reason...
+            break;
         case HARD:  players.add(new HardPlayer());
             break;
         case HUMAN: players.add(new HumanPlayer());
