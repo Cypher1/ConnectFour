@@ -92,9 +92,9 @@ class BasicBoard implements Board, Cloneable{
 	public int getWinner(){
                 for(int x=0; x <= getWidth(); x++){
                         for(int y=0; y <= getHeight(); y++){
-                                        //return winner;
                                 int winner = isWin(x,y,0,1);
                                 if(winner != EMPTY){
+                                        return winner;
                                 }
                                 winner = isWin(x,y,1,1);
                                 if(winner != EMPTY){
@@ -104,6 +104,10 @@ class BasicBoard implements Board, Cloneable{
                                 if(winner != EMPTY){
                                         return winner;
                                 }
+				winner = isWin(x,y,1,-1);
+				if(winner != EMPTY){
+					return winner;
+				}
                         }
                 }
                 return EMPTY;
