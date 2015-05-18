@@ -8,7 +8,7 @@ public class MediumPlayer implements Player {
 	//iterate through states and so how many you winning 
 	private int minMax(Board board, int depth, int player) {
 		int bestValue, val;
-		if (depth == 0 || board.getWinner() != -1) {
+		if (depth == 0 || board.getWinner() != null) {
 			// return heuristic value
 			return heuristic(board, player);
 		}
@@ -43,7 +43,7 @@ public class MediumPlayer implements Player {
 		}
 	}
 
-	private int heuristic (Board board, int player) {
+	private int heuristic (Board board, Integer player) {
 		int heuristicValue = 0;
 		// analyse current board state
 		// give it a value to determine benefit to player

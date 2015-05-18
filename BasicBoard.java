@@ -9,6 +9,8 @@ class BasicBoard implements Board, Cloneable{
     private int numPlayers;
     private int currentPlayer;
     private int winlen;
+    private Integer lastX;
+    private Integer lastY;
 
     private LinkedList<BoardRenderer> renderers;
 
@@ -16,6 +18,8 @@ class BasicBoard implements Board, Cloneable{
         this.winlen = winlen;
         this.numPlayers = numPlayers;
         this.currentPlayer = FIRSTPLAYER;
+        this.lastX = null;
+        this.lastY = null;
 
         boardState = new Integer[getWidth()][getHeight()];
 
@@ -82,45 +86,54 @@ class BasicBoard implements Board, Cloneable{
 
     private void setBoard(int x, int y, Integer player){
         boardState[x][y] = player;
+        this.lastX = x;
+        this.lastY = y;
     }
 
     public Integer getWinner(){
-        for(int x=0; x <= getWidth(); x++){
-            for(int y=0; y <= getHeight(); y++){
-                Integer winner = isWin(x,y,0,1);
-                if(winner != null){
-                    return winner;
+        if (lastX != null && lastY != null){
+            Integer winner = null;
+
+            for (int dx = -1; dx < 1; dx ++) {
+                for (int dy = -1; dy < 1; dy++) {
+                    if (dx == 0 && dy == 0){
+                        continue;
+                    }
+                    
+                    winner = isWin(lastX,lastY,dx,dy);
+                    if(winner != null){
+                        return winner;
+                    }
                 }
-                winner = isWin(x,y,1,1);
-                if(winner != null){
-                    return winner;
-                }
-                winner = isWin(x,y,1,0);
-                if(winner != null){
-                    return winner;
-                }
-                winner = isWin(x,y,1,-1);
-                if(winner != null){
-                    return winner;
-                }
-            }
+            } 
         }
         return null;
     }
 
-    private Integer isWin(int x, int y, int dx, int dy){
+    private Integer isWin(int startx, int starty, int dx, int dy){
+        int x = startx;
+        int y = starty;
+        boolean backTracked = false;
         Integer type = getState(x,y);
 
+        //check that the given coordinate is actually one of the players
         if(type == null){
             return null;
         }
-
-        for(int len=0; len < winlen; len++){
-            if(getState(x,y) != type){
-                return null;
-            }
+        for(int len=1; len < winlen; len++){
             x+=dx;
             y+=dy;
+            if(getState(x,y) != type){
+                if(backTracked){
+                    return null;
+                }
+                backTracked = true;
+                x = startx;
+                y = starty;
+                dx *= -1;
+                dy *= -1;
+                len --;   
+            }  
         }
         return type;
     }
@@ -135,7 +148,8 @@ class BasicBoard implements Board, Cloneable{
                 newBoard.setBoard(x,y, getState(x,y));
             }
         }
-
+        newBoard.lastX = this.lastX;
+        newBoard.lastY = this.lastY;
         return newBoard;
     }
 }
