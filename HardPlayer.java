@@ -9,13 +9,16 @@ public class HardPlayer implements Player {
 		for(int op = 0; op < current.getWidth(); op++){
 			Board moveBoard = current.clone();		
 			if(moveBoard.placeMove(op)){
-				double canWin = negaMax(moveBoard, 10, -inf, inf,  moveBoard.getCurrentPlayer());
+				double canWin = negaMax(moveBoard, 5, -inf, inf,  current.getCurrentPlayer());
+				System.out.print(op+":"+canWin+". ");
+				
 				if(canWin > moveVal){
 					moveVal = canWin;
 					move = op;
 				}
 			}
 		}
+		System.out.println();
 		System.out.println("CanWin: "+moveVal);
 		System.out.println("BestMove: "+move);
 
@@ -55,6 +58,4 @@ public class HardPlayer implements Player {
 		}
 		return bestValue;
 	}
-
-
 }
