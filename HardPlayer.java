@@ -12,11 +12,13 @@ public class HardPlayer implements Player {
 		int move = 0;
 		double moveVal = -inf;
 		for(int op = 0; op < current.getWidth(); op++){
-			Board moveBoard = current.clone();		
+			Board moveBoard = current.clone();
 			if(moveBoard.placeMove(op)){
 				double canWin = negaMax(moveBoard, 10, -inf, inf,  current.getCurrentPlayer());
 				System.out.print(op+":"+canWin+". ");
-				
+		
+                canWin += (moveBoard.getWidth()/2.0-Math.abs(op-moveBoard.getWidth()/2.0))/op-moveBoard.getWidth();
+                
 				if(canWin > moveVal){
 					moveVal = canWin;
 					move = op;
@@ -51,7 +53,8 @@ public class HardPlayer implements Player {
 			Board childBoard = board.clone();
 			boolean worked = childBoard.placeMove(op);
 			if(worked){//is a legal move
-				double val = 0.75*negaMax(childBoard, depth - 1, -beta, -alpha, childBoard.getCurrentPlayer());
+				double val = 0.8*negaMax(childBoard, depth - 1, -beta, -alpha, childBoard.getCurrentPlayer());
+
 				if(val > bestValue){
 					bestValue = val;
 				}
