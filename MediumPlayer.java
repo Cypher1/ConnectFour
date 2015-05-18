@@ -7,7 +7,8 @@ public class MediumPlayer implements Player {
 	//finds the possible moves that the AI can make
 	//iterate through states and so how many you winning 
 	private int minMax(Board board, int depth, int player) {
-		int bestValue, val;
+		int bestValue = 0;
+		int val = 0;
 		if (depth == 0 || board.getWinner() != -1) {
 			// return heuristic value
 			return heuristic(board, player);
@@ -23,6 +24,9 @@ public class MediumPlayer implements Player {
 						bestValue = val;
 					}
 				}
+				
+				bestValue = Math.max(bestValue, val);
+
 				//bestValue = max(bestValue, val);
 			}
 			return bestValue;
@@ -37,6 +41,7 @@ public class MediumPlayer implements Player {
 						bestValue = val;
 					}
 				}
+				bestValue = Math.min(bestValue, val);
 				//bestValue = min(bestValue, val);
 			}
 			return bestValue;
@@ -64,8 +69,6 @@ public class MediumPlayer implements Player {
 				}
 			}
 		}
-
-
-		return heuristicValue;
+	return heuristicValue;
 	}
 }
