@@ -3,33 +3,37 @@ import java.util.LinkedList;
 
 class BasicBoard implements Board, Cloneable{
 
-    public final static int EMPTY = -1;
-    
-    private int boardState[][];
+    private static final int FIRSTPLAYER = 0;
+
+    private Integer boardState[][];
     private int numPlayers;
     private int currentPlayer;
     private int winlen;
+    private Integer lastX;
+    private Integer lastY;
 
     private LinkedList<BoardRenderer> renderers;
 
     BasicBoard(int numPlayers, int winlen){
-	this.winlen = winlen;
-    	this.numPlayers = numPlayers;
-	this.currentPlayer = 0;
+        this.winlen = winlen;
+        this.numPlayers = numPlayers;
+        this.currentPlayer = FIRSTPLAYER;
+        this.lastX = null;
+        this.lastY = null;
 
-	boardState = new int[getWidth()][getHeight()];
+        boardState = new Integer[getWidth()][getHeight()];
 
-	for(int x=0; x < getWidth(); x++){
-	    for(int y=0; y < getHeight(); y++){
-		boardState[x][y] = EMPTY;
+        for(int x=0; x < getWidth(); x++){
+            for(int y=0; y < getHeight(); y++){
+            boardState[x][y] = null;
             }
-	}
+        }
 
-	renderers = new LinkedList<BoardRenderer>();
+        renderers = new LinkedList<BoardRenderer>();
     }
 
     public void addRenderer(BoardRenderer render){
-	   renderers.add(render);
+       renderers.add(render);
     }
 
     public int getWidth(){
@@ -40,34 +44,31 @@ class BasicBoard implements Board, Cloneable{
         return 6;
     }
 
-    public int getState(int x, int y){
-	if(x < 0 || x >= getWidth() || y < 0 || y >= getHeight()){
-		return EMPTY;
-	}
-        return boardState[x][y];
-
+    public Integer getState(int x, int y){
+        if(x < 0 || x >= getWidth() || y < 0 || y >= getHeight()){
+            return null;
+        } else {
+            return boardState[x][y];
+        }
     }
 
     public boolean placeMove(int xPos){
         //check if the move is legal
        	if((xPos >= getWidth()) || (xPos == -1)){
-		    return false;
-	    }
+            return false;
+        }
 
-	    for(int y=getHeight()-1; y >= 0; y--){
-            if(getState(xPos, y) == EMPTY){
+        for(int y=getHeight()-1; y >= 0; y--){
+            if(getState(xPos, y) == null){
                 setBoard(xPos, y, currentPlayer);
-                nextPlayer();
-		
-		for(BoardRenderer render : renderers){
-                	render.setBoard(this.clone());
-		        render.render();
-	        }
-    
+                setNextPlayer();
+                for(BoardRenderer render : renderers){
+                    render.setBoard(this.clone());
+                    render.render();
+                }
                 return true;
             }
         }
-        
         return false;
     }
 
@@ -76,70 +77,79 @@ class BasicBoard implements Board, Cloneable{
     }
 
     public void setCurrentPlayer(int player){
-	currentPlayer = player;
+        currentPlayer = player;
     }
 
-    private void nextPlayer(){
+    private void setNextPlayer(){
         currentPlayer = (currentPlayer+1)%numPlayers;//increment the currentPlayer
     }
 
-    private void setBoard(int x, int y, int player){
+    private void setBoard(int x, int y, Integer player){
         boardState[x][y] = player;
+        this.lastX = x;
+        this.lastY = y;
     }
 
-	public int getWinner(){
-                for(int x=0; x <= getWidth(); x++){
-                        for(int y=0; y <= getHeight(); y++){
-                                int winner = isWin(x,y,0,1);
-                                if(winner != EMPTY){
-                                        return winner;
-                                }
-                                winner = isWin(x,y,1,1);
-                                if(winner != EMPTY){
-                                        return winner;
-                                }
-                                winner = isWin(x,y,1,0);
-                                if(winner != EMPTY){
-                                        return winner;
-                                }
-				winner = isWin(x,y,1,-1);
-				if(winner != EMPTY){
-					return winner;
-				}
-                        }
+    public Integer getWinner(){
+        if (lastX != null && lastY != null){
+            Integer winner = null;
+
+            for (int dx = -1; dx < 1; dx ++) {
+                for (int dy = -1; dy < 1; dy++) {
+                    if (dx == 0 && dy == 0){
+                        continue;
+                    }
+                    
+                    winner = isWin(lastX,lastY,dx,dy);
+                    if(winner != null){
+                        return winner;
+                    }
                 }
-                return EMPTY;
+            } 
         }
+        return null;
+    }
 
-        private int isWin(int x, int y, int dx, int dy){
-                int type = getState(x,y);
+    private Integer isWin(int startx, int starty, int dx, int dy){
+        int x = startx;
+        int y = starty;
+        boolean backTracked = false;
+        Integer type = getState(x,y);
 
-                if(type == EMPTY){
-                        return EMPTY;
-                }
-
-                for(int len=0; len < winlen; len++){
-                        if(getState(x,y) != type){
-                                return EMPTY;
-                        }
-                        x+=dx;
-                        y+=dy;
-                }
-
-                return type;
+        //check that the given coordinate is actually one of the players
+        if(type == null){
+            return null;
         }
+        for(int len=1; len < winlen; len++){
+            x+=dx;
+            y+=dy;
+            if(getState(x,y) != type){
+                if(backTracked){
+                    return null;
+                }
+                backTracked = true;
+                x = startx;
+                y = starty;
+                dx *= -1;
+                dy *= -1;
+                len --;   
+            }  
+        }
+        return type;
+    }
 
     public BasicBoard clone(){
-	BasicBoard newBoard = new BasicBoard(numPlayers, winlen);
+       BasicBoard newBoard = new BasicBoard(numPlayers, winlen);
 
-	newBoard.setCurrentPlayer(getCurrentPlayer());
+       newBoard.setCurrentPlayer(getCurrentPlayer());
 
-	for(int x = 0; x < getWidth(); x++){
-		for(int y = 0; y < getHeight(); y++){
-			newBoard.setBoard(x,y, getState(x,y));
-		}
-	}
-
-	return newBoard;
+        for(int x = 0; x < getWidth(); x++){
+            for(int y = 0; y < getHeight(); y++){
+                newBoard.setBoard(x,y, getState(x,y));
+            }
+        }
+        newBoard.lastX = this.lastX;
+        newBoard.lastY = this.lastY;
+        return newBoard;
     }
 }
