@@ -71,42 +71,24 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
         g2d.setColor(new Color(0, 0, 200));//set the background color
         g2d.fillRect(0, 0, width, height);
 
-<<<<<<< HEAD
 	Integer winner = board.getWinner();
 
         int width = board.getWidth();
         int height = board.getHeight();
         for(int y = 0; y < height; y++){
             for(int x = 0; x < width; x++){
-                int state = board.getState(x,y);
+                Integer state = board.getState(x,y);
                 
                 g2d.setColor( Color.getHSBColor(0, 0, 0) );
-=======
-	int width = board.getWidth();
-	int height = board.getHeight();
-	for(int y = 0; y < height; y++){
-		for(int x = 0; x < width; x++){
-			Integer state = board.getState(x,y);
-			if(state != null){
-				g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
-			} else {
-				g2d.setColor(Color.white);
-			}
-			g2d.fillOval(startX+(sizeX+spacing)*x, startY+(sizeY+spacing)*y, sizeX, sizeY);
-			g2d.setColor( Color.getHSBColor(0, 0, 0) );
-			g2d.drawOval(startX+(sizeX+spacing)*x, startY+(sizeY+spacing)*y, sizeX, sizeY);
-		}
-	}
->>>>>>> cleanBack-end
 		
-		if(winner != -1 && winner != null && winner == state){
+		if(winner != null && state != null && winner == state){
 			g2d.fillOval(startX+(sizeX+spacing)*x-3, startY+(sizeY+spacing)*y-3, sizeX+6, sizeY+6);
 			g2d.setColor( Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
 		} else {
 			g2d.fillOval(startX+(sizeX+spacing)*x-1, startY+(sizeY+spacing)*y-1, sizeX+2, sizeY+2);
 		}
                 
-                if(state != board.EMPTY){
+                if(state != null){
                     g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
                 } else {
                     g2d.setColor(Color.white);
