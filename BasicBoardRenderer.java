@@ -50,9 +50,9 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
 
 		//create Grid Bag constraints for layout of the window
         GridBagConstraints c = new GridBagConstraints();
-     	c.gridy = 1;
-     	c.gridx = 0;
-     	c.gridwidth = 7;
+     	c.gridy = connectFour.BOARD_PLACEMENT[1];
+     	c.gridx = connectFour.BOARD_PLACEMENT[0];
+     	c.gridwidth = connectFour.BOARD_WIDTH;
 
      	//add to JFrame
 		this.window.add(this, c);
