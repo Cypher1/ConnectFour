@@ -15,9 +15,9 @@ public class HardPlayer implements Player {
 			Board moveBoard = current.clone();
 			if(moveBoard.placeMove(op)){
 				double canWin = negaMax(moveBoard, 10, -inf, inf,  current.getCurrentPlayer());
+                                canWin += 1-(Math.abs(op-moveBoard.getWidth()/2.0))/moveBoard.getWidth();
+				
 				System.out.print(op+":"+canWin+". ");
-		
-                canWin += (moveBoard.getWidth()/2.0-Math.abs(op-moveBoard.getWidth()/2.0))/op-moveBoard.getWidth();
                 
 				if(canWin > moveVal){
 					moveVal = canWin;
