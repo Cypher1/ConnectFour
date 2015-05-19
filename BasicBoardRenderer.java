@@ -7,16 +7,17 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
+import java.awt.RenderingHints;
 
 class BasicBoardRenderer extends JPanel implements BoardRenderer{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -7656929072530099542L;
-	private BasicBoard board = null;
-	private JFrame window;
-	private int width;
-	private int height;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -7656929072530099542L;
+    private BasicBoard board = null;
+    private JFrame window;
+    private int width;
+    private int height;
 
     
     private int startX = 10;
@@ -28,65 +29,78 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
     private int spacing = 5;
 
     
-	BasicBoardRenderer(){
-		super();
-	}
+    BasicBoardRenderer(){
+        super();
+    }
 
-	@Override
-	public void setBoard(BasicBoard board){
-		this.board = board;
-		board.addRenderer(this);
+    @Override
+    public void setBoard(BasicBoard board){
+        this.board = board;
+        board.addRenderer(this);
 
-		width = startX*2+(sizeX+spacing)*board.getWidth();
-		height = startY*2+(sizeY+spacing)*board.getHeight();
-		// set a preferred size for the custom panel.
-		setPreferredSize(new Dimension(width, height));
-		
-		render();
-	}
+        width = startX*2+(sizeX+spacing)*board.getWidth();
+        height = startY*2+(sizeY+spacing)*board.getHeight();
+        // set a preferred size for the custom panel.
+        setPreferredSize(new Dimension(width, height));
+        
+        render();
+    }
 
-	public void setFrame(JFrame window){
-		this.window = window;
+    public void setFrame(JFrame window){
+        this.window = window;
 
-		//create Grid Bag constraints for layout of the window
+        //create Grid Bag constraints for layout of the window
         GridBagConstraints c = new GridBagConstraints();
      	c.gridy = connectFour.BOARD_PLACEMENT[1];
      	c.gridx = connectFour.BOARD_PLACEMENT[0];
      	c.gridwidth = connectFour.BOARD_WIDTH;
 
-     	//add to JFrame
-		this.window.add(this, c);
-	}
-	
+        //add to JFrame
+        this.window.add(this, c);
+    }
+    
     @Override
     public void paintComponent(Graphics g) {
-    	Graphics2D g2d = (Graphics2D) g;
+        Graphics2D g2d = (Graphics2D) g;
+        
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            
         super.paintComponent(g);
 
-       
-	g2d.setColor(new Color(0, 0, 200));//set the background color
-	g2d.fillRect(0, 0, width, height);
+           
+        g2d.setColor(new Color(0, 0, 200));//set the background color
+        g2d.fillRect(0, 0, width, height);
 
-	int width = board.getWidth();
-	int height = board.getHeight();
-	for(int y = 0; y < height; y++){
-		for(int x = 0; x < width; x++){
-			int state = board.getState(x,y);
-			if(state != board.EMPTY){
-				g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
-			} else {
-				g2d.setColor(Color.white);
-			}
-			g2d.fillOval(startX+(sizeX+spacing)*x, startY+(sizeY+spacing)*y, sizeX, sizeY);
-			g2d.setColor( Color.getHSBColor(0, 0, 0) );
-			g2d.drawOval(startX+(sizeX+spacing)*x, startY+(sizeY+spacing)*y, sizeX, sizeY);
-		}
-	}
+	Integer winner = board.getWinner();
+
+        int width = board.getWidth();
+        int height = board.getHeight();
+        for(int y = 0; y < height; y++){
+            for(int x = 0; x < width; x++){
+                Integer state = board.getState(x,y);
+                
+                g2d.setColor( Color.getHSBColor(0, 0, 0) );
 		
+		if(winner != null && state != null && winner == state){
+			g2d.fillOval(startX+(sizeX+spacing)*x-3, startY+(sizeY+spacing)*y-3, sizeX+6, sizeY+6);
+			g2d.setColor( Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
+		} else {
+			g2d.fillOval(startX+(sizeX+spacing)*x-1, startY+(sizeY+spacing)*y-1, sizeX+2, sizeY+2);
+		}
+                
+                if(state != null){
+                    g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
+                } else {
+                    g2d.setColor(Color.white);
+                }
+                g2d.fillOval(startX+(sizeX+spacing)*x, startY+(sizeY+spacing)*y, sizeX, sizeY);
+            }
+        }
+    
    }
-	
-	@Override
-	public void render(){
-		repaint();
-	}
+    
+    @Override
+    public void render(){
+        repaint();
+    }
 }
