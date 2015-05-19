@@ -26,7 +26,7 @@ public class MediumPlayer implements Player {
 	private double negaMax(Board board, int depth, int player){
 		Integer winner = board.getWinner();//check if the game has ended
 		double bestValue = Integer.MIN_VALUE;
-		if(depth == 0 || winner != -1){
+		if(depth == 0 || winner != null){
 			if(depth == 0){
 				return 0.1;
 			}
