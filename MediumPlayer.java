@@ -1,8 +1,10 @@
+/** A medium player for connect four 
+**/
 public class MediumPlayer implements Player {
-
+	/** Returns the next move the player would do 
+	**/
 	public int nextMove (Board current){
 		int inf = Integer.MIN_VALUE;
-		//Initial call for Player A's root node
 		int move = 0;
 		double moveVal = inf;
 		for(int op = 0; op < current.getWidth(); op++){
@@ -17,6 +19,9 @@ public class MediumPlayer implements Player {
 			}
 		return move;
 	}
+	/** Calculates a value for the best possible moves
+	Uses negamax 
+	**/
 	
 	private double negaMax(Board board, int depth, int player){
 		Integer winner = board.getWinner();//check if the game has ended
