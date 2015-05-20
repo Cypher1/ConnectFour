@@ -3,13 +3,14 @@
 */
 public class HumanPlayer implements Player {
 
+	private static final int NO_MOVE = -1;
 	private int nextMove;
 
 	/**
 		constructor initialises the human player to no moves made. 
 	*/
 	public HumanPlayer() {
-		this.nextMove = -1;
+		this.nextMove = NO_MOVE;
 	}
 
 	/**
@@ -31,10 +32,10 @@ public class HumanPlayer implements Player {
 	public int nextMove (Board current){
 		int move = -1;
 		//check move has been made and reinitialise
-		if(this.nextMove != -1)
+		if(this.nextMove != NO_MOVE)
 			move = this.nextMove;
 
-		this.nextMove = -1;
+		this.nextMove = NO_MOVE;
 		return move;
 	}
 }

@@ -34,12 +34,21 @@ public class connectFour implements Runnable {
     public static final int START = 4;
     public static final int COL_BUTTON_START = 5;
 
+    //define the grid positions for buttons e.t.c.
+    private static final int[] RESTART_BUTTON_PLACEMENT = {0, 2};
+    private static final int RESTART_BUTTON_WIDTH = 7;
+    private static final int[] COL_BUTTON_PLACEMENT = {0, 1};
+    private static final int[] COL_BUTTON_WEIGHTS = {2, 1};
+    private static final int[] COL_BUTTON_PADDING = {0, 50*8};
+    public static final int[] BOARD_PLACEMENT = {0, 1};
+    public static final int BOARD_WIDTH = 7;
+
     private JFrame f;
+    private JLabel gameMessage;
     private int gameMode;
     private Simulator simulator;
     LinkedList<Player> players;
-
-    //nested class that deals with button presses
+    private Thread simulatorThread;
    
 
     @Override
@@ -56,7 +65,6 @@ public class connectFour implements Runnable {
 
         startScreen(f);
 		
-		System.out.println("DONE");
     }
  
     public static void main(String[] args) {
@@ -67,7 +75,6 @@ public class connectFour implements Runnable {
     
 
 	public void initGame(int playType, JFrame f){
-        System.out.println("INITIALISING GAME");
         //remove all current buttons etc from frame for the new perspective
         f.getContentPane().removeAll();
 
@@ -80,7 +87,7 @@ public class connectFour implements Runnable {
         {
         case EASY:  players.add(new EasyPlayer());
             break;
-        case MED:   players.add(new MediumPlayer()); // my compiler couldn't find MediumPlayer class for some reason...
+        case MED:   players.add(new MediumPlayer()); 
             break;
         case HARD:  players.add(new HardPlayer());
             break;
@@ -99,11 +106,23 @@ public class connectFour implements Runnable {
         //remove everything from f to give the new perspective
         f.getContentPane().removeAll();
 
+        //if there is a thread running destroy it
+        /*if(simulatorThread != null){
+            while(simulatorThread.isAlive()){
+                System.out.println("SIMULATOR THREAD DESTROYED");
+                simulatorThread.interrupt(); 
+                break;
+            }
+        }*/
+        if(simulatorThread != null){
+            destroySimulatorThread();
+        }
+        
         //create grid bag layout constraints to set the layout
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel label = new JLabel("  Choose a Play Mode:      ");
+        JLabel label = new JLabel("Choose a Play Mode:  ");
         //create the easy/medium/hard buttons
         JButton b_e = new JButton("EASY");
         JButton b_m = new JButton("MEDIUM");
@@ -145,15 +164,19 @@ public class connectFour implements Runnable {
         //Create grid bag constraint for layout of the JFrame
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridy = 0;
-        c.weightx = 2;
+        c.gridy = COL_BUTTON_PLACEMENT[1];
+        c.weightx = COL_BUTTON_WEIGHTS[0];
+        c.ipady = COL_BUTTON_PADDING[1];
 
         //create a button for each column
         for(int i = 0; i < simulator.getBoard().getWidth(); i++){
             //create button and set attributes
-            JButton b_temp = new JButton("V");
+            JButton b_temp = new JButton("");
             ConnectFourActionListener l_temp = new ConnectFourActionListener(f, COL_BUTTON_START+i, this);
             b_temp.addActionListener(l_temp);
+            b_temp.setOpaque(false);
+            b_temp.setContentAreaFilled(false);
+            b_temp.setBorderPainted(false);
             c.gridx = i;
             f.add(b_temp, c); 
         }
@@ -167,14 +190,12 @@ public class connectFour implements Runnable {
         c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridwidth = simulator.getBoard().getWidth();
-        c.gridy = 2;
-        c.weightx = 0.0;
+        c.gridy = RESTART_BUTTON_PLACEMENT[1];
+        //c.weightx = RESTART_BUTTON_WIDTH;
         f.add(b_restart, c);
 
         f.pack();
         f.setVisible(true);
-
-        System.out.println("INITIALISED GAME FRAME");
     }
 
     /**
@@ -188,25 +209,49 @@ public class connectFour implements Runnable {
         
         //render the start board
         //Create a board renderer and a new board
-        BasicBoardRenderer renderer = new BasicBoardRenderer();
-        BasicBoard initialBoard = new BasicBoard(NUM_PLAYERS, WINLEN); 
+        BasicBoardRenderer renderer = new BasicBoardRenderer(); 
+
+        //simulator.getBoard().addRenderer(renderer);
+        this.simulatorThread = new Thread(simulator, "simulatorThread");
+        this.simulatorThread.setDaemon(true);
+        simulatorThread.start();
 
         //initiate renderer attributes
-        renderer.setBoard(initialBoard);
+        renderer.setBoard(simulator.getBoard());
         renderer.setFrame(f);
         renderer.render();
 
         //make the window visible
         f.pack();
         f.setVisible(true);
-        System.out.println("SHOWN");
+    }
 
-        //create a new thread for the simulator and start it
-        simulator.getBoard().addRenderer(renderer);
-        Thread simulatorThread = new Thread(simulator, "simulatorThread");
-        simulatorThread.start();
+    /** 
+        function responsible for updating play messages each turn
+    */
+    private void updateGameMessage(int player, int win)
+    {
+        String message = "Player " + 1;
+         
+        this.gameMessage = new JLabel();
+    }
 
-        System.out.println("INITIALISED BACK END");
+    /**
+        Responsible for destroying the thread the simulator runs on 
+    */
+    private void destroySimulatorThread()
+    {
+        while(simulatorThread.isAlive() & !(simulatorThread.isInterrupted())){
+            try{        
+                simulatorThread.interrupt();
+                System.out.println("Sleeping");
+                break;
+            }
+            catch(Exception e){
+                e.printStackTrace();
+                break;
+            }
+        }
     }
 
     /**

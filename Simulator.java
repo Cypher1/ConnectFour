@@ -3,7 +3,7 @@ import java.util.LinkedList;
 public class Simulator implements Runnable
 {
 	private LinkedList<Player> players;
-	private Board board;
+	private BasicBoard board; // changed from Board to BasicBoard
 
 	private int currentPlayer = 0;
 
@@ -51,7 +51,7 @@ public class Simulator implements Runnable
 		System.out.println("WINNER == PLAYER"+(getWinner()+1));
 	}
 
-	public Board getBoard(){
+	public BasicBoard getBoard(){ //changed to BasicBoard from Board
 		return board;
 	}
 	
