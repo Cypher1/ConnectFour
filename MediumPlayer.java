@@ -10,7 +10,7 @@ public class MediumPlayer implements Player {
 		for(int op = 0; op < current.getWidth(); op++){
 			Board moveBoard = current.clone();		
 			if(moveBoard.placeMove(op)){
-				double canWin = negaMax(moveBoard, 4, current.getCurrentPlayer());
+				double canWin = -negaMax(moveBoard, 4, moveBoard.getCurrentPlayer());
 					if(canWin > moveVal){
 						moveVal = canWin;
 						move = op;
@@ -32,19 +32,19 @@ public class MediumPlayer implements Player {
 			}
 
 			if(winner == player){
-				return -depth;
+				return depth;
 			}
-			return depth;
+			return -depth;
 		}
 
 		for(int op = 0; op < board.getWidth(); op++){
 			Board childBoard = board.clone();
 			boolean worked = childBoard.placeMove(op);
 			if(worked){//is a legal move
-				double val = 0.3*negaMax(childBoard, depth - 1,  childBoard.getCurrentPlayer());
+				double val = -0.3*negaMax(childBoard, depth - 1,  childBoard.getCurrentPlayer());
 				bestValue = Math.max(bestValue, val);
 			}
 		}
-		return -bestValue;
+		return bestValue;
 	}
 }
