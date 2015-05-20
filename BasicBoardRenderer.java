@@ -71,8 +71,6 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
         g2d.setColor(new Color(0, 0, 200));//set the background color
         g2d.fillRect(0, 0, width, height);
 
-	Integer winner = board.getWinner();
-
         int width = board.getWidth();
         int height = board.getHeight();
         for(int y = 0; y < height; y++){
@@ -80,16 +78,17 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
                 Integer state = board.getState(x,y);
                 
                 g2d.setColor( Color.getHSBColor(0, 0, 0) );
-		
-		if(winner != null && state != null && winner == state){
-			g2d.fillOval(startX+(sizeX+spacing)*x-3, startY+(sizeY+spacing)*y-3, sizeX+6, sizeY+6);
-			g2d.setColor( Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
-		} else {
-			g2d.fillOval(startX+(sizeX+spacing)*x-1, startY+(sizeY+spacing)*y-1, sizeX+2, sizeY+2);
-		}
+	        g2d.fillOval(startX+(sizeX+spacing)*x-1, startY+(sizeY+spacing)*y-1, sizeX+2, sizeY+2);
                 
                 if(state != null){
-                    g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
+		    if(board.isWin(x,y) == state){
+               	        g2d.setColor(Color.white);
+                        g2d.fillOval(startX+(sizeX+spacing)*x, startY+(sizeY+spacing)*y, sizeX, sizeY);
+		        g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
+			g2d.fillOval(startX+(sizeX+spacing)*x+5, startY+(sizeX+spacing)*y+5, sizeX-10, sizeY-10);
+			continue;
+                    }
+		    g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
                 } else {
                     g2d.setColor(Color.white);
                 }

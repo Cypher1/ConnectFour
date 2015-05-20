@@ -92,26 +92,29 @@ class BasicBoard implements Board, Cloneable{
 
     public Integer getWinner(){
         if (lastX != null && lastY != null){
-            Integer winner = null;
+            return isWin(lastX, lastY);
+        }
+        return null;
+    }
 
-            for (int dx = -1; dx < 1; dx ++) {
-                for (int dy = -1; dy < 1; dy++) {
-                    if (dx == 0 && dy == 0){
-                        continue;
-                    }
-                    
-                    winner = isWin(lastX,lastY,dx,dy);
-                    if(winner != null){
-                        return winner;
-                    }
+    public Integer isWin(int startx, int starty){
+        for (int dx = -1; dx < 1; dx ++) {
+            for (int dy = -1; dy <= 1; dy++) {
+                Integer winner = isWin(startx, starty,dx,dy);
+                if(winner != null){
+                    return winner;
                 }
-            } 
+            }
         }
         return null;
     }
 
     private Integer isWin(int startx, int starty, int dx, int dy){
-        int x = startx;
+        if(dx == 0 && dy == 0){
+	    return null;
+	}
+
+	int x = startx;
         int y = starty;
         boolean backTracked = false;
         Integer type = getState(x,y);
@@ -132,8 +135,8 @@ class BasicBoard implements Board, Cloneable{
                 y = starty;
                 dx *= -1;
                 dy *= -1;
-                len --;   
-            }  
+                len--;
+            }
         }
         return type;
     }
