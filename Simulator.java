@@ -52,7 +52,7 @@ public class Simulator implements Runnable
 			
 		if (board.isFull()){
 			System.out.println("PLAYERS TIED");
-		} else {
+		} else if (getWinner() != null){
 			System.out.println("WINNER == PLAYER"+(getWinner()+1));
 		}
 	}
