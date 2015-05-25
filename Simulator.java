@@ -28,7 +28,7 @@ public class Simulator implements Runnable
 	public void gameUpdate(){
 		Player curr = players.get(currentPlayer);
 		boolean legal = true;
-		if(getWinner() == null){
+		if(getWinner() == null && !board.isFull()){
 			//get the move of the player
 			curr = players.get(currentPlayer);
 			System.out.println("YOUR MOVE PLAYER"+(currentPlayer+1));
@@ -48,7 +48,13 @@ public class Simulator implements Runnable
 
 		if (!(players.get(currentPlayer) instanceof HumanPlayer)){//call again for AI players
 			gameUpdate();
-		}				
+		}	
+			
+		if (board.isFull()){
+			System.out.println("PLAYERS TIED");
+		} else {
+			System.out.println("WINNER == PLAYER"+(getWinner()+1));
+		}
 	}
 
 	public BasicBoard getBoard(){ //changed to BasicBoard from Board
