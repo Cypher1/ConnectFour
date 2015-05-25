@@ -1,69 +1,89 @@
 import java.util.LinkedList;
 
-public class Simulator implements Runnable
+public class Simulator
 {
-	private LinkedList<Player> players;
-	private BasicBoard board; // changed from Board to BasicBoard
+    private LinkedList<Player> players;
+    private Board board;
 
-	private int currentPlayer = 0;
+    private int currentPlayer = 0;
 
-	private static final int WINLEN = 4;
-	
-	Simulator(LinkedList<Player> players){
-		gamestart(players);//start the game
-	}
+    private static final int WINLEN = 4;
 
-	public int getCurrentPlayer(){
-		return this.currentPlayer;
-	}
-
-	public Integer getWinner(){
-        return board.getWinner();
-	}
-
-    public void run() {
-    	gameUpdate();
+    /**
+    * A constructor for a new simulator. <p>
+    * pre: the linkedlist of players is non-empty, and boardwidth and height are not 0<br>
+    * post: a new simulator has been created with the given inputs
+    *
+    * @param players: a linkedlist of players which will be playing the game
+    * @param boardWidth: the width that the board of the game will be
+    * @param boardHeight: the height that the board of the game will be
+    */    
+    Simulator(LinkedList<Player> players, int boardWidth, int boardHeight){
+        this.players = players;
+        this.board = new Board(players.size(), WINLEN, boardWidth, boardHeight);
     }
 
-	public void gameUpdate(){
-		Player curr = players.get(currentPlayer);
-		boolean legal = true;
-		if(getWinner() == null && !board.isFull()){
-			//get the move of the player
-			curr = players.get(currentPlayer);
-			System.out.println("YOUR MOVE PLAYER"+(currentPlayer+1));
-			int moveXPos = curr.nextMove(board.clone());
-			//enact the move			
-			legal = board.placeMove(moveXPos);
-			if(legal){	
-				System.out.println(moveXPos);
-				//update the board Renderer / UI
-				//next turn (assuming that there is no winner)
-				currentPlayer = (currentPlayer+1)%players.size();
-				if(getWinner() != null){
-					System.out.println("WINNER == PLAYER"+(getWinner()+1));
-				}		
-			}
-		}
+    /**
+    * A getter for the current player
+    * @return the id of the current player
+    */
+    public int getCurrentPlayer(){
+        return this.currentPlayer;
+    }
 
-		
-		if (getWinner() == null && !(players.get(currentPlayer) instanceof HumanPlayer)){//call again for AI players
-			gameUpdate();
-		}			
+    /**
+    * A getter for the winner of the game
+    * @return the id of the winning player, or null if no win has been made
+    */
+    public Integer getWinner(){
+        return board.getWinner();
+    }
 
-		if (board.isFull()){
-			System.out.println("PLAYERS TIED");
-		} else if (getWinner() != null){
-			System.out.println("WINNER == PLAYER"+(getWinner()+1));
-		}
-	}
+    /**
+    * A getter for the board this simulator is based on
+    * @return the board in it's current state
+    */
+    public Board getBoard(){
+        return board;
+    }
 
-	public BasicBoard getBoard(){ //changed to BasicBoard from Board
-		return board;
-	}
-	
-	public void gamestart(LinkedList<Player> players){//restart or start the game
-		this.players = players;
-		this.board = new BasicBoard(players.size(), WINLEN);
-	}
+    /**
+    * This updates the game by one move. The outcome of that move is also dealt with, and 
+    * simulator is left in a state which allows the next move to be made by a different player <p>
+    * pre: the game is valid<br>
+    * post: game has been updated by one move, a move has been made and whether that move has generated
+    * a win or draw has been dealt with
+    */
+    public void gameUpdate(){
+        Player curr = players.get(currentPlayer);
+        boolean legal = true;
+        if(getWinner() == null && !board.isFull()){
+            //get the move of the player
+            curr = players.get(currentPlayer);
+            System.out.println("YOUR MOVE PLAYER"+(currentPlayer+1));
+            int moveXPos = curr.nextMove(board.clone());
+            //enact the move            
+            legal = board.placeMove(moveXPos);
+            if(legal){  
+                System.out.println(moveXPos);
+                //update the board Renderer / UI
+                //next turn (assuming that there is no winner)
+                currentPlayer = (currentPlayer+1)%players.size();
+                if(getWinner() != null){
+                    System.out.println("WINNER == PLAYER"+(getWinner()+1));
+                }       
+            }
+        }
+
+        
+        if (getWinner() == null && !(players.get(currentPlayer) instanceof HumanPlayer)){//call again for AI players
+            gameUpdate();
+        }           
+
+        if (board.isFull()){
+            System.out.println("PLAYERS TIED");
+        } else if (getWinner() != null){
+            System.out.println("WINNER == PLAYER"+(getWinner()+1));
+        }
+    }
 }
