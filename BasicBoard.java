@@ -109,12 +109,29 @@ class BasicBoard implements Board, Cloneable{
         return null;
     }
 
+    public boolean isFull(){
+        boolean isFull = true;
+        int x = 0;
+        int y = 0;
+        while (isFull == true && x < getWidth()){
+            for (y = 0; y < getHeight(); y ++){
+                System.out.println("checking" + x + y);
+                if (boardState[x][y] == null){
+                    isFull = false;
+                    break;
+                }
+            }
+            x ++;
+        }
+        return isFull;
+    }
+
     private Integer isWin(int startx, int starty, int dx, int dy){
         if(dx == 0 && dy == 0){
-	    return null;
-	}
+            return null;
+        }
 
-	int x = startx;
+        int x = startx;
         int y = starty;
         boolean backTracked = false;
         Integer type = getState(x,y);

@@ -28,7 +28,7 @@ public class Simulator implements Runnable
 	public void gameLoop(){
 		Player curr = players.get(currentPlayer);
 		boolean legal = true;
-		while(getWinner() == null){
+		while(getWinner() == null && !board.isFull()){
 			//get the move of the player
 			curr = players.get(currentPlayer);
 			System.out.println("YOUR MOVE PLAYER"+(currentPlayer+1));
@@ -48,7 +48,11 @@ public class Simulator implements Runnable
 			currentPlayer = (currentPlayer+1)%players.size();
 		}
 
-		System.out.println("WINNER == PLAYER"+(getWinner()+1));
+		if (board.isFull()){
+			System.out.println("PLAYERS TIED");
+		} else {
+			System.out.println("WINNER == PLAYER"+(getWinner()+1));
+		}
 	}
 
 	public BasicBoard getBoard(){ //changed to BasicBoard from Board
