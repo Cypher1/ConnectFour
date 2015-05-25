@@ -1,6 +1,6 @@
 import java.util.LinkedList;
 
-public class Simulator implements Runnable
+public class Simulator
 {
     private LinkedList<Player> players;
     private Board board;
@@ -8,23 +8,52 @@ public class Simulator implements Runnable
     private int currentPlayer = 0;
 
     private static final int WINLEN = 4;
-    
+
+    /**
+    * A constructor for a new simulator. <p>
+    * pre: the linkedlist of players is non-empty, and boardwidth and height are not 0<br>
+    * post: a new simulator has been created with the given inputs
+    *
+    * @param players: a linkedlist of players which will be playing the game
+    * @param boardWidth: the width that the board of the game will be
+    * @param boardHeight: the height that the board of the game will be
+    */    
     Simulator(LinkedList<Player> players, int boardWidth, int boardHeight){
-        gamestart(players, boardWidth, boardHeight);//start the game
+        this.players = players;
+        this.board = new Board(players.size(), WINLEN, boardWidth, boardHeight);
     }
 
+    /**
+    * A getter for the current player
+    * @return the id of the current player
+    */
     public int getCurrentPlayer(){
         return this.currentPlayer;
     }
 
+    /**
+    * A getter for the winner of the game
+    * @return the id of the winning player, or null if no win has been made
+    */
     public Integer getWinner(){
         return board.getWinner();
     }
 
-    public void run() {
-        gameUpdate();
+    /**
+    * A getter for the board this simulator is based on
+    * @return the board in it's current state
+    */
+    public Board getBoard(){
+        return board;
     }
 
+    /**
+    * This updates the game by one move. The outcome of that move is also dealt with, and 
+    * simulator is left in a state which allows the next move to be made by a different player <p>
+    * pre: the game is valid<br>
+    * post: game has been updated by one move, a move has been made and whether that move has generated
+    * a win or draw has been dealt with
+    */
     public void gameUpdate(){
         Player curr = players.get(currentPlayer);
         boolean legal = true;
@@ -56,14 +85,5 @@ public class Simulator implements Runnable
         } else if (getWinner() != null){
             System.out.println("WINNER == PLAYER"+(getWinner()+1));
         }
-    }
-
-    public Board getBoard(){
-        return board;
-    }
-    
-    public void gamestart(LinkedList<Player> players, int boardWidth, int boardHeight){//restart or start the game
-        this.players = players;
-        this.board = new Board(players.size(), WINLEN, boardWidth, boardHeight);
     }
 }
