@@ -46,10 +46,11 @@ public class Simulator implements Runnable
 			}
 		}
 
-		if (!(players.get(currentPlayer) instanceof HumanPlayer)){//call again for AI players
+		
+		if (getWinner() == null && !(players.get(currentPlayer) instanceof HumanPlayer)){//call again for AI players
 			gameUpdate();
-		}	
-			
+		}			
+
 		if (board.isFull()){
 			System.out.println("PLAYERS TIED");
 		} else if (getWinner() != null){
