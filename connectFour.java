@@ -10,15 +10,8 @@
 */
 import java.io.File;
 import java.io.IOException;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.BorderLayout;
-import java.awt.image.BufferedImage;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
+import java.awt.*;
+import javax.swing.*;
 import javax.imageio.ImageIO;
 import java.util.LinkedList;
  
@@ -97,6 +90,7 @@ public class connectFour implements Runnable {
 
         initBackend();
         gameFrame();
+	simulator.gameUpdate();
 	}
 
     /**
@@ -106,18 +100,6 @@ public class connectFour implements Runnable {
         //remove everything from f to give the new perspective
         f.getContentPane().removeAll();
 
-        //if there is a thread running destroy it
-        /*if(simulatorThread != null){
-            while(simulatorThread.isAlive()){
-                System.out.println("SIMULATOR THREAD DESTROYED");
-                simulatorThread.interrupt(); 
-                break;
-            }
-        }*/
-        if(simulatorThread != null){
-            destroySimulatorThread();
-        }
-        
         //create grid bag layout constraints to set the layout
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -211,11 +193,6 @@ public class connectFour implements Runnable {
         //Create a board renderer and a new board
         BasicBoardRenderer renderer = new BasicBoardRenderer(); 
 
-        //simulator.getBoard().addRenderer(renderer);
-        this.simulatorThread = new Thread(simulator, "simulatorThread");
-        this.simulatorThread.setDaemon(true);
-        simulatorThread.start();
-
         //initiate renderer attributes
         renderer.setBoard(simulator.getBoard());
         renderer.setFrame(f);
@@ -231,27 +208,8 @@ public class connectFour implements Runnable {
     */
     private void updateGameMessage(int player, int win)
     {
-        String message = "Player " + 1;
-         
+        String message = "Player " + player;
         this.gameMessage = new JLabel();
-    }
-
-    /**
-        Responsible for destroying the thread the simulator runs on 
-    */
-    private void destroySimulatorThread()
-    {
-        while(simulatorThread.isAlive() & !(simulatorThread.isInterrupted())){
-            try{        
-                simulatorThread.interrupt();
-                System.out.println("Sleeping");
-                break;
-            }
-            catch(Exception e){
-                e.printStackTrace();
-                break;
-            }
-        }
     }
 
     /**
@@ -271,5 +229,6 @@ public class connectFour implements Runnable {
             HumanPlayer human = (HumanPlayer)currPlayer;
             human.makeMove(column);
         }
+	simulator.gameUpdate();
     }
 }

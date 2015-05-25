@@ -2,12 +2,7 @@
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.RenderingHints;
+import java.awt.*;
 
 class BasicBoardRenderer extends JPanel implements BoardRenderer{
     /**
@@ -28,6 +23,9 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
     
     private int spacing = 5;
 
+    Dimension offDimension;
+    Image offImage;
+    Graphics2D g2d;
     
     BasicBoardRenderer(){
         super();
@@ -60,14 +58,20 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
     }
     
     @Override
-    public void paintComponent(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
+    public void update(Graphics g) {
+        if(getSize().width == 0 || getSize().height == 0){
+		return;
+	}
+
+        if ( (g2d == null)
+          || (!offDimension.equals(getSize()))) {
+            offDimension = getSize();
+            offImage = createImage(getSize().width, getSize().height);
+            g2d = (Graphics2D) offImage.getGraphics();
+        }  
         
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             
-        super.paintComponent(g);
-
-           
         g2d.setColor(new Color(0, 0, 200));//set the background color
         g2d.fillRect(0, 0, width, height);
 
@@ -95,11 +99,19 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
                 g2d.fillOval(startX+(sizeX+spacing)*x, startY+(sizeY+spacing)*y, sizeX, sizeY);
             }
         }
-    
+        g.drawImage(offImage, 0, 0, this); 
    }
     
     @Override
+    public void paint(Graphics g){
+	update(g);
+    }
+
+    @Override
     public void render(){
-        repaint();
+	    Graphics g = getGraphics();
+            if(g != null){
+	        paint(g);
+            }
     }
 }
