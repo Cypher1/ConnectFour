@@ -1,12 +1,12 @@
 /*Main program for COMP2911-Project
 
-	Start Date: 28th April 2015
-	Written By: 
-		Kirsten Hendriks
-		Peng Herrork
-		Lucy Kidd
-		Michelle Phan
-		Joshua Pratt
+    Start Date: 28th April 2015
+    Written By: 
+        Kirsten Hendriks
+        Peng Herrork
+        Lucy Kidd
+        Michelle Phan
+        Joshua Pratt
 */
 import java.io.File;
 import java.io.IOException;
@@ -57,7 +57,7 @@ public class connectFour implements Runnable {
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 
         startScreen(f);
-		
+        
     }
  
     public static void main(String[] args) {
@@ -67,7 +67,7 @@ public class connectFour implements Runnable {
     }
     
 
-	public void initGame(int playType, JFrame f){
+    public void initGame(int playType, JFrame f){
         //remove all current buttons etc from frame for the new perspective
         f.getContentPane().removeAll();
 
@@ -90,8 +90,8 @@ public class connectFour implements Runnable {
 
         initBackend();
         gameFrame();
-	simulator.gameUpdate();
-	}
+    simulator.gameUpdate();
+    }
 
     /**
         Responsible for setting out and showing the buttons e.t.c. associated with the start screen
@@ -125,8 +125,8 @@ public class connectFour implements Runnable {
         f.add(b_2, c);
 
         //Create a board renderer and a new board
-        BasicBoardRenderer renderer = new BasicBoardRenderer();
-        BasicBoard initialBoard = new BasicBoard(NUM_PLAYERS, WINLEN); 
+        BoardRenderer renderer = new BoardRenderer();
+        Board initialBoard = new Board(NUM_PLAYERS, WINLEN); 
 
         //initiate renderer attributes
         renderer.setBoard(initialBoard);
@@ -191,7 +191,7 @@ public class connectFour implements Runnable {
         
         //render the start board
         //Create a board renderer and a new board
-        BasicBoardRenderer renderer = new BasicBoardRenderer(); 
+        BoardRenderer renderer = new BoardRenderer(); 
 
         //initiate renderer attributes
         renderer.setBoard(simulator.getBoard());
@@ -229,6 +229,6 @@ public class connectFour implements Runnable {
             HumanPlayer human = (HumanPlayer)currPlayer;
             human.makeMove(column);
         }
-	simulator.gameUpdate();
+    simulator.gameUpdate();
     }
 }
