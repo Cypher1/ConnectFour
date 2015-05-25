@@ -1,6 +1,7 @@
 //Basic Renderer for the board
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JLabel;
 
 import java.awt.*;
 
@@ -11,6 +12,7 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
     private static final long serialVersionUID = -7656929072530099542L;
     private BasicBoard board = null;
     private JFrame window;
+    private JLabel gameMessage;
     private int width;
     private int height;
 
@@ -55,6 +57,12 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
 
         //add to JFrame
         this.window.add(this, c);
+
+        //create game message and it's grid bag constraints
+        this.gameMessage = new JLabel();
+        c.gridy = connectFour.MESSAGE_PLACEMENT[1];
+        c.gridx = connectFour.MESSAGE_PLACEMENT[0];
+        c.gridwidth = connectFour.MESSAGE_WIDTH;
     }
     
     @Override
@@ -85,14 +93,14 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
 	        g2d.fillOval(startX+(sizeX+spacing)*x-1, startY+(sizeY+spacing)*y-1, sizeX+2, sizeY+2);
                 
                 if(state != null){
-		    if(board.isWin(x,y) == state){
+		            if(board.isWin(x,y) == state){
                	        g2d.setColor(Color.white);
                         g2d.fillOval(startX+(sizeX+spacing)*x, startY+(sizeY+spacing)*y, sizeX, sizeY);
-		        g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
-			g2d.fillOval(startX+(sizeX+spacing)*x+5, startY+(sizeX+spacing)*y+5, sizeX-10, sizeY-10);
-			continue;
+		                g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
+			            g2d.fillOval(startX+(sizeX+spacing)*x+5, startY+(sizeX+spacing)*y+5, sizeX-10, sizeY-10);
+			            continue;
                     }
-		    g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
+		                g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
                 } else {
                     g2d.setColor(Color.white);
                 }
@@ -100,11 +108,14 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
             }
         }
         g.drawImage(offImage, 0, 0, this); 
+
+        updateGameMessage( board.getCurrentPlayer(), board.getWinner());
    }
     
     @Override
     public void paint(Graphics g){
-	update(g);
+	   update(g);
+
     }
 
     @Override
@@ -113,5 +124,20 @@ class BasicBoardRenderer extends JPanel implements BoardRenderer{
             if(g != null){
 	        paint(g);
             }
+    }
+
+    /** 
+        function responsible for updating play messages each turn
+    */
+    private void updateGameMessage(int player, Integer win)
+    {
+        String message;
+        if (win != null){
+            message = "Player " + player + " wins!!";
+        }else{
+            message = "Player " + player + "'s turn";
+        }
+
+        this.gameMessage.setText(message);
     }
 }

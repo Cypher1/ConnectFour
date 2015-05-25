@@ -106,6 +106,7 @@ class BasicBoard implements Board, Cloneable{
                 }
             }
         }
+
         return null;
     }
 

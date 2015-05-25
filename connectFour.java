@@ -28,13 +28,16 @@ public class connectFour implements Runnable {
     public static final int COL_BUTTON_START = 5;
 
     //define the grid positions for buttons e.t.c.
-    private static final int[] RESTART_BUTTON_PLACEMENT = {0, 2};
+    private static final int[] RESTART_BUTTON_PLACEMENT = {0, 0};
     private static final int RESTART_BUTTON_WIDTH = 7;
     private static final int[] COL_BUTTON_PLACEMENT = {0, 1};
     private static final int[] COL_BUTTON_WEIGHTS = {2, 1};
-    private static final int[] COL_BUTTON_PADDING = {0, 50*8};
+    private static final int[] COL_BUTTON_PADDING = {10, 50*8};
     public static final int[] BOARD_PLACEMENT = {0, 1};
-    public static final int BOARD_WIDTH = 7;
+    public static final int BOARD_WIDTH = 7; //Need to update this for further use
+    public static final int[] MESSAGE_PLACEMENT = {3, 1};
+    public static final int MESSAGE_WIDTH = 3;
+
 
     private JFrame f;
     private JLabel gameMessage;
@@ -57,7 +60,6 @@ public class connectFour implements Runnable {
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 
         startScreen(f);
-		
     }
  
     public static void main(String[] args) {
@@ -65,7 +67,6 @@ public class connectFour implements Runnable {
         // Schedules the application to be run at the correct time in the event queue.
         SwingUtilities.invokeLater(gameWindow);
     }
-    
 
 	public void initGame(int playType, JFrame f){
         //remove all current buttons etc from frame for the new perspective
@@ -90,7 +91,7 @@ public class connectFour implements Runnable {
 
         initBackend();
         gameFrame();
-	simulator.gameUpdate();
+	   simulator.gameUpdate();
 	}
 
     /**
@@ -142,11 +143,30 @@ public class connectFour implements Runnable {
     */
     private void gameFrame()
     {
+        //create a board panel and correct GridBagConstraints
+        JPanel boardPanel = new JPanel();
+        boardPanel.setLayout(new GridBagLayout());
 
-        //Create grid bag constraint for layout of the JFrame
+        //get the height and width of the board for here!
+        int width = 65 * 7; //!! change this to board 'rows'
+        int height = 65 * 6; //!! change this to 'cols'
+        boardPanel.setPreferredSize(new Dimension(width,height));
+
+        //make the board panel invisible
+        boardPanel.setOpaque(false);
+        //boardPanel.setContentAreaFilled(false);
+        //boardPanel.setBorderPainted(false);
+
+        //grid bag layout for panel within frame
         GridBagConstraints c = new GridBagConstraints();
+        c.gridy = BOARD_PLACEMENT[1];
+        c.gridx = BOARD_PLACEMENT[0];
+        c.weightx = BOARD_WIDTH;
+        f.add(boardPanel, c);
+
+        //Create grid bag layout columns buttons within panel
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridy = COL_BUTTON_PLACEMENT[1];
+        c.gridy = COL_BUTTON_PLACEMENT[0];
         c.weightx = COL_BUTTON_WEIGHTS[0];
         c.ipady = COL_BUTTON_PADDING[1];
 
@@ -160,8 +180,9 @@ public class connectFour implements Runnable {
             b_temp.setContentAreaFilled(false);
             b_temp.setBorderPainted(false);
             c.gridx = i;
-            f.add(b_temp, c); 
+            boardPanel.add(b_temp, c); 
         }
+
 
         //create and add a quit button
         JButton b_restart = new JButton("RESTART");
@@ -203,15 +224,6 @@ public class connectFour implements Runnable {
         f.setVisible(true);
     }
 
-    /** 
-        function responsible for updating play messages each turn
-    */
-    private void updateGameMessage(int player, int win)
-    {
-        String message = "Player " + player;
-        this.gameMessage = new JLabel();
-    }
-
     /**
         Deals with human game moves. It will check the current player is a human before invoking
         the makeMove function within the HumanPlayer class
@@ -229,6 +241,6 @@ public class connectFour implements Runnable {
             HumanPlayer human = (HumanPlayer)currPlayer;
             human.makeMove(column);
         }
-	simulator.gameUpdate();
+	    simulator.gameUpdate();
     }
 }
