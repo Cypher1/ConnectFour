@@ -124,17 +124,8 @@ public class connectFour implements Runnable {
         f.add(b_h, c);
         f.add(b_2, c);
 
-        //Create a board renderer and a new board
-        BoardRenderer renderer = new BoardRenderer();
-        Board initialBoard = new Board(NUM_PLAYERS, WINLEN); 
-
-        //initiate renderer attributes
-        renderer.setBoard(initialBoard);
-        renderer.setFrame(f);
-        renderer.render();
-
-        f.pack();
-        f.setVisible(true);
+        players = new LinkedList<Player>();//make this an empty list so that the simulator doesn't do anything 
+        initBackend();    
     }
 
     /**
@@ -187,7 +178,9 @@ public class connectFour implements Runnable {
     private void initBackend()
     {
         //initiate the simuator with players
-        simulator = new Simulator(players);
+        int boardWidth = 7;
+        int boardHeight = 6;
+        simulator = new Simulator(players, boardWidth, boardHeight);
         
         //render the start board
         //Create a board renderer and a new board

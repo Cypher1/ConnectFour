@@ -5,6 +5,8 @@ class Board implements Cloneable{
 
     private static final int FIRSTPLAYER = 0;
 
+    private int width;
+    private int height;
     private Integer boardState[][];
     private int numPlayers;
     private int currentPlayer;
@@ -21,12 +23,15 @@ class Board implements Cloneable{
     *post: A new board has been created with the given number of players and winning
     *length
     */
-    Board(int numPlayers, int winlen){
+    Board(int numPlayers, int winlen, int width, int height){
         this.winlen = winlen;
         this.numPlayers = numPlayers;
         this.currentPlayer = FIRSTPLAYER;
         this.lastX = null;
         this.lastY = null;
+
+        this.width = width;
+        this.height = height;
 
         boardState = new Integer[getWidth()][getHeight()];
 
@@ -55,7 +60,7 @@ class Board implements Cloneable{
     * @return: the integer value of the width of the board
     */
     public int getWidth(){
-        return 7;
+        return width;
     }
 
     /**
@@ -63,7 +68,7 @@ class Board implements Cloneable{
     * @return: the integer value of the height of the board
     */
     public int getHeight(){
-        return 6;
+        return height;
     }
 
     /**
@@ -255,7 +260,7 @@ class Board implements Cloneable{
     * Overrides the object clone function
     */
     public Board clone(){
-       Board newBoard = new Board(numPlayers, winlen);
+       Board newBoard = new Board(numPlayers, winlen, width, height);
 
        newBoard.setCurrentPlayer(getCurrentPlayer());
 

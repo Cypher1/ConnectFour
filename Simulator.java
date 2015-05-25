@@ -9,8 +9,8 @@ public class Simulator implements Runnable
 
     private static final int WINLEN = 4;
     
-    Simulator(LinkedList<Player> players){
-        gamestart(players);//start the game
+    Simulator(LinkedList<Player> players, int boardWidth, int boardHeight){
+        gamestart(players, boardWidth, boardHeight);//start the game
     }
 
     public int getCurrentPlayer(){
@@ -62,8 +62,8 @@ public class Simulator implements Runnable
         return board;
     }
     
-    public void gamestart(LinkedList<Player> players){//restart or start the game
+    public void gamestart(LinkedList<Player> players, int boardWidth, int boardHeight){//restart or start the game
         this.players = players;
-        this.board = new Board(players.size(), WINLEN);
+        this.board = new Board(players.size(), WINLEN, boardWidth, boardHeight);
     }
 }
