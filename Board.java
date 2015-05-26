@@ -56,6 +56,16 @@ class Board implements Cloneable{
     }
 
     /**
+     * Gets the list of Renderers from the board
+     * pre: the board is valid <br>
+     * post: the renderers have been returned as a list
+     */
+    public LinkedList<BoardRenderer> getRenderers()
+    {
+        return (LinkedList<BoardRenderer>) renderers.clone();
+    }
+
+    /**
     * A getter for the width of the board.
     * @return: the integer value of the width of the board
     */

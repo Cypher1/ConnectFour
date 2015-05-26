@@ -66,4 +66,14 @@ public class Simulator implements Runnable
         this.players = players;
         this.board = new Board(players.size(), WINLEN, boardWidth, boardHeight);
     }
+
+    public Simulator clone(){
+        Simulator sim = new Simulator(this.players, this.getBoard().getWidth(), this.getBoard().getHeight());
+        sim.board = this.board.clone();
+        LinkedList<BoardRenderer> renderers = this.board.getRenderers();
+        for(BoardRenderer renderer : renderers){
+            sim.board.addRenderer(renderer);
+        }                                    
+        return sim;
+    }
 }

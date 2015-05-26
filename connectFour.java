@@ -20,6 +20,7 @@ public class connectFour implements Runnable {
     private static final int NUM_PLAYERS = 2;
     private static final int WINLEN = 4;
     //define the buttons
+    public static final int UNDO = -2;
     public static final int EASY = 0;
     public static final int MED = 1;
     public static final int HARD = 2;
@@ -40,9 +41,8 @@ public class connectFour implements Runnable {
     private JLabel gameMessage;
     private int gameMode;
     private Simulator simulator;
+    private LinkedList<Simulator> undorecord = new LinkedList<Simulator>();
     LinkedList<Player> players;
-    private Thread simulatorThread;
-   
 
     @Override
     public void run() {
@@ -57,7 +57,6 @@ public class connectFour implements Runnable {
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 
         startScreen(f);
-        
     }
  
     public static void main(String[] args) {
@@ -133,7 +132,6 @@ public class connectFour implements Runnable {
     */
     private void gameFrame()
     {
-
         //Create grid bag constraint for layout of the JFrame
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -156,8 +154,11 @@ public class connectFour implements Runnable {
 
         //create and add a quit button
         JButton b_restart = new JButton("RESTART");
+        JButton b_undo = new JButton("UNDO");
         ConnectFourActionListener l_restart = new ConnectFourActionListener(f, START, this);
+        ConnectFourActionListener l_undo = new ConnectFourActionListener(f, UNDO, this);
         b_restart.addActionListener(l_restart);
+        b_undo.addActionListener(l_undo);
 
         //create new grid bag layout for quit button
         c = new GridBagConstraints();
@@ -166,6 +167,7 @@ public class connectFour implements Runnable {
         c.gridy = RESTART_BUTTON_PLACEMENT[1];
         //c.weightx = RESTART_BUTTON_WIDTH;
         f.add(b_restart, c);
+        f.add(b_undo, c);
 
         f.pack();
         f.setVisible(true);
@@ -219,9 +221,26 @@ public class connectFour implements Runnable {
 
         //check the current player is human and invoke a move
         if (currPlayer instanceof HumanPlayer){
+            undorecord.add(simulator.clone());
             HumanPlayer human = (HumanPlayer)currPlayer;
             human.makeMove(column);
         }
-    simulator.gameUpdate();
+        simulator.gameUpdate();
+    }
+
+    public void undoSimulator(){
+        if(undorecord.size() > 0){
+            f.getContentPane().removeAll();
+            simulator = undorecord.getLast().clone();
+            undorecord.removeLast();
+            BoardRenderer renderer = new BoardRenderer(); 
+            //initiate renderer attributes
+            renderer.setBoard(simulator.getBoard());
+            renderer.setFrame(f);
+            renderer.render();
+                
+            gameFrame();        
+            simulator.gameUpdate();
+        }
     }
 }

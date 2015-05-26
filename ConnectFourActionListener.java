@@ -35,6 +35,9 @@ public class ConnectFourActionListener implements ActionListener {
                 //return to start screen
                 game.startScreen(f);
                 //System.out.println("RESTART PRESSED");
+            } else if(button == game.UNDO){
+                game.undoSimulator();
+                //System.out.println("Undo pressed");
             }
     	}
     }
