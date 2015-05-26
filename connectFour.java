@@ -115,7 +115,7 @@ public class connectFour implements Runnable {
         f.getContentPane().removeAll();
         width = 600;
         height = 700;
-        f.getContentPane().setPreferredSize(new Dimension(width, height));
+        f.getContentPane().setMinimumSize(new Dimension(width, height));
 
         GridBagConstraints c = new GridBagConstraints();
         JLabel title = new JLabel("<html>Connect Four</>");
@@ -195,54 +195,16 @@ public class connectFour implements Runnable {
         f.pack();
         f.setVisible(true); 
 }
-
-
-    /** responsible for initialising the buttons, labels and panels used during game runtime
-    */
-    private void gameFrame()
-    {
-
-        //Create grid bag constraint for layout of the JFrame
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridy = COL_BUTTON_PLACEMENT[1];
-        c.weightx = COL_BUTTON_WEIGHTS[0];
-        c.ipady = COL_BUTTON_PADDING[1];
-
-        //create a button for each column
-        for(int i = 0; i < simulator.getBoard().getWidth(); i++){
-            //create button and set attributes
-            JButton b_temp = new JButton("");
-            ConnectFourActionListener l_temp = new ConnectFourActionListener(f, COL_BUTTON_START+i, this);
-            b_temp.addActionListener(l_temp);
-            b_temp.setOpaque(false);
-            b_temp.setContentAreaFilled(false);
-            b_temp.setBorderPainted(false);
-            c.gridx = i;
-            f.add(b_temp, c); 
-        }
-
-        //create and add a quit button
-        JButton b_restart = new JButton("RESTART");
-        ConnectFourActionListener l_restart = new ConnectFourActionListener(f, RESTART, this);
-        b_restart.addActionListener(l_restart);
-
-        //create new grid bag layout for quit button
-        c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = simulator.getBoard().getWidth();
-        c.gridy = RESTART_BUTTON_PLACEMENT[1];
-        //c.weightx = RESTART_BUTTON_WIDTH;
-        f.add(b_restart, c);
     
     /**
      *  responsible for initialising the buttons, labels and panels used during game runtime
      */
     private void gameFrame()
     {
+       
+
         setColumnButtons();
         setSidePanel();
-
 
         f.pack();
         f.setVisible(true);
@@ -272,18 +234,13 @@ public class connectFour implements Runnable {
         //initiate renderer attributes
         renderer.setBoard(simulator.getBoard());
         renderer.setFrame(f);
-        renderer.setGameMessage(gameMessage);
+        //renderer.setGameMessage(gameMessage);
         renderer.render();
 
         //make the window visible
         f.pack();
         f.setVisible(true);
     }
-
-
-    /** function responsible for updating play messages each turn
-    */
-    private void updateGameMessage(int player, int win)
 
     /**
      *  Responsible for making and setting out the buttons for each column of the connect four 
@@ -317,7 +274,7 @@ public class connectFour implements Runnable {
         c.ipady = COL_BUTTON_PADDING[1];
 
         //create a button for each column
-        for(int i = 0; i < simulator.getBoard().getWidth(); i++){
+        for(int i = 0; i < BOARD_WIDTH; i++){
             //create button and set attributes
             JButton b_temp = new JButton("");
             ConnectFourActionListener l_temp = new ConnectFourActionListener(f, COL_BUTTON_START+i, this);
@@ -375,12 +332,6 @@ public class connectFour implements Runnable {
         sidePanel.add(gameMessage, c);
     }
 
-
-    /**Deals with human game moves. It will check the current player is a human before invoking
-        the makeMove function within the HumanPlayer class
-        @param column will be a number from 0 to 6 indicating the column the human player wants to 
-            drop a tile into
-    */
 
     /**
      *  Deals with human game moves. It will check the current player is a human before invoking

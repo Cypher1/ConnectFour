@@ -28,19 +28,11 @@ public class ConnectFourActionListener implements ActionListener {
             } else if ((button >= game.COL_BUTTON_START) && (button <= game.COL_BUTTON_START+7)){
                 game.humanPlayerMove(button - game.COL_BUTTON_START);
             } else if (button == game.START){
-                if (button < game.EASY && button < game.HARD) {
-                    game.startScreen(f);
-                } else {
+              
                     game.initGame(f);
-                }
+                
             } else if (button == game.RESTART) {
                 game.startScreen(f);
-
-            } 
-        }
-    }
-
-                //System.out.println("RESTART PRESSED");
             } else if(button == game.UNDO){
                 game.undoSimulator();
                 //System.out.println("Undo pressed");
