@@ -29,13 +29,16 @@ public class connectFour implements Runnable {
     public static final int COL_BUTTON_START = 5;
 
     //define the grid positions for buttons e.t.c.
-    private static final int[] RESTART_BUTTON_PLACEMENT = {0, 2};
+    private static final int[] RESTART_BUTTON_PLACEMENT = {0, 7};
     private static final int RESTART_BUTTON_WIDTH = 7;
     private static final int[] COL_BUTTON_PLACEMENT = {0, 1};
     private static final int[] COL_BUTTON_WEIGHTS = {2, 1};
-    private static final int[] COL_BUTTON_PADDING = {0, 50*8};
+    private static final int[] COL_BUTTON_PADDING = {10, 50*8};
     public static final int[] BOARD_PLACEMENT = {0, 1};
-    public static final int BOARD_WIDTH = 7;
+    public static final int BOARD_WIDTH = 7; //Need to update this for further use
+    public static final int[] SIDEPANEL_PLACEMENT = {1, 1};
+    public static final int[] MESSAGE_PLACEMENT = {0, 2};
+
 
     private JFrame f;
     private JLabel gameMessage;
@@ -64,7 +67,6 @@ public class connectFour implements Runnable {
         // Schedules the application to be run at the correct time in the event queue.
         SwingUtilities.invokeLater(gameWindow);
     }
-    
 
     public void initGame(int playType, JFrame f){
         //remove all current buttons etc from frame for the new perspective
@@ -87,14 +89,14 @@ public class connectFour implements Runnable {
             break;
         }
 
-        initBackend();
         gameFrame();
-    simulator.gameUpdate();
-    }
+        initBackend();
+	    simulator.gameUpdate();
+	}
 
     /**
-        Responsible for setting out and showing the buttons e.t.c. associated with the start screen
-    */
+     *  Responsible for setting out and showing the buttons e.t.c. associated with the start screen
+     */
     public void startScreen(JFrame f){  
         //remove everything from f to give the new perspective
         f.getContentPane().removeAll();
@@ -128,55 +130,21 @@ public class connectFour implements Runnable {
     }
 
     /**
-        responsible for initialising the buttons, labels and panels used during game runtime
-    */
+     *  responsible for initialising the buttons, labels and panels used during game runtime
+     */
     private void gameFrame()
     {
-        //Create grid bag constraint for layout of the JFrame
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridy = COL_BUTTON_PLACEMENT[1];
-        c.weightx = COL_BUTTON_WEIGHTS[0];
-        c.ipady = COL_BUTTON_PADDING[1];
-
-        //create a button for each column
-        for(int i = 0; i < simulator.getBoard().getWidth(); i++){
-            //create button and set attributes
-            JButton b_temp = new JButton("");
-            ConnectFourActionListener l_temp = new ConnectFourActionListener(f, COL_BUTTON_START+i, this);
-            b_temp.addActionListener(l_temp);
-            b_temp.setOpaque(false);
-            b_temp.setContentAreaFilled(false);
-            b_temp.setBorderPainted(false);
-            c.gridx = i;
-            f.add(b_temp, c); 
-        }
-
-        //create and add a quit button
-        JButton b_restart = new JButton("RESTART");
-        JButton b_undo = new JButton("UNDO");
-        ConnectFourActionListener l_restart = new ConnectFourActionListener(f, START, this);
-        ConnectFourActionListener l_undo = new ConnectFourActionListener(f, UNDO, this);
-        b_restart.addActionListener(l_restart);
-        b_undo.addActionListener(l_undo);
-
-        //create new grid bag layout for quit button
-        c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = simulator.getBoard().getWidth();
-        c.gridy = RESTART_BUTTON_PLACEMENT[1];
-        //c.weightx = RESTART_BUTTON_WIDTH;
-        f.add(b_restart, c);
-        f.add(b_undo, c);
+        setColumnButtons();
+        setSidePanel();
 
         f.pack();
         f.setVisible(true);
     }
 
     /**
-        Responsible for creating players, renderer, simulator for the game as well as 
-        starting the simulator thread that will run parallel to the GUI thread
-    */
+     *  Responsible for creating players, renderer, simulator for the game as well as 
+     *  starting the simulator thread that will run parallel to the GUI thread
+     */
     private void initBackend()
     {
         //initiate the simuator with players
@@ -191,6 +159,7 @@ public class connectFour implements Runnable {
         //initiate renderer attributes
         renderer.setBoard(simulator.getBoard());
         renderer.setFrame(f);
+        renderer.setGameMessage(gameMessage);
         renderer.render();
 
         //make the window visible
@@ -198,21 +167,95 @@ public class connectFour implements Runnable {
         f.setVisible(true);
     }
 
-    /** 
-        function responsible for updating play messages each turn
-    */
-    private void updateGameMessage(int player, int win)
+    /**
+     *  Responsible for making and setting out the buttons for each column of the connect four 
+     *  board
+     */
+    public void setColumnButtons()
     {
-        String message = "Player " + player;
-        this.gameMessage = new JLabel();
+        //create a board panel and correct GridBagConstraints
+        JPanel boardPanel = new JPanel();
+        boardPanel.setLayout(new GridBagLayout());
+
+        //get the height and width of the board for here!
+        int width = 65 * 7; //!! change this to board 'rows'
+        int height = 65 * 6; //!! change this to 'cols'
+        boardPanel.setPreferredSize(new Dimension(width,height));
+
+        //make the board panel invisible
+        boardPanel.setOpaque(false);
+
+        //grid bag layout for panel within frame
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridy = BOARD_PLACEMENT[1];
+        c.gridx = BOARD_PLACEMENT[0];
+        //c.weightx = BOARD_WIDTH;
+        f.add(boardPanel, c);
+
+        //Create grid bag layout columns buttons within panel
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridy = COL_BUTTON_PLACEMENT[0];
+        c.weightx = COL_BUTTON_WEIGHTS[0];
+        c.ipady = COL_BUTTON_PADDING[1];
+
+        //create a button for each column
+        for(int i = 0; i < simulator.getBoard().getWidth(); i++){
+            //create button and set attributes
+            JButton b_temp = new JButton("");
+            ConnectFourActionListener l_temp = new ConnectFourActionListener(f, COL_BUTTON_START+i, this);
+            b_temp.addActionListener(l_temp);
+            b_temp.setOpaque(false);
+            b_temp.setContentAreaFilled(false);
+            b_temp.setBorderPainted(false);
+            c.gridx = i;
+            boardPanel.add(b_temp, c); 
+        }
     }
 
     /**
-        Deals with human game moves. It will check the current player is a human before invoking
-        the makeMove function within the HumanPlayer class
-        @param column will be a number from 0 to 6 indicating the column the human player wants to 
-            drop a tile into
-    */
+     *  Responible for making and Laying out all attributes of the side panel present during game mode
+     */
+    public void setSidePanel()
+    {
+        // create a new JPanel and name set layout manager
+        JPanel sidePanel = new JPanel();
+        sidePanel.setLayout(new GridBagLayout());
+
+        //get the height and width of the board for here!
+        int width = 65 * 7 / 2; //!! change this to board 'rows'
+        int height = 65 * 6; //!! change this to 'cols'
+        sidePanel.setPreferredSize(new Dimension(width,height));
+
+        //grid bag layout for the side panel within the frame
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridy = SIDEPANEL_PLACEMENT[1];
+        c.gridx = SIDEPANEL_PLACEMENT[0];
+        f.add(sidePanel, c);
+
+        //create and add a quit button
+        JButton b_restart = new JButton("RESTART");
+        ConnectFourActionListener l_restart = new ConnectFourActionListener(f, START, this);
+        b_restart.addActionListener(l_restart);
+
+        //create new grid bag layout for the restart button and add to panel
+        c = new GridBagConstraints();
+        c.fill = GridBagConstraints.VERTICAL;
+        c.gridy = RESTART_BUTTON_PLACEMENT[1];
+        sidePanel.add(b_restart, c);
+
+        //create a game message object and add it to the panel
+        gameMessage = new JLabel("Player 1's Turn");
+        gameMessage.setFont(gameMessage.getFont().deriveFont(18.0f));
+        c.gridy = MESSAGE_PLACEMENT[1];
+        sidePanel.add(gameMessage, c);
+    }
+
+    /**
+     *  Deals with human game moves. It will check the current player is a human before invoking
+     *  the makeMove function within the HumanPlayer class
+     *  @param column will be a number from 0 to 6 indicating the column the human player wants to 
+     *  drop a tile into
+     */
     public void humanPlayerMove(int column)
     {
         //get the current player
@@ -228,6 +271,9 @@ public class connectFour implements Runnable {
         simulator.gameUpdate();
     }
 
+    /**
+     *  Undoes a move by reseting the Simulator to the old version
+     */
     public void undoSimulator(){
         if(undorecord.size() > 0){
             f.getContentPane().removeAll();

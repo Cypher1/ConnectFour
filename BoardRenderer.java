@@ -1,6 +1,7 @@
 //Basic Renderer for the board
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JLabel;
 
 import java.awt.*;
 
@@ -11,6 +12,7 @@ class BoardRenderer extends JPanel{
     private static final long serialVersionUID = -7656929072530099542L;
     private Board board = null;
     private JFrame window;
+    private JLabel gameMessage;
     private int width;
     private int height;
 
@@ -43,6 +45,16 @@ class BoardRenderer extends JPanel{
         render();
     }
 
+    /**
+        Responsible for setting the game message pointer.
+        @params gameMessage: a pointer to the JLabel that shows 'Game State Messages' in
+            the GUI
+    */
+    public void setGameMessage(JLabel gameMessage)
+    {
+        this.gameMessage = gameMessage;
+    }
+
     public void setFrame(JFrame window){
         this.window = window;
 
@@ -50,7 +62,6 @@ class BoardRenderer extends JPanel{
         GridBagConstraints c = new GridBagConstraints();
         c.gridy = connectFour.BOARD_PLACEMENT[1];
         c.gridx = connectFour.BOARD_PLACEMENT[0];
-        c.gridwidth = connectFour.BOARD_WIDTH;
 
         //add to JFrame
         this.window.add(this, c);
@@ -99,6 +110,9 @@ class BoardRenderer extends JPanel{
             }
         }
         g.drawImage(offImage, 0, 0, this); 
+
+        if(gameMessage != null)
+            updateGameMessage( board.getCurrentPlayer(), board.getWinner());
    }
     
     @Override
@@ -111,5 +125,37 @@ class BoardRenderer extends JPanel{
             if(g != null){
             paint(g);
             }
+    }
+
+    /** 
+        function responsible for updating play messages each turn
+    */
+    private void updateGameMessage(int player, Integer win)
+    {
+        //!!Does not support 3 player mode very well
+        String colour;
+        if (win != null) player = (player + 1)%2;
+
+        //set the name of the player
+        if (player == 0){
+            colour = "Red";
+        } else if (player == 1){
+            colour = "Yellow";
+        }else{
+            colour = player + "";
+        }
+
+        //create the message
+        String message;
+        if (win != null){
+            message = colour + " player wins!!";
+            gameMessage.setFont(gameMessage.getFont().deriveFont(23.0f));
+        }else{
+            message = colour + "'s turn";
+        }
+
+        //add the message to the gameMessage JLabel
+        gameMessage.setText(message);
+        gameMessage.repaint();
     }
 }
