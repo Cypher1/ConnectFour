@@ -5,11 +5,13 @@ import javax.swing.JLabel;
 import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Date;
 
 class BoardRenderer extends JPanel implements ActionListener{
     /**
      * 
      */
+    private static int DROP_HEIGHT = 500;
     private static final long serialVersionUID = -7656929072530099542L;
     private Board board = null;
     private JFrame window;
@@ -29,15 +31,16 @@ class BoardRenderer extends JPanel implements ActionListener{
     private Integer lastX = null;
     private Integer lastY = null;
     private int dropDistance;
+    private static int delay = 20;
 
-    Dimension offDimension;
-    Image offImage;
-    Graphics2D g2d;
-    Timer timer;
+    private Dimension offDimension;
+    private Image offImage;
+    private Graphics2D g2d;
+    private Timer timer;
+    private Long lastTime = null;
 
-    BoardRenderer(){
+    public BoardRenderer(){
         super();
-        int delay = 100;
         timer = new Timer(delay, this);
         timer.start();// Start the timer here.
     }
@@ -51,7 +54,7 @@ class BoardRenderer extends JPanel implements ActionListener{
 
         lastX = board.getLastX();
         lastY = board.getLastY();
-        dropDistance = 1000;
+        dropDistance = DROP_HEIGHT;
 
         // set a preferred size for the custom panel.
         setPreferredSize(new Dimension(width, height));
@@ -90,13 +93,15 @@ class BoardRenderer extends JPanel implements ActionListener{
             g2d = (Graphics2D) offImage.getGraphics();
         }  
         
+        long dt = getLastTime();
+
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             
         g2d.setColor(new Color(0, 0, 200));//set the background color
         g2d.fillRect(0, 0, width, height);
 
         if(dropDistance != 0){
-            dropDistance -= 50;
+            dropDistance -= 25*dt/delay;
             if(dropDistance < 0){
                 dropDistance = 0;
             }
@@ -198,5 +203,16 @@ class BoardRenderer extends JPanel implements ActionListener{
         if(ev.getSource()==timer){
             render();// this will call at every 1 second
         }
+    }
+
+    public long getLastTime(){
+        long time = new Date().getTime();
+        if(lastTime == null){
+            lastTime = time;
+            return 0;
+        }
+        long ftime = time - lastTime;
+        lastTime = time;
+        return ftime;
     }
 }
