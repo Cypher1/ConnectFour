@@ -2,8 +2,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JFrame;
 
-/**
-    A class that deals with button presses of the buttons associated with the connectFour class
+/**A class that deals with button presses of the buttons associated with the connectFour class
 */
 
 public class ConnectFourActionListener implements ActionListener {
@@ -20,21 +19,22 @@ public class ConnectFourActionListener implements ActionListener {
     	@Override
     	public void actionPerformed(ActionEvent e){
     		//check which button was pressed and call their respective function
-            if((button >= game.EASY) && (button <= game.HARD)){
+       if((button >= game.EASY) && (button <= game.HARD)){
                 //initialise game with appropriate difficulty
-                game.initGame(button, f); 
-                //System.out.println("DIFFICULTY " + button + " CHOSEN"); 
-
-            }else if (button == game.HUMAN){
+                game.setGameMode(button);
+            } else if (button == game.HUMAN){
                 //initialise a game against a human
-                game.initGame(button, f);
-                //System.out.println("HUMAN V HUMAN MODE CHOSEN");
+                game.setGameMode(button);
             } else if ((button >= game.COL_BUTTON_START) && (button <= game.COL_BUTTON_START+7)){
                 game.humanPlayerMove(button - game.COL_BUTTON_START);
             } else if (button == game.START){
-                //return to start screen
+                if (button < game.EASY && button < game.HARD) {
+                    game.startScreen(f);
+                } else {
+                    game.initGame(f);
+                }
+            } else if (button == game.RESTART) {
                 game.startScreen(f);
-                //System.out.println("RESTART PRESSED");
-            }
-    	}
+            } 
+        }
     }
