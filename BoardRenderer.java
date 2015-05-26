@@ -70,6 +70,9 @@ class BoardRenderer extends JPanel{
             return;
         }
 
+        if(gameMessage != null)
+            updateGameMessage( board.getCurrentPlayer(), board.getWinner());
+
         if ( (g2d == null) || (!offDimension.equals(getSize()))) {
             offDimension = getSize();
             offImage = createImage(getSize().width, getSize().height);
@@ -106,9 +109,6 @@ class BoardRenderer extends JPanel{
             }
         }
         g.drawImage(offImage, 0, 0, this); 
-
-        if(gameMessage != null)
-            updateGameMessage( board.getCurrentPlayer(), board.getWinner());
    }
     
     @Override
@@ -128,17 +128,15 @@ class BoardRenderer extends JPanel{
     */
     private void updateGameMessage(int player, Integer win)
     {
-        //!!Does not support 3 player mode very well
-        String colour;
+        //will be the opposite player if there is a winner
         if (win != null) player = (player + 1)%2;
 
         //set the name of the player
+        String colour;
         if (player == 0){
             colour = "Red";
-        } else if (player == 1){
+        } else {
             colour = "Yellow";
-        }else{
-            colour = player + "";
         }
 
         //create the message
@@ -152,6 +150,5 @@ class BoardRenderer extends JPanel{
 
         //add the message to the gameMessage JLabel
         gameMessage.setText(message);
-        gameMessage.repaint();
     }
 }

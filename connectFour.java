@@ -38,6 +38,7 @@ public class connectFour implements Runnable {
     public static final int BOARD_WIDTH = 7; //Need to update this for further use
     public static final int[] SIDEPANEL_PLACEMENT = {1, 1};
     public static final int[] MESSAGE_PLACEMENT = {0, 2};
+    public static final int MESSAGE_WIDTH = 2;
 
 
     private JFrame f;
@@ -88,7 +89,7 @@ public class connectFour implements Runnable {
         case HUMAN: players.add(new HumanPlayer());
             break;
         }
-
+        
         gameFrame();
         initBackend();
 	    simulator.gameUpdate();
@@ -189,7 +190,6 @@ public class connectFour implements Runnable {
         GridBagConstraints c = new GridBagConstraints();
         c.gridy = BOARD_PLACEMENT[1];
         c.gridx = BOARD_PLACEMENT[0];
-        //c.weightx = BOARD_WIDTH;
         f.add(boardPanel, c);
 
         //Create grid bag layout columns buttons within panel
@@ -250,9 +250,10 @@ public class connectFour implements Runnable {
         sidePanel.add(b_undo, c);
 
         //create a game message object and add it to the panel
-        gameMessage = new JLabel("Player 1's Turn");
+        gameMessage = new JLabel("");
         gameMessage.setFont(gameMessage.getFont().deriveFont(18.0f));
         c.gridy = MESSAGE_PLACEMENT[1];
+        c.gridwidth = MESSAGE_WIDTH;
         sidePanel.add(gameMessage, c);
     }
 
@@ -290,8 +291,11 @@ public class connectFour implements Runnable {
             renderer.setBoard(simulator.getBoard());
             renderer.setFrame(f);
             renderer.render();
-                
-            gameFrame();        
+            
+            //set game frame and add game message label to the renderer 
+            gameFrame();
+            renderer.setGameMessage(gameMessage); 
+            
             simulator.gameUpdate();
         }
     }
