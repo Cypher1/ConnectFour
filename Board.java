@@ -56,6 +56,16 @@ class Board implements Cloneable{
     }
 
     /**
+     * Gets the list of Renderers from the board
+     * pre: the board is valid <br>
+     * post: the renderers have been returned as a list
+     */
+    public LinkedList<BoardRenderer> getRenderers()
+    {
+        return (LinkedList<BoardRenderer>) renderers.clone();
+    }
+
+    /**
     * A getter for the width of the board.
     * @return: the integer value of the width of the board
     */
@@ -85,6 +95,22 @@ class Board implements Cloneable{
         } else {
             return boardState[x][y];
         }
+    }
+
+    /**
+    * A getter for the X coordinate of the last move made
+    * @return : the Y coordinate of the last move made or null if no move has yet been made
+    */
+    public Integer getLastX () {
+        return lastX;
+    }
+
+    /**
+    * A getter for the Y coordinate of the last move made
+    * @return : the Y coordinate of the last move made or null if no move has yet been made
+    */
+    public Integer getLastY () {
+        return lastY;
     }
 
     /**

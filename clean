@@ -1,5 +1,2 @@
-#!/bin/sh
-#cleans the .class files from the folder
-# they are git ignored so don't worry about them being accidentally included in the git
-# but this makes things cleaner
-rm *.class
+#cleans the project
+rm *.class -f

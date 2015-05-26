@@ -1,6 +1,7 @@
 //Basic Renderer for the board
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JLabel;
 
 import java.awt.*;
 
@@ -11,6 +12,7 @@ class BoardRenderer extends JPanel{
     private static final long serialVersionUID = -7656929072530099542L;
     private Board board = null;
     private JFrame window;
+    private JLabel gameMessage;
     private int width;
     private int height;
 
@@ -39,8 +41,16 @@ class BoardRenderer extends JPanel{
         height = startY*2+(sizeY+spacing)*board.getHeight();
         // set a preferred size for the custom panel.
         setPreferredSize(new Dimension(width, height));
-        
-        render();
+    }
+
+    /**
+    *    Responsible for setting the game message pointer.
+    *    @params gameMessage: a pointer to the JLabel that shows 'Game State Messages' in
+    *        the GUI
+    */
+    public void setGameMessage(JLabel gameMessage)
+    {
+        this.gameMessage = gameMessage;
     }
 
     public void setFrame(JFrame window){
@@ -50,20 +60,17 @@ class BoardRenderer extends JPanel{
         GridBagConstraints c = new GridBagConstraints();
         c.gridy = connectFour.BOARD_PLACEMENT[1];
         c.gridx = connectFour.BOARD_PLACEMENT[0];
-        c.gridwidth = connectFour.BOARD_WIDTH;
 
         //add to JFrame
         this.window.add(this, c);
     }
     
-    @Override
     public void update(Graphics g) {
         if(getSize().width == 0 || getSize().height == 0){
-        return;
-    }
+            return;
+        }
 
-        if ( (g2d == null)
-          || (!offDimension.equals(getSize()))) {
+        if ( (g2d == null) || (!offDimension.equals(getSize()))) {
             offDimension = getSize();
             offImage = createImage(getSize().width, getSize().height);
             g2d = (Graphics2D) offImage.getGraphics();
@@ -81,17 +88,17 @@ class BoardRenderer extends JPanel{
                 Integer state = board.getState(x,y);
                 
                 g2d.setColor( Color.getHSBColor(0, 0, 0) );
-            g2d.fillOval(startX+(sizeX+spacing)*x-1, startY+(sizeY+spacing)*y-1, sizeX+2, sizeY+2);
+                g2d.fillOval(startX+(sizeX+spacing)*x-1, startY+(sizeY+spacing)*y-1, sizeX+2, sizeY+2);
                 
                 if(state != null){
-            if(board.isWin(x,y) == state){
+                    if(board.isWin(x,y) == state){
                         g2d.setColor(Color.white);
                         g2d.fillOval(startX+(sizeX+spacing)*x, startY+(sizeY+spacing)*y, sizeX, sizeY);
-                g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
-            g2d.fillOval(startX+(sizeX+spacing)*x+5, startY+(sizeX+spacing)*y+5, sizeX-10, sizeY-10);
-            continue;
+                        g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
+                        g2d.fillOval(startX+(sizeX+spacing)*x+5, startY+(sizeX+spacing)*y+5, sizeX-10, sizeY-10);
+                        continue;
                     }
-            g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
+                    g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
                 } else {
                     g2d.setColor(Color.white);
                 }
@@ -99,17 +106,52 @@ class BoardRenderer extends JPanel{
             }
         }
         g.drawImage(offImage, 0, 0, this); 
+
+        if(gameMessage != null)
+            updateGameMessage( board.getCurrentPlayer(), board.getWinner());
    }
     
     @Override
     public void paint(Graphics g){
-    update(g);
+        update(g);
     }
 
     public void render(){
         Graphics g = getGraphics();
-            if(g != null){
+        if(g != null){
             paint(g);
-            }
+        }
+    }
+
+    /** 
+    *    function responsible for updating play messages each turn
+    */
+    private void updateGameMessage(int player, Integer win)
+    {
+        //!!Does not support 3 player mode very well
+        String colour;
+        if (win != null) player = (player + 1)%2;
+
+        //set the name of the player
+        if (player == 0){
+            colour = "Red";
+        } else if (player == 1){
+            colour = "Yellow";
+        }else{
+            colour = player + "";
+        }
+
+        //create the message
+        String message;
+        if (win != null){
+            message = colour + " player wins!!";
+            gameMessage.setFont(gameMessage.getFont().deriveFont(23.0f));
+        }else{
+            message = colour + "'s turn";
+        }
+
+        //add the message to the gameMessage JLabel
+        gameMessage.setText(message);
+        gameMessage.repaint();
     }
 }

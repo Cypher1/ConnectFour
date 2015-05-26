@@ -1,3 +1,2 @@
-#!/bin/sh
-#The run file
+#run
 java connectFour
