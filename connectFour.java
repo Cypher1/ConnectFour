@@ -14,7 +14,11 @@ import java.awt.*;
 import javax.swing.*;
 import javax.imageio.ImageIO;
 import java.util.LinkedList;
- 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.event.*;
+
 public class connectFour implements Runnable {
 
     private static final int NUM_PLAYERS = 2;
@@ -27,6 +31,7 @@ public class connectFour implements Runnable {
     public static final int HUMAN = 3;
     public static final int START = 4;
     public static final int COL_BUTTON_START = 5;
+    public static final int RESTART = -1;
 
     //define the grid positions for buttons e.t.c.
     private static final int[] RESTART_BUTTON_PLACEMENT = {0, 7};
@@ -35,6 +40,7 @@ public class connectFour implements Runnable {
     private static final int[] COL_BUTTON_WEIGHTS = {2, 1};
     private static final int[] COL_BUTTON_PADDING = {10, 50*8};
     public static final int[] BOARD_PLACEMENT = {0, 1};
+    private JButton startButton;
     public static final int BOARD_WIDTH = 7; //Need to update this for further use
     public static final int[] SIDEPANEL_PLACEMENT = {1, 1};
     public static final int[] MESSAGE_PLACEMENT = {0, 2};
@@ -67,12 +73,15 @@ public class connectFour implements Runnable {
         // Schedules the application to be run at the correct time in the event queue.
         SwingUtilities.invokeLater(gameWindow);
     }
-
-    public void initGame(int playType, JFrame f){
+    
+    public void setGameMode(int inputgameMode) {
+        startButton.setEnabled(true);
+        gameMode = inputgameMode;
+    }
+    
+    public void initGame(JFrame f){
         //remove all current buttons etc from frame for the new perspective
         f.getContentPane().removeAll();
-
-        this.gameMode = playType;
 
         //create players
         players = new LinkedList<Player>();
@@ -91,49 +100,109 @@ public class connectFour implements Runnable {
 
         gameFrame();
         initBackend();
-	    simulator.gameUpdate();
-	}
+        simulator.gameUpdate();
+    }
 
     /**
      *  Responsible for setting out and showing the buttons e.t.c. associated with the start screen
      */
+
     public void startScreen(JFrame f){  
+        f.repaint();
+        int width;
+        int height;
         //remove everything from f to give the new perspective
         f.getContentPane().removeAll();
+        width = 600;
+        height = 700;
+        f.getContentPane().setMinimumSize(new Dimension(width, height));
 
-        //create grid bag layout constraints to set the layout
         GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
+        JLabel title = new JLabel("<html>Connect Four</>");
+        title.setFont (title.getFont ().deriveFont (24.0f));
+        f.add(title); 
 
-        JLabel label = new JLabel("Choose a Play Mode:  ");
-        //create the easy/medium/hard buttons
+        JLabel sub = new JLabel("Choose your game mode:");
+        sub.setFont (sub.getFont ().deriveFont (22.0f));
+        c.gridy = 1;
+        c.gridx = 0;
+        c.gridwidth = 2;
+        f.add(sub,c);
+
         JButton b_e = new JButton("EASY");
-        JButton b_m = new JButton("MEDIUM");
-        JButton b_h = new JButton("HARD");
-        JButton b_2 = new JButton("2 PLAYER MODE");
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.ipady = 4;
+        c.gridy = 2;
+        f.add(b_e, c);
 
-        //add an action listener to the button (NB: need to get rid of magic numbers)
+        JButton b_m = new JButton("MEDIUM"); 
+        c.gridy = 3;
+        c.gridx = 0;
+        f.add(b_m, c);
+
+        JButton b_h = new JButton("HARD");
+        c.gridy = 4;
+        f.add(b_h, c);
+
+        JButton b_2 = new JButton("2 PLAYER MODE");
+        c.gridy = 5;
+        f.add(b_2,c);
+        
+        JLabel selection = new JLabel("Select game size:");
+        selection.setFont (selection.getFont ().deriveFont (16.0f));
+        c.gridy = 6;
+        f.add(selection,c);
+
+        JLabel row = new JLabel("Row:");
+        row.setFont (row.getFont ().deriveFont (14.0f));
+        c.gridy = 7;
+        c.gridwidth = 1;
+        f.add(row,c);
+        String[] items = {"4","6","7","8","9","10"};
+      
+        JComboBox<String> box = new JComboBox<>(items);
+        f.add(box);
+        c.gridy = 8;
+        f.add(box, c);
+
+        JLabel col = new JLabel("Column:");
+        col.setFont (col.getFont ().deriveFont (14.0f));
+        c.gridy = 7;
+        c.gridx = 1;
+        f.add(col,c);
+        
+        JComboBox<String> box1 = new JComboBox<>(items);
+        f.add(box1);
+        c.gridy = 8;
+        c.gridx = 1;
+        f.add(box1, c);
+
+        startButton = new JButton("Start");
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridy = 9;
+        c.gridx = 0;
+        c.gridwidth = 2;
+        f.add(startButton,c);
+  
         b_e.addActionListener(new ConnectFourActionListener(f, EASY, this));
         b_m.addActionListener(new ConnectFourActionListener(f, MED, this));
         b_h.addActionListener(new ConnectFourActionListener(f, HARD, this));
         b_2.addActionListener(new ConnectFourActionListener(f, HUMAN, this));
 
-        //add buttons to the window
-        f.add(label, c);
-        f.add(b_e, c);
-        f.add(b_m, c);
-        f.add(b_h, c);
-        f.add(b_2, c);
+        startButton.addActionListener(new ConnectFourActionListener(f, START, this));
+        startButton.setEnabled(false);
 
-        players = new LinkedList<Player>();//make this an empty list so that the simulator doesn't do anything 
-        initBackend();    
-    }
-
+        f.pack();
+        f.setVisible(true); 
+}
+    
     /**
      *  responsible for initialising the buttons, labels and panels used during game runtime
      */
     private void gameFrame()
     {
+       
+
         setColumnButtons();
         setSidePanel();
 
@@ -141,10 +210,16 @@ public class connectFour implements Runnable {
         f.setVisible(true);
     }
 
+
+    /**Responsible for creating players, renderer, simulator for the game as well as 
+        starting the simulator thread that will run parallel to the GUI thread
+    */
+
     /**
      *  Responsible for creating players, renderer, simulator for the game as well as 
      *  starting the simulator thread that will run parallel to the GUI thread
      */
+
     private void initBackend()
     {
         //initiate the simuator with players
@@ -159,7 +234,7 @@ public class connectFour implements Runnable {
         //initiate renderer attributes
         renderer.setBoard(simulator.getBoard());
         renderer.setFrame(f);
-        renderer.setGameMessage(gameMessage);
+        //renderer.setGameMessage(gameMessage);
         renderer.render();
 
         //make the window visible
@@ -199,7 +274,7 @@ public class connectFour implements Runnable {
         c.ipady = COL_BUTTON_PADDING[1];
 
         //create a button for each column
-        for(int i = 0; i < simulator.getBoard().getWidth(); i++){
+        for(int i = 0; i < BOARD_WIDTH; i++){
             //create button and set attributes
             JButton b_temp = new JButton("");
             ConnectFourActionListener l_temp = new ConnectFourActionListener(f, COL_BUTTON_START+i, this);
@@ -216,6 +291,7 @@ public class connectFour implements Runnable {
      *  Responible for making and Laying out all attributes of the side panel present during game mode
      */
     public void setSidePanel()
+
     {
         // create a new JPanel and name set layout manager
         JPanel sidePanel = new JPanel();
@@ -256,12 +332,14 @@ public class connectFour implements Runnable {
         sidePanel.add(gameMessage, c);
     }
 
+
     /**
      *  Deals with human game moves. It will check the current player is a human before invoking
      *  the makeMove function within the HumanPlayer class
      *  @param column will be a number from 0 to 6 indicating the column the human player wants to 
      *  drop a tile into
      */
+
     public void humanPlayerMove(int column)
     {
         //get the current player
