@@ -41,14 +41,12 @@ class BoardRenderer extends JPanel{
         height = startY*2+(sizeY+spacing)*board.getHeight();
         // set a preferred size for the custom panel.
         setPreferredSize(new Dimension(width, height));
-        
-        render();
     }
 
     /**
-        Responsible for setting the game message pointer.
-        @params gameMessage: a pointer to the JLabel that shows 'Game State Messages' in
-            the GUI
+    *    Responsible for setting the game message pointer.
+    *    @params gameMessage: a pointer to the JLabel that shows 'Game State Messages' in
+    *        the GUI
     */
     public void setGameMessage(JLabel gameMessage)
     {
@@ -67,14 +65,12 @@ class BoardRenderer extends JPanel{
         this.window.add(this, c);
     }
     
-    @Override
     public void update(Graphics g) {
         if(getSize().width == 0 || getSize().height == 0){
-        return;
-    }
+            return;
+        }
 
-        if ( (g2d == null)
-          || (!offDimension.equals(getSize()))) {
+        if ( (g2d == null) || (!offDimension.equals(getSize()))) {
             offDimension = getSize();
             offImage = createImage(getSize().width, getSize().height);
             g2d = (Graphics2D) offImage.getGraphics();
@@ -92,17 +88,17 @@ class BoardRenderer extends JPanel{
                 Integer state = board.getState(x,y);
                 
                 g2d.setColor( Color.getHSBColor(0, 0, 0) );
-            g2d.fillOval(startX+(sizeX+spacing)*x-1, startY+(sizeY+spacing)*y-1, sizeX+2, sizeY+2);
+                g2d.fillOval(startX+(sizeX+spacing)*x-1, startY+(sizeY+spacing)*y-1, sizeX+2, sizeY+2);
                 
                 if(state != null){
-            if(board.isWin(x,y) == state){
+                    if(board.isWin(x,y) == state){
                         g2d.setColor(Color.white);
                         g2d.fillOval(startX+(sizeX+spacing)*x, startY+(sizeY+spacing)*y, sizeX, sizeY);
-                g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
-            g2d.fillOval(startX+(sizeX+spacing)*x+5, startY+(sizeX+spacing)*y+5, sizeX-10, sizeY-10);
-            continue;
+                        g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
+                        g2d.fillOval(startX+(sizeX+spacing)*x+5, startY+(sizeX+spacing)*y+5, sizeX-10, sizeY-10);
+                        continue;
                     }
-            g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
+                    g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
                 } else {
                     g2d.setColor(Color.white);
                 }
@@ -117,18 +113,18 @@ class BoardRenderer extends JPanel{
     
     @Override
     public void paint(Graphics g){
-    update(g);
+        update(g);
     }
 
     public void render(){
         Graphics g = getGraphics();
-            if(g != null){
+        if(g != null){
             paint(g);
-            }
+        }
     }
 
     /** 
-        function responsible for updating play messages each turn
+    *    function responsible for updating play messages each turn
     */
     private void updateGameMessage(int player, Integer win)
     {

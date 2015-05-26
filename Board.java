@@ -98,6 +98,22 @@ class Board implements Cloneable{
     }
 
     /**
+    * A getter for the X coordinate of the last move made
+    * @return : the Y coordinate of the last move made or null if no move has yet been made
+    */
+    public Integer getLastX () {
+        return lastX;
+    }
+
+    /**
+    * A getter for the Y coordinate of the last move made
+    * @return : the Y coordinate of the last move made or null if no move has yet been made
+    */
+    public Integer getLastY () {
+        return lastY;
+    }
+
+    /**
     * This function is used to place a move. When called the player which is set as the 
     * current player, will place a token in the lowest free spot available in the
     * given column <p>
