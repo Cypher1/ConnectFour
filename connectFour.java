@@ -237,11 +237,17 @@ public class connectFour implements Runnable {
         ConnectFourActionListener l_restart = new ConnectFourActionListener(f, START, this);
         b_restart.addActionListener(l_restart);
 
+        JButton b_undo = new JButton("UNDO");
+        ConnectFourActionListener l_undo = new ConnectFourActionListener(f, UNDO, this);
+        b_undo.addActionListener(l_undo);
+        
         //create new grid bag layout for the restart button and add to panel
         c = new GridBagConstraints();
         c.fill = GridBagConstraints.VERTICAL;
         c.gridy = RESTART_BUTTON_PLACEMENT[1];
+
         sidePanel.add(b_restart, c);
+        sidePanel.add(b_undo, c);
 
         //create a game message object and add it to the panel
         gameMessage = new JLabel("Player 1's Turn");

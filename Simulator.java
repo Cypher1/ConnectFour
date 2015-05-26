@@ -87,10 +87,6 @@ public class Simulator
         }
     }
 
-    public Board getBoard(){
-        return board;
-    }
-    
     public void gamestart(LinkedList<Player> players, int boardWidth, int boardHeight){//restart or start the game
         this.players = players;
         this.board = new Board(players.size(), WINLEN, boardWidth, boardHeight);

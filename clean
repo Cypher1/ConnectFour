@@ -1,0 +1,2 @@
+#cleans the project
+rm *.class -f

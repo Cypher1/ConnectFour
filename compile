@@ -1,0 +1,2 @@
+#COMPILES the connect four program
+javac *.java
