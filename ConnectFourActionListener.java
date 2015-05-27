@@ -6,10 +6,10 @@ import javax.swing.JFrame;
 * A class that deals with button presses of the buttons associated with the connectFour class
 */
 public class ConnectFourActionListener implements ActionListener {
-	private JFrame f;
-	private int button;
+    private JFrame f;
+    private int button;
     private connectFour game;        
-	
+    
     /**
     * A constructor for the ConnectFourActionListener. <p>
     * pre: the inputs are valid <b>
@@ -18,20 +18,20 @@ public class ConnectFourActionListener implements ActionListener {
     * @param button: the id of the button which this action listener relates to 
     * @param game: the connectFour game which the button makes changes to
     */
-	public ConnectFourActionListener(JFrame f, int button, connectFour game){
-		this.f = f;
-		this.button = button;
+    public ConnectFourActionListener(JFrame f, int button, connectFour game){
+        this.f = f;
+        this.button = button;
         this.game = game;
-	}
-	
-	/**
+    }
+    
+    /**
     * The function which actually triggers the events that a button press should generate <p>
     * pre: the buttons have been set up, and the game is valid <br>
     * post: the action that the button was supposed to generate has been completed
     * @param e: the action event
     */
-	public void actionPerformed(ActionEvent e){
-		//check which button was pressed and call their respective function
+    public void actionPerformed(ActionEvent e){
+        //check which button was pressed and call their respective function
         if((button >= game.EASY) && (button <= game.HARD)){
             //initialise game with appropriate difficulty
             game.setGameMode(button);
@@ -50,6 +50,6 @@ public class ConnectFourActionListener implements ActionListener {
         } else if (button == game.QUIT_GAME){
             game.startScreen(f);
         }
-	}
+    }
 }
 
