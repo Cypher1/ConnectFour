@@ -72,7 +72,7 @@ class BoardRenderer extends JPanel implements ActionListener{
 
     public void setFrame(JFrame window){
         this.window = window;
-
+        dropDistance = 0;//do not drop when undoing or restarting
         //create Grid Bag constraints for layout of the window
         GridBagConstraints c = new GridBagConstraints();
         c.gridy = connectFour.BOARD_PLACEMENT[1];
