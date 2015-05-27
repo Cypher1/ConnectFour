@@ -68,7 +68,7 @@ public class connectFour implements Runnable {
         f.setLayout(new GridBagLayout());
         // Sets the behavior for when the window is closed
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-
+        f.setResizable(false);
         startScreen(f);
     }
  
