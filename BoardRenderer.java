@@ -2,10 +2,11 @@
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-
+import javax.swing.Timer;
 import java.awt.*;
+import java.awt.event.*;
 
-class BoardRenderer extends JPanel{
+class BoardRenderer extends JPanel implements ActionListener{
     /**
      * 
      */
@@ -25,12 +26,20 @@ class BoardRenderer extends JPanel{
     
     private int spacing = 5;
 
+    private Integer lastX = null;
+    private Integer lastY = null;
+    private int dropDistance;
+
     Dimension offDimension;
     Image offImage;
     Graphics2D g2d;
-    
+    Timer timer;
+
     BoardRenderer(){
         super();
+        int delay = 100;
+        timer = new Timer(delay, this);
+        timer.start();// Start the timer here.
     }
 
     public void setBoard(Board board){
@@ -39,6 +48,11 @@ class BoardRenderer extends JPanel{
 
         width = startX*2+(sizeX+spacing)*board.getWidth();
         height = startY*2+(sizeY+spacing)*board.getHeight();
+
+        lastX = board.getLastX();
+        lastY = board.getLastY();
+        dropDistance = 1000;
+
         // set a preferred size for the custom panel.
         setPreferredSize(new Dimension(width, height));
     }
@@ -84,31 +98,56 @@ class BoardRenderer extends JPanel{
         g2d.setColor(new Color(0, 0, 200));//set the background color
         g2d.fillRect(0, 0, width, height);
 
+        if(dropDistance != 0){
+            dropDistance -= 50;
+            if(dropDistance < 0){
+                dropDistance = 0;
+            }
+        } 
+                
         int width = board.getWidth();
         int height = board.getHeight();
         for(int y = 0; y < height; y++){
             for(int x = 0; x < width; x++){
                 Integer state = board.getState(x,y);
-                
+               
+                int xPos = startX+(sizeX+spacing)*x;
+                int yPos = startY+(sizeY+spacing)*y;
+                boolean dropping = (lastX != null && lastY != null && lastX == x && lastY == y && (dropDistance > 0));
+
                 g2d.setColor( Color.getHSBColor(0, 0, 0) );
-                g2d.fillOval(startX+(sizeX+spacing)*x-1, startY+(sizeY+spacing)*y-1, sizeX+2, sizeY+2);
-                
-                if(state != null){
+                g2d.fillOval(xPos-1, yPos-1, sizeX+2, sizeY+2); 
+                                
+                if(state != null && !dropping){
                     if(board.isWin(x,y) == state){
                         g2d.setColor(Color.white);
-                        g2d.fillOval(startX+(sizeX+spacing)*x, startY+(sizeY+spacing)*y, sizeX, sizeY);
+                        g2d.fillOval(xPos, yPos, sizeX, sizeY);
                         g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
-                        g2d.fillOval(startX+(sizeX+spacing)*x+5, startY+(sizeX+spacing)*y+5, sizeX-10, sizeY-10);
+                        g2d.fillOval(xPos+5, yPos+5, sizeX-10, sizeY-10);
                         continue;
                     }
                     g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
+                    g2d.fillOval(xPos, yPos, sizeX, sizeY);
                 } else {
                     g2d.setColor(Color.white);
+                    g2d.fillOval(xPos, yPos, sizeX, sizeY);
                 }
-                g2d.fillOval(startX+(sizeX+spacing)*x, startY+(sizeY+spacing)*y, sizeX, sizeY);
+                
+                if(dropping){
+                    yPos -= dropDistance;
+                    g2d.setColor( Color.getHSBColor(0, 0, 0) );
+                    g2d.fillOval(xPos-1, yPos-1, sizeX+2, sizeY+2); 
+                    
+                    g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
+                    g2d.fillOval(xPos, yPos, sizeX, sizeY);
+                }
             }
         }
         g.drawImage(offImage, 0, 0, this); 
+
+        if(gameMessage != null){
+            updateGameMessage( board.getCurrentPlayer(), board.getWinner());
+        }
    }
     
     @Override
@@ -150,5 +189,14 @@ class BoardRenderer extends JPanel{
 
         //add the message to the gameMessage JLabel
         gameMessage.setText(message);
+    }
+
+    /**
+     * Automatically redraws the board
+     */
+    public void actionPerformed(ActionEvent ev){
+        if(ev.getSource()==timer){
+            render();// this will call at every 1 second
+        }
     }
 }

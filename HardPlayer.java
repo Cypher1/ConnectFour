@@ -1,12 +1,21 @@
-/** A Hard Player for Connect Four
+/** 
+ * A Hard Player for Connect Four
  * Uses NegaMax to determine which moves are the best options
  * Still makes some foolish moves when it cannot look far enough into the future of the game
  * Written by Joshua Pratt
  */
 public class HardPlayer implements Player {
-	private int inf = 100000;
+	private static final int inf = 100000;
 
-    /** Returns the next move that the player will choose to do */
+    /** 
+    * Returns the next move that the player will choose to do <p>
+    * pre: the board is valid <br>
+    * post: no move has been implemented in the simulator, but a column number has been 
+    * returned
+    * @param current: this is the current board state, which is used by the AI to determine
+    * it's next move
+    * @return the int id of the column in which the player wants to make it's move
+    */
 	public int nextMove (Board current){
 		//Initial call for Player A's root node
 		int move = 0;
@@ -32,8 +41,18 @@ public class HardPlayer implements Player {
 		return move;
 	}
 
-    /** Calculates a value for the best possible action to be chosen (assuming equivalent players)
-    *   Uses negaMax with Alpha Beta Pruning
+    /** 
+    * Calculates a value for the best possible action to be chosen.
+    * Calculated while assuming enemy player uses the same algorithm or a close approximation.
+    * Uses negaMax with Alpha Beta Pruning. <p>
+	* pre: the input given is valid as defined by the negaMax algorithm<br>
+	* post: no change is made, but the win value of the current state is returned
+    * @param board: the current state of the board
+    * @param depth: the number of expansions left for evaluation
+    * @param alpha: the best possible win value for the current player
+    * @param beta: the best possible win value for the other player
+    * @param player: the id of the current player
+    * @return the win value of the current state
     */
 	private double negaMax(Board board, int depth, double alpha, double beta, int player){
 		Integer winner = board.getWinner();//check if the game has ended
