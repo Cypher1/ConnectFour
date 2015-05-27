@@ -76,7 +76,7 @@ public class Simulator
         }
 
         
-        if (getWinner() == null && !(players.get(currentPlayer) instanceof HumanPlayer)){//call again for AI players
+        if (!board.isFull() && getWinner() == null && !(players.get(currentPlayer) instanceof HumanPlayer)){//call again for AI players
             gameUpdate();
         }           
 
