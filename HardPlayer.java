@@ -23,7 +23,7 @@ public class HardPlayer implements Player {
 		for(int op = 0; op < current.getWidth(); op++){
 			Board moveBoard = current.clone();
 			if(moveBoard.placeMove(op)){
-				double canWin = -negaMax(moveBoard, 9, -inf, inf,  moveBoard.getCurrentPlayer());
+				double canWin = -negaMax(moveBoard, 6, -inf, inf,  moveBoard.getCurrentPlayer());
                                 canWin += 1-(Math.abs(op-moveBoard.getWidth()/2.0))/moveBoard.getWidth();
 				
 				System.out.print(op+":"+canWin+". ");
@@ -58,7 +58,7 @@ public class HardPlayer implements Player {
 		Integer winner = board.getWinner();//check if the game has ended
 		if(depth == 0 || (winner != null && winner != -1)){
 			if(depth == 0){
-				return 0.1;
+				return heuristic(board);
 			}
 
 			if(winner == player){
@@ -88,4 +88,35 @@ public class HardPlayer implements Player {
 		}
 		return bestValue;
 	}
+
+    private double heuristic(Board board){
+        double score = 0;
+        int player = board.getCurrentPlayer();
+
+        for(int x = 0; x < board.getWidth(); x++){
+            for(int y = 0; y < board.getHeight(); y++){
+                Integer state = board.getState(x,y);
+                if(state != null){
+                    Integer up = board.getState(x,y-1);
+                    Integer right = board.getState(x+1,y);
+                    Integer upRight = board.getState(x+1, y-1);
+                    Integer downRight = board.getState(x+1, y+1);
+                    
+                    int numEq = 0;    
+                    if(state == up) numEq++;
+                    if(state == right) numEq++;
+                    if(state == upRight) numEq++;
+                    if(state == downRight) numEq++;
+
+                    if(state == player){
+                        numEq *= -1;
+                    }                  
+                    score += numEq;
+                }
+
+            }
+        }
+
+        return score/4.0;
+    }
 }
