@@ -60,6 +60,8 @@ class Board implements Cloneable{
      * pre: the board is valid <br>
      * post: the renderers have been returned as a list
      */
+    
+    @SuppressWarnings("unchecked")
     public LinkedList<BoardRenderer> getRenderers()
     {
         return (LinkedList<BoardRenderer>) renderers.clone();
