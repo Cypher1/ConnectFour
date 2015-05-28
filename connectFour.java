@@ -23,6 +23,7 @@ public class connectFour implements Runnable {
 
     private static final int NUM_PLAYERS = 2;
     private static final int WINLEN = 4;
+    private static final int MIN_BOARDSIZE = 4;
     private static final int x = 0;
     private static final int y = 1;
     
@@ -52,7 +53,11 @@ public class connectFour implements Runnable {
     public static final int[] SIDEPANEL_SIZE = {65 * 7 / 2, 65 * 4};
     public static final int[] MESSAGE_PLACEMENT = {0, 2};
     public static final int MESSAGE_WIDTH = 2;
+    public static final int[] BUTTON_SIZE = {150, 28};
 
+    //these are from board renderer sizes and spacing
+    public static final int PIXELS_PER_COL = 60 + 5; 
+    public static final int PIXELS_PER_ROW = 60 + 5; 
 
     private JFrame f;
     private JLabel gameMessage;
@@ -208,22 +213,22 @@ public class connectFour implements Runnable {
         f.add(sub,c);
 
         setEasyButton = new JButton("EASY");
-        setEasyButton.setPreferredSize(new Dimension (150,28));
+        setEasyButton.setPreferredSize(new Dimension (BUTTON_SIZE[x], BUTTON_SIZE[y]));
         c.gridy = c.gridy+1;
         f.add(setEasyButton, c);
 
         setMediumButton = new JButton("MEDIUM"); 
-        setMediumButton.setPreferredSize(new Dimension (150,28));
+        setMediumButton.setPreferredSize(new Dimension (BUTTON_SIZE[x],BUTTON_SIZE[y]));
         c.gridy = c.gridy+1;
         f.add(setMediumButton, c);
 
         setHardButton = new JButton("HARD");
-        setHardButton.setPreferredSize(new Dimension (150,28));
+        setHardButton.setPreferredSize(new Dimension (BUTTON_SIZE[x], BUTTON_SIZE[y]));
         c.gridy = c.gridy+1;
         f.add(setHardButton, c);
 
         setTwoPlayerButton = new JButton("2 PLAYER MODE");
-        setTwoPlayerButton.setPreferredSize(new Dimension (150,28));
+        setTwoPlayerButton.setPreferredSize(new Dimension (BUTTON_SIZE[x], BUTTON_SIZE[y]));
         c.gridy = c.gridy+1;
         f.add(setTwoPlayerButton,c);
         
@@ -249,7 +254,7 @@ public class connectFour implements Runnable {
         
         String[] items = {"4","5","6","7","8","9","10"};
         JComboBox<String> box_cols = new JComboBox<>(items);
-        box_cols.setSelectedIndex(boardSize[0]-4);
+        box_cols.setSelectedIndex(boardSize[0]-MIN_BOARDSIZE);
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(5,15,0,10);
         c.gridy = c.gridy+1;
@@ -258,13 +263,14 @@ public class connectFour implements Runnable {
         f.add(box_cols, c);
 
         JComboBox<String> box_rows = new JComboBox<>(items);
-        box_rows.setSelectedIndex(boardSize[1]-4);
+        box_rows.setSelectedIndex(boardSize[1]-MIN_BOARDSIZE); 
+
         c.anchor = GridBagConstraints.EAST;
         c.gridx = 0;
         f.add(box_rows, c);
 
         startButton = new JButton("Start");
-        startButton.setPreferredSize(new Dimension (150,28));
+        startButton.setPreferredSize(new Dimension (BUTTON_SIZE[x], BUTTON_SIZE[y]));
         c.anchor = GridBagConstraints.CENTER;
         c.gridy = c.gridy + 1;
         c.gridwidth = 2;
@@ -339,9 +345,10 @@ public class connectFour implements Runnable {
         JPanel boardPanel = new JPanel();
         boardPanel.setLayout(new GridBagLayout());
 
-        //get the height and width of the board for here!
-        int width = 65 * boardSize[x];
-        int height = 65 * boardSize[y]; 
+        //get the height and width of the board
+        int width = boardSize[x] * PIXELS_PER_COL;
+        int height = boardSize[y] * PIXELS_PER_ROW; 
+
         boardPanel.setPreferredSize(new Dimension(width,height));
 
         //make the board panel invisible
@@ -397,23 +404,26 @@ public class connectFour implements Runnable {
         //create and add a quit button
         JButton b_restart = new JButton("RESTART");
         ConnectFourActionListener l_restart = new ConnectFourActionListener(f, START, this);
+        b_restart.setPreferredSize(new Dimension (BUTTON_SIZE[x], BUTTON_SIZE[y]));
         b_restart.addActionListener(l_restart);
 
         JButton b_undo = new JButton("UNDO");
         ConnectFourActionListener l_undo = new ConnectFourActionListener(f, UNDO, this);
+        b_undo.setPreferredSize(new Dimension (BUTTON_SIZE[x], BUTTON_SIZE[y]));
         b_undo.addActionListener(l_undo);
 
         JButton b_quit = new JButton("QUIT GAME");
         ConnectFourActionListener l_quit = new ConnectFourActionListener(f, QUIT_GAME, this);
+        b_quit.setPreferredSize(new Dimension (BUTTON_SIZE[x], BUTTON_SIZE[y]));
         b_quit.addActionListener(l_quit);
 
         JButton b_hint = new JButton("HINT");
         ConnectFourActionListener l_hint = new ConnectFourActionListener(f, HINT, this);
+        b_hint.setPreferredSize(new Dimension (BUTTON_SIZE[x], BUTTON_SIZE[y]));
         b_hint.addActionListener(l_hint);        
         
         //create new grid bag layout for the restart button and add to panel
         c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
         c.gridwidth = RESTART_BUTTON_WIDTH;
         c.gridy = RESTART_BUTTON_PLACEMENT[y];
         c.insets = new Insets(10,0,0,0);  //internal padding for buttons
@@ -430,6 +440,7 @@ public class connectFour implements Runnable {
         //create a game message object and add it to the panel
         gameMessage = new JLabel("");
         gameMessage.setFont(gameMessage.getFont().deriveFont(18.0f));
+        c.anchor = GridBagConstraints.CENTER;
         c.gridy = MESSAGE_PLACEMENT[y];
         c.gridwidth = MESSAGE_WIDTH;
         sidePanel.add(gameMessage, c);
