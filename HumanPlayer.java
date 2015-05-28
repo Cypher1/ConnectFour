@@ -1,8 +1,11 @@
 /**
-* A class that implements Player, but is controlled by the human. This acts as an interface
+* A class that implements Player (via HardPlayer), but is controlled by the human. This acts as an interface
 * between simulator and the humans
+*
+* It is an extension of HardPlayer so that it can call the HardPlayer
+* to get hints.
 */
-public class HumanPlayer implements Player {
+public class HumanPlayer extends HardPlayer {//extends HardAI to allow it to get hints from the hard AI
 
 	private static final int NO_MOVE = -1;
 	private int nextMove;
@@ -11,6 +14,7 @@ public class HumanPlayer implements Player {
 	* A constructor for human player. This sets the next move as no move being made. 
 	*/
 	public HumanPlayer() {
+        super();
 		this.nextMove = NO_MOVE;
 	}
 
@@ -26,6 +30,19 @@ public class HumanPlayer implements Player {
 		this.nextMove = column;
 	}
 
+    /**
+     * Used to get hints from the super class HardAI.
+     * Will be called by the UI. <p>
+     * pre: none <br>
+     * post: the suggested move has been returned
+     * @param current: the current board, this is required to conform the HumanPlayer to the
+     * Player interface.
+     * @return the number of the column of the move
+     */
+    public int hintMove(Board current){
+        return super.nextMove(current);
+    }
+
 	/**
 	* The function responsible for checking if a move has been made, this will be called
 	* by the simulator. <p>
@@ -36,6 +53,7 @@ public class HumanPlayer implements Player {
 	* Player interface but is not actually used.
 	* @return -1 if no move has been made yet or the number of the column of the move
 	*/
+    @Override
 	public int nextMove (Board current){
 		int move = NO_MOVE;
 		//check move has been made and reinitialise
