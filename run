@@ -1,2 +1,2 @@
 #run
-java connectFour > .log
+java connectFour @> .log
