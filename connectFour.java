@@ -77,9 +77,20 @@ public class connectFour implements Runnable {
     @Override
     public void run() {
         System.out.println("RUNNING");
+        //set look and feel with a UI Manager
+        try{
+            /*DIFFERENT "LOOK AND FEEL"s*/
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+            //UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+            //UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+            //UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel");
+            //UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+        } catch (Exception e){
+            System.out.println("Setting look and feel failed");
+        }
+
         // Create the window
         f = new JFrame("Connect Four!");
-        // Add a layout manager so that the button is not placed on top of the label
         //reinitialise the JFrame for current use
         f.setLayout(new GridBagLayout());
         // Sets the behavior for when the window is closed
