@@ -49,7 +49,6 @@ public class connectFour implements Runnable {
     private static final int[] COL_BUTTON_PADDING = {10, 50*8};
     public static final int[] BOARD_PLACEMENT = {0, 1};
     public static final int[] SIDEPANEL_PLACEMENT = {1, 1};
-    public static final int[] SIDEPANEL_SIZE = {65 * 7 / 2, 65 * 6};
     public static final int[] MESSAGE_PLACEMENT = {0, 2};
     public static final int MESSAGE_WIDTH = 2;
 
@@ -223,6 +222,8 @@ public class connectFour implements Runnable {
         c.gridwidth = 1;
         c.gridy = c.gridy+1;
         f.add(row,c);
+        String[] items = {"4","5","6","7","8","9","10"};
+      
 
         JLabel col = new JLabel("Column:");
         col.setFont (col.getFont ().deriveFont (14.0f));
@@ -230,9 +231,8 @@ public class connectFour implements Runnable {
         c.gridx = 1;
         f.add(col,c);
         
-        String[] items = {"4","5","6","7","8","9","10"};
         JComboBox<String> box_cols = new JComboBox<>(items);
-        box_cols.setSelectedIndex(3);
+        box_cols.setSelectedIndex(2);
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(5,15,0,10);
         c.gridy = c.gridy+1;
@@ -241,7 +241,7 @@ public class connectFour implements Runnable {
         f.add(box_cols, c);
 
         JComboBox<String> box_rows = new JComboBox<>(items);
-        box_rows.setSelectedIndex(2);
+        box_rows.setSelectedIndex(1);
         c.anchor = GridBagConstraints.EAST;
         c.gridx = 0;
         f.add(box_rows, c);
@@ -271,7 +271,12 @@ public class connectFour implements Runnable {
      * used during the game
      */
     private void gameFrame()
-    {   f.getContentPane().removeAll();
+    {
+<<<<<<< HEAD
+        f.getContentPane().removeAll();
+=======
+        f.repaint();
+>>>>>>> 1dd556e6afe3a783d04a66e86ace6187fcb3dde2
         setColumnButtons();
         setSidePanel();
 
@@ -361,7 +366,9 @@ public class connectFour implements Runnable {
         sidePanel.setLayout(new GridBagLayout());
 
         //get the height and width of the board for here!
-        sidePanel.setPreferredSize(new Dimension(SIDEPANEL_SIZE[x],SIDEPANEL_SIZE[y]));
+        int width = 65 * boardSize[x] / 2; //!! change this to board 'rows'
+        int height = 65 * boardSize[y]; //!! change this to 'cols'
+        sidePanel.setPreferredSize(new Dimension(width,height));
 
         //grid bag layout for the side panel within the frame
         GridBagConstraints c = new GridBagConstraints();
@@ -451,21 +458,17 @@ public class connectFour implements Runnable {
             f.getContentPane().removeAll();
             simulator = undorecord.getLast().clone();
             undorecord.removeLast();
-
-            //set the side panel and content buttons
-            setColumnButtons();
-            setSidePanel();
-
             BoardRenderer renderer = new BoardRenderer(); 
             //initiate renderer attributes
             renderer.setBoard(simulator.getBoard());
             renderer.setFrame(f);
             renderer.render();
+            
+            //set game frame and add game message label to the renderer 
+            gameFrame();
             renderer.setGameMessage(gameMessage); 
             
             simulator.gameUpdate();
-
-            f.pack();
         }
     }
 }
