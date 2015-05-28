@@ -14,7 +14,7 @@ public class ConnectFourActionListener implements ActionListener {
     
     /**
     * A constructor for the ConnectFourActionListener. <p>
-    * pre: the inputs are valid <b>
+    * pre: the inputs are valid <p>
     * post: a new connectFourActionListener is created with the given parameters
     * @param f: the ui of the game
     * @param button: the id of the button which this action listener relates to 
@@ -28,7 +28,7 @@ public class ConnectFourActionListener implements ActionListener {
 
      /**
     * A constructor for the ConnectFourActionListener. <p>
-    * pre: the inputs are valid <b>
+    * pre: the inputs are valid <p>
     * post: a new connectFourActionListener is created with the given parameters
     * @param f: the ui of the game
     * @param button: the id of the button which this action listener relates to 
