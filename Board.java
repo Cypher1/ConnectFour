@@ -130,6 +130,7 @@ class Board implements Cloneable{
             return false;
         }
 
+        System.out.println("PLACE MOVE");
         for(int y=getHeight()-1; y >= 0; y--){
             if(getState(xPos, y) == null){
                 setBoard(xPos, y, currentPlayer);

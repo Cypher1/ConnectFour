@@ -24,6 +24,14 @@ public class EasyPlayer implements Player {
 	* @return the column index which the move should be played in
 	*/
 	public int nextMove (Board current){
-		return generator.nextInt(current.getWidth()-1);
+		int move = 0;
+        boolean legal = false;
+        while(!legal){
+            Board test = current.clone();
+            move = generator.nextInt(current.getWidth());
+            legal = test.placeMove(move);
+        }
+
+        return move;
 	}
 }

@@ -248,7 +248,7 @@ class BoardRenderer extends JPanel implements ActionListener{
         }
 
         if(board.isFull()){
-            message = "Draw";
+            message = "<html><div>Draw";
         }
 
         message += "</div></html>";

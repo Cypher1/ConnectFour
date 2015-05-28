@@ -56,14 +56,13 @@ public class Simulator
     */
     public void gameUpdate(){
         Player curr = players.get(currentPlayer);
-        boolean legal = true;
         if(getWinner() == null && !board.isFull()){
             //get the move of the player
             curr = players.get(currentPlayer);
             System.out.println("YOUR MOVE PLAYER"+(currentPlayer+1));
             int moveXPos = curr.nextMove(board.clone());
-            //enact the move            
-            legal = board.placeMove(moveXPos);
+            //enact the move
+            boolean legal = board.placeMove(moveXPos);
             if(legal){  
                 System.out.println(moveXPos);
                 //update the board Renderer / UI
