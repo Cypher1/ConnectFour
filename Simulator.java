@@ -86,12 +86,7 @@ public class Simulator
             System.out.println("WINNER == PLAYER"+(getWinner()+1));
         }
     }
-
-    public void gamestart(LinkedList<Player> players, int boardWidth, int boardHeight){//restart or start the game
-        this.players = players;
-        this.board = new Board(players.size(), WINLEN, boardWidth, boardHeight);
-    }
-
+    
     public Simulator clone(){
         Simulator sim = new Simulator(this.players, this.getBoard().getWidth(), this.getBoard().getHeight());
         sim.board = this.board.clone();

@@ -25,8 +25,7 @@ public class HumanPlayer extends HardPlayer {//extends HardAI to allow it to get
 	* @param column: an integer between 0 and the board width that represents the column of
 	* the next move
 	*/
-	public void makeMove(int column)
-	{
+	public void makeMove(int column){
 		this.nextMove = column;
 	}
 

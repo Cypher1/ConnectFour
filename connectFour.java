@@ -71,7 +71,7 @@ public class connectFour implements Runnable {
 
     private Simulator simulator;
     private LinkedList<Simulator> undorecord = new LinkedList<Simulator>();
-    LinkedList<Player> players;
+    private LinkedList<Player> players;
     private int[] boardSize = {7, 6};
 
     @Override
@@ -186,7 +186,7 @@ public class connectFour implements Runnable {
         
         undorecord = new LinkedList<Simulator>();
         
-        gameFrame();
+        initGameFrame();
         initBackend();
         simulator.gameUpdate();
     }
@@ -306,7 +306,7 @@ public class connectFour implements Runnable {
      * pre: the game frame so far has not been corrupted<br>
      * post: the game frame includes all the buttons and side pale
      */
-    private void gameFrame(){
+    private void initGameFrame(){
         f.getContentPane().removeAll();
         f.setMinimumSize(new Dimension(-1, -1));
 
@@ -324,8 +324,7 @@ public class connectFour implements Runnable {
      *  pre: the frame has not been corrupted so far<br>
      *  post: a board renderer and simulator has been created and included
      */
-    private void initBackend()
-    {
+    private void initBackend(){
         //initiate the simuator with players;
         simulator = new Simulator(players, boardSize[0], boardSize[1]);
         //clear all previuos simulators saved for the undo function
@@ -352,8 +351,7 @@ public class connectFour implements Runnable {
      *  pre: the frame has not been corrupted so far <br>
      *  post: the column buttons have been set in the frame
      */
-    public void setColumnButtons()
-    {
+    public void setColumnButtons(){
         //create a board panel and correct GridBagConstraints
         JPanel boardPanel = new JPanel();
         boardPanel.setLayout(new GridBagLayout());
@@ -400,9 +398,7 @@ public class connectFour implements Runnable {
      *  pre: the frame has not been corrupted so far<br>
      *  post: the side panel has been populated with the appropriate buttons
      */
-    public void setSidePanel()
-
-    {
+    public void setSidePanel(){
         // create a new JPanel and name set layout manager
         JPanel sidePanel = new JPanel();
         sidePanel.setLayout(new GridBagLayout());
@@ -470,8 +466,7 @@ public class connectFour implements Runnable {
      *  @param column will be a number from 0 to 6 indicating the column the human player wants to 
      *  drop a tile into
      */
-    public void humanPlayerMove(int column)
-    {
+    public void humanPlayerMove(int column){
         //get the current player
         int player = simulator.getCurrentPlayer();
         Player currPlayer = players.get(player);
@@ -494,8 +489,7 @@ public class connectFour implements Runnable {
      * pre: the game state is valid <br>
      * post: the simulator has been called to provie a hint to the player
      */
-    public void provideHint()
-    {
+    public void provideHint(){
         simulator.provideHint();
     }
 
