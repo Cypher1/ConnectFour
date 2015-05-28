@@ -232,7 +232,7 @@ public class connectFour implements Runnable {
         
         String[] items = {"4","5","6","7","8","9","10"};
         JComboBox<String> box_cols = new JComboBox<>(items);
-        box_cols.setSelectedIndex(3);
+        box_cols.setSelectedIndex(boardSize[0]-4);
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(5,15,0,10);
         c.gridy = c.gridy+1;
@@ -241,7 +241,7 @@ public class connectFour implements Runnable {
         f.add(box_cols, c);
 
         JComboBox<String> box_rows = new JComboBox<>(items);
-        box_rows.setSelectedIndex(2);
+        box_rows.setSelectedIndex(boardSize[1]-4);
         c.anchor = GridBagConstraints.EAST;
         c.gridx = 0;
         f.add(box_rows, c);
