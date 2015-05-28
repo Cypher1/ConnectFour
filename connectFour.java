@@ -222,8 +222,6 @@ public class connectFour implements Runnable {
         c.gridwidth = 1;
         c.gridy = c.gridy+1;
         f.add(row,c);
-        String[] items = {"4","5","6","7","8","9","10"};
-      
 
         JLabel col = new JLabel("Column:");
         col.setFont (col.getFont ().deriveFont (14.0f));
@@ -231,8 +229,9 @@ public class connectFour implements Runnable {
         c.gridx = 1;
         f.add(col,c);
         
+        String[] items = {"4","5","6","7","8","9","10"};
         JComboBox<String> box_cols = new JComboBox<>(items);
-        box_cols.setSelectedIndex(2);
+        box_cols.setSelectedIndex(3);
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(5,15,0,10);
         c.gridy = c.gridy+1;
@@ -241,7 +240,7 @@ public class connectFour implements Runnable {
         f.add(box_cols, c);
 
         JComboBox<String> box_rows = new JComboBox<>(items);
-        box_rows.setSelectedIndex(1);
+        box_rows.setSelectedIndex(2);
         c.anchor = GridBagConstraints.EAST;
         c.gridx = 0;
         f.add(box_rows, c);
