@@ -49,7 +49,7 @@ public class connectFour implements Runnable {
     private static final int[] COL_BUTTON_PADDING = {10, 50*8};
     public static final int[] BOARD_PLACEMENT = {0, 1};
     public static final int[] SIDEPANEL_PLACEMENT = {1, 1};
-    public static final int[] SIDEPANEL_SIZE = {65 * 7 / 2, 65 * 6};
+    public static final int[] SIDEPANEL_SIZE = {65 * 7 / 2, 65 * 4};
     public static final int[] MESSAGE_PLACEMENT = {0, 2};
     public static final int MESSAGE_WIDTH = 2;
 
