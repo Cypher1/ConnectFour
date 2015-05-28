@@ -107,6 +107,11 @@ public class Simulator
      */
     public void provideHint()
     {
-           // int hintPos = curr.hintMove(board.clone());
+        Player curr = players.get(currentPlayer);
+
+        if (curr instanceof HumanPlayer){
+            HumanPlayer human = (HumanPlayer)curr;
+            //int hintPos = curr.hintMove();
+        }
     }
 }

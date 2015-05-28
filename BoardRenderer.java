@@ -7,7 +7,8 @@ import java.util.LinkedList;
 
 class BoardRenderer extends JPanel implements ActionListener{
     /**
-     * 
+     * A renderer for the Board<br>
+     * Uses a JPanel and Graphics2D to draw a Board for the UI
      */
     private static int DROP_HEIGHT = 500;
     private static final long serialVersionUID = -7656929072530099542L;
@@ -45,6 +46,12 @@ class BoardRenderer extends JPanel implements ActionListener{
         timer.start();// Start the timer here.
     }
 
+    /**
+     * Updates the board the needs to be drawn (and updates the list of moves that have been taken
+     * pre: board must be a valid board
+     * post: the board will be updated and the list of lastXs and lastYs will contain the last move
+     * @param board the new board that need to be renderered
+     */
     public void setBoard(Board board){
         this.board = board;
         board.addRenderer(this);
@@ -60,15 +67,19 @@ class BoardRenderer extends JPanel implements ActionListener{
     }
 
     /**
-    *    Responsible for setting the game message pointer.
-    *    @params gameMessage: a pointer to the JLabel that shows 'Game State Messages' in
-    *        the GUI
-    */
+     * Responsible for setting the game message pointer.
+     * @param gameMessage: a pointer to the JLabel that shows 'Game State Messages' in
+     * the GUI
+     */
     public void setGameMessage(JLabel gameMessage)
     {
         this.gameMessage = gameMessage;
     }
 
+    /**
+     * Adds the renderer to its window
+     * @param window The window to draw into
+     */
     public void setFrame(JFrame window){
         this.window = window;
         dropDistance = 0;//do not drop when undoing or restarting
@@ -81,6 +92,7 @@ class BoardRenderer extends JPanel implements ActionListener{
         this.window.add(this, c);
     }
     
+    @Override
     public void update(Graphics g) {
         if(getSize().width == 0 || getSize().height == 0){
             return;
@@ -184,6 +196,9 @@ class BoardRenderer extends JPanel implements ActionListener{
         update(g);
     }
 
+    /**
+     * Requests a redraw of the board
+     */
     public void render(){
         Graphics g = getGraphics();
         if(g != null){
@@ -216,12 +231,15 @@ class BoardRenderer extends JPanel implements ActionListener{
             message = colour + "'s turn";
         }
 
+        if(board.isFull()){
+            message = "Draw";
+        }
         //add the message to the gameMessage JLabel
         gameMessage.setText(message);
     }
 
     /**
-     * Automatically redraws the board
+     * Automatically redraws the board (using a timer)
      */
     public void actionPerformed(ActionEvent ev){
         if(ev.getSource()==timer){
@@ -229,7 +247,7 @@ class BoardRenderer extends JPanel implements ActionListener{
         }
     }
 
-    public long getLastTime(){
+    private long getLastTime(){
         long time = new Date().getTime();
         if(lastTime == null){
             lastTime = time;

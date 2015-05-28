@@ -56,7 +56,13 @@ public class connectFour implements Runnable {
     private JFrame f;
     private JLabel gameMessage;
     private int gameMode;
+    
     private JButton startButton;
+    private JButton setEasyButton;
+    private JButton setMediumButton;
+    private JButton setHardButton;
+    private JButton setTwoPlayerButton;
+
     private Simulator simulator;
     private LinkedList<Simulator> undorecord = new LinkedList<Simulator>();
     LinkedList<Player> players;
@@ -86,6 +92,22 @@ public class connectFour implements Runnable {
     public void setGameMode(int inputgameMode) {
         startButton.setEnabled(true);
         gameMode = inputgameMode;
+
+        //highlight the chosen button?
+        Color baseColor = new JButton().getBackground();
+        Color highlight = Color.white;
+    
+        setEasyButton.setBackground(baseColor);
+        setMediumButton.setBackground(baseColor);
+        setHardButton.setBackground(baseColor);
+        setTwoPlayerButton.setBackground(baseColor);
+
+        switch(inputgameMode){
+            case EASY: setEasyButton.setBackground(highlight); break;
+            case MED: setMediumButton.setBackground(highlight); break;
+            case HARD: setHardButton.setBackground(highlight); break;
+            case HUMAN: setTwoPlayerButton.setBackground(highlight); break;
+        }
     }
 
     /**
@@ -130,6 +152,8 @@ public class connectFour implements Runnable {
             break;
         }
         
+        undorecord = new LinkedList<Simulator>();
+        
         gameFrame();
         initBackend();
         simulator.gameUpdate();
@@ -165,25 +189,25 @@ public class connectFour implements Runnable {
         c.gridy = c.gridy+1;
         f.add(sub,c);
 
-        JButton b_e = new JButton("EASY");
-        b_e.setPreferredSize(new Dimension (150,28));
+        setEasyButton = new JButton("EASY");
+        setEasyButton.setPreferredSize(new Dimension (150,28));
         c.gridy = c.gridy+1;
-        f.add(b_e, c);
+        f.add(setEasyButton, c);
 
-        JButton b_m = new JButton("MEDIUM"); 
-        b_m.setPreferredSize(new Dimension (150,28));
+        setMediumButton = new JButton("MEDIUM"); 
+        setMediumButton.setPreferredSize(new Dimension (150,28));
         c.gridy = c.gridy+1;
-        f.add(b_m, c);
+        f.add(setMediumButton, c);
 
-        JButton b_h = new JButton("HARD");
-        b_h.setPreferredSize(new Dimension (150,28));
+        setHardButton = new JButton("HARD");
+        setHardButton.setPreferredSize(new Dimension (150,28));
         c.gridy = c.gridy+1;
-        f.add(b_h, c);
+        f.add(setHardButton, c);
 
-        JButton b_2 = new JButton("2 PLAYER MODE");
-        b_2.setPreferredSize(new Dimension (150,28));
+        setTwoPlayerButton = new JButton("2 PLAYER MODE");
+        setTwoPlayerButton.setPreferredSize(new Dimension (150,28));
         c.gridy = c.gridy+1;
-        f.add(b_2,c);
+        f.add(setTwoPlayerButton,c);
         
         JLabel selection = new JLabel("Select game size:");
         selection.setFont (selection.getFont ().deriveFont (16.0f));
@@ -229,10 +253,10 @@ public class connectFour implements Runnable {
         c.gridwidth = 2;
         f.add(startButton,c);
   
-        b_e.addActionListener(new ConnectFourActionListener(f, EASY, this));
-        b_m.addActionListener(new ConnectFourActionListener(f, MED, this));
-        b_h.addActionListener(new ConnectFourActionListener(f, HARD, this));
-        b_2.addActionListener(new ConnectFourActionListener(f, HUMAN, this));
+        setEasyButton.addActionListener(new ConnectFourActionListener(f, EASY, this));
+        setMediumButton.addActionListener(new ConnectFourActionListener(f, MED, this));
+        setHardButton.addActionListener(new ConnectFourActionListener(f, HARD, this));
+        setTwoPlayerButton.addActionListener(new ConnectFourActionListener(f, HUMAN, this));
         box_rows.addActionListener(new ConnectFourActionListener(f, ROWS_IN, this, box_rows));
         box_cols.addActionListener(new ConnectFourActionListener(f, COLS_IN, this, box_cols));
         startButton.addActionListener(new ConnectFourActionListener(f, START, this));
@@ -248,7 +272,9 @@ public class connectFour implements Runnable {
      */
     private void gameFrame()
     {
+
         f.getContentPane().removeAll();
+
         setColumnButtons();
         setSidePanel();
 
