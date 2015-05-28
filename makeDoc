@@ -1,0 +1,1 @@
+javadoc -sourcepath Board.java BoardRenderer.java ConnectFourActionListener.java connectFour.java EasyPlayer.java HardPlayer.java HumanPlayer.java MediumPlayer.java Player.java Simulator.java -package -d doc

@@ -270,8 +270,8 @@ public class connectFour implements Runnable {
      * Responsible for the initialisation of all User Interface objects
      * used during the game
      */
-    private void gameFrame()
-    {   f.getContentPane().removeAll();
+    private void gameFrame(){
+        f.getContentPane().removeAll();
         setColumnButtons();
         setSidePanel();
 
