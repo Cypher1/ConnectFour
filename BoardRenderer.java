@@ -1,11 +1,9 @@
 //Basic Renderer for the board
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.Timer;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Date;
+import java.util.LinkedList;
 
 class BoardRenderer extends JPanel implements ActionListener{
     /**
@@ -30,6 +28,8 @@ class BoardRenderer extends JPanel implements ActionListener{
 
     private Integer lastX = null;
     private Integer lastY = null;
+    private LinkedList<Integer> lastXs = new LinkedList<>();
+    private LinkedList<Integer> lastYs = new LinkedList<>();
     private int dropDistance;
     private static int delay = 20;
 
@@ -51,10 +51,9 @@ class BoardRenderer extends JPanel implements ActionListener{
 
         width = startX*2+(sizeX+spacing)*board.getWidth();
         height = startY*2+(sizeY+spacing)*board.getHeight();
-
-        lastX = board.getLastX();
-        lastY = board.getLastY();
-        dropDistance = DROP_HEIGHT;
+        
+        lastXs.add(board.getLastX());
+        lastYs.add(board.getLastY());
 
         // set a preferred size for the custom panel.
         setPreferredSize(new Dimension(width, height));
@@ -109,7 +108,15 @@ class BoardRenderer extends JPanel implements ActionListener{
                 dropDistance = 0;
             }
         } 
-                
+
+        if(dropDistance == 0 && lastXs.size() > 1){
+            lastXs.removeFirst();
+            lastYs.removeFirst();
+            lastX = lastXs.getFirst();
+            lastY = lastYs.getFirst();
+            dropDistance = DROP_HEIGHT;
+        }
+
         int width = board.getWidth();
         int height = board.getHeight();
         for(int y = 0; y < height; y++){
@@ -118,12 +125,29 @@ class BoardRenderer extends JPanel implements ActionListener{
                
                 int xPos = startX+(sizeX+spacing)*x;
                 int yPos = startY+(sizeY+spacing)*y;
-                boolean dropping = (lastX != null && lastY != null && lastX == x && lastY == y && (dropDistance > 0));
+                boolean dropping = (dropDistance > 0);
+                boolean hidden = false;
+
+                if(dropping){//check if this is one of the ones being dropped
+                    if(lastX != null && lastX == x && lastY != null && lastY == y){
+                        dropping = true;
+                        hidden = true;
+                    }
+                    else{
+                        dropping = false;
+                        for(int i=0; i < lastXs.size(); i++){
+                            if(lastXs.get(i) == x && lastYs.get(i) == y){
+                                hidden = true;
+                                break;
+                            }
+                        }
+                    }
+                }
 
                 g2d.setColor( Color.getHSBColor(0, 0, 0) );
                 g2d.fillOval(xPos-1, yPos-1, sizeX+2, sizeY+2); 
                                 
-                if(state != null && !dropping){
+                if(state != null && !hidden){
                     if(board.isWin(x,y) == state){
                         g2d.setColor(Color.white);
                         g2d.fillOval(xPos, yPos, sizeX, sizeY);
