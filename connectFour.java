@@ -384,7 +384,7 @@ public class connectFour implements Runnable {
 
         JButton b_hint = new JButton("HINT");
         ConnectFourActionListener l_hint = new ConnectFourActionListener(f, HINT, this);
-        b_quit.addActionListener(l_hint);        
+        b_hint.addActionListener(l_hint);        
         
         //create new grid bag layout for the restart button and add to panel
         c = new GridBagConstraints();

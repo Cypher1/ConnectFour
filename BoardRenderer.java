@@ -98,9 +98,6 @@ class BoardRenderer extends JPanel implements ActionListener{
             return;
         }
 
-        if(gameMessage != null)
-            updateGameMessage( board.getCurrentPlayer(), board.getWinner());
-
         if ( (g2d == null) || (!offDimension.equals(getSize()))) {
             offDimension = getSize();
             offImage = createImage(getSize().width, getSize().height);
@@ -185,11 +182,10 @@ class BoardRenderer extends JPanel implements ActionListener{
                 }
             }
         }
-        g.drawImage(offImage, 0, 0, this); 
-
-        if(gameMessage != null){
+        if(gameMessage != null)
             updateGameMessage( board.getCurrentPlayer(), board.getWinner());
-        }
+
+        g.drawImage(offImage, 0, 0, this); 
    }
     
     @Override
@@ -210,7 +206,7 @@ class BoardRenderer extends JPanel implements ActionListener{
     /** 
     *    function responsible for updating play messages each turn
     */
-    private void updateGameMessage(int player, Integer win)
+    public void updateGameMessage(int player, Integer win)
     {
         //will be the opposite player if there is a winner
         if (win != null) player = (player + 1)%2;
@@ -235,8 +231,22 @@ class BoardRenderer extends JPanel implements ActionListener{
         if(board.isFull()){
             message = "Draw";
         }
+
         //add the message to the gameMessage JLabel
         gameMessage.setText(message);
+    }
+
+    /**
+     * Responsible for updating the game message to show a hint.
+     * Should be called by the Board when a hint is requested 
+     * @param col : is the column of the hint 
+     */
+    public void provideHint(int col)
+    {
+        String hint = "HINT: column " + col;
+        System.out.println("Sent to this.gameMessage: " + hint);
+        gameMessage.setFont(gameMessage.getFont().deriveFont(23.0f));
+        gameMessage.setText(hint);
     }
 
     /**
