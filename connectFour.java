@@ -23,6 +23,7 @@ public class connectFour implements Runnable {
 
     private static final int NUM_PLAYERS = 2;
     private static final int WINLEN = 4;
+    private static final int MIN_BOARDSIZE = 4;
     private static final int x = 0;
     private static final int y = 1;
     
@@ -57,7 +58,6 @@ public class connectFour implements Runnable {
     //these are from board renderer sizes and spacing
     public static final int PIXELS_PER_COL = 60 + 5; 
     public static final int PIXELS_PER_ROW = 60 + 5; 
-
 
     private JFrame f;
     private JLabel gameMessage;
@@ -254,7 +254,7 @@ public class connectFour implements Runnable {
         
         String[] items = {"4","5","6","7","8","9","10"};
         JComboBox<String> box_cols = new JComboBox<>(items);
-        box_cols.setSelectedIndex(boardSize[0]-4);
+        box_cols.setSelectedIndex(boardSize[0]-MIN_BOARDSIZE);
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(5,15,0,10);
         c.gridy = c.gridy+1;
@@ -263,7 +263,7 @@ public class connectFour implements Runnable {
         f.add(box_cols, c);
 
         JComboBox<String> box_rows = new JComboBox<>(items);
-        box_rows.setSelectedIndex(boardSize[1]-4); 
+        box_rows.setSelectedIndex(boardSize[1]-MIN_BOARDSIZE); 
 
         c.anchor = GridBagConstraints.EAST;
         c.gridx = 0;
