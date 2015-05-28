@@ -231,6 +231,9 @@ class BoardRenderer extends JPanel implements ActionListener{
             message = colour + "'s turn";
         }
 
+        if(board.isFull()){
+            message = "Draw";
+        }
         //add the message to the gameMessage JLabel
         gameMessage.setText(message);
     }
