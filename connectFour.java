@@ -117,73 +117,79 @@ public class connectFour implements Runnable {
         int height;
         //remove everything from f to give the new perspective
         f.getContentPane().removeAll();
-        width = 600;
-        height = 700;
+        width = 500;
+        height = 600;
         f.getContentPane().setMinimumSize(new Dimension(width, height));
 
         GridBagConstraints c = new GridBagConstraints();
         JLabel title = new JLabel("<html>Connect Four</>");
         title.setFont (title.getFont ().deriveFont (24.0f));
+        c.gridy = 8;
         f.add(title); 
 
         JLabel sub = new JLabel("Choose your game mode:");
         sub.setFont (sub.getFont ().deriveFont (22.0f));
-        c.gridy = 1;
+        c.gridy = 12;
         c.gridx = 0;
         c.gridwidth = 2;
         f.add(sub,c);
 
         JButton b_e = new JButton("EASY");
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.ipady = 4;
-        c.gridy = 2;
+        b_e.setPreferredSize(new Dimension (150,28));
+        c.ipady = 5;
+        c.gridy = 20;
         f.add(b_e, c);
 
         JButton b_m = new JButton("MEDIUM"); 
-        c.gridy = 3;
+        b_m.setPreferredSize(new Dimension (150,28));
+        c.gridy = 24;
         c.gridx = 0;
         f.add(b_m, c);
 
         JButton b_h = new JButton("HARD");
-        c.gridy = 4;
+        b_h.setPreferredSize(new Dimension (150,28));
+        c.gridy = 30;
         f.add(b_h, c);
 
         JButton b_2 = new JButton("2 PLAYER MODE");
-        c.gridy = 5;
+        b_2.setPreferredSize(new Dimension (150,28));
+        c.gridy = 34;
         f.add(b_2,c);
         
         JLabel selection = new JLabel("Select game size:");
         selection.setFont (selection.getFont ().deriveFont (16.0f));
-        c.gridy = 6;
+        c.gridy = 38;
         f.add(selection,c);
 
         JLabel row = new JLabel("Row:");
         row.setFont (row.getFont ().deriveFont (14.0f));
-        c.gridy = 7;
+        c.gridy = 42;
         c.gridwidth = 1;
         f.add(row,c);
         String[] items = {"4","6","7","8","9","10"};
       
         JComboBox<String> box = new JComboBox<>(items);
+        box.setSelectedIndex(1);
         f.add(box);
-        c.gridy = 8;
+        c.gridy = 46;
         f.add(box, c);
 
         JLabel col = new JLabel("Column:");
         col.setFont (col.getFont ().deriveFont (14.0f));
-        c.gridy = 7;
+        c.gridy = 42;
         c.gridx = 1;
         f.add(col,c);
         
         JComboBox<String> box1 = new JComboBox<>(items);
         f.add(box1);
-        c.gridy = 8;
+        box1.setSelectedIndex(2);
+        c.gridy = 46;
         c.gridx = 1;
         f.add(box1, c);
 
         startButton = new JButton("Start");
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridy = 9;
+        startButton.setPreferredSize(new Dimension (150,28));
+        c.gridy = 50;
         c.gridx = 0;
         c.gridwidth = 2;
         f.add(startButton,c);
