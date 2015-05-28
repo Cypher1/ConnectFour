@@ -23,6 +23,7 @@ public class connectFour implements Runnable {
 
     private static final int NUM_PLAYERS = 2;
     private static final int WINLEN = 4;
+    private static final int MIN_BOARDSIZE = 4;
     private static final int x = 0;
     private static final int y = 1;
     
@@ -49,10 +50,14 @@ public class connectFour implements Runnable {
     private static final int[] COL_BUTTON_PADDING = {10, 50*8};
     public static final int[] BOARD_PLACEMENT = {0, 1};
     public static final int[] SIDEPANEL_PLACEMENT = {1, 1};
-    public static final int[] SIDEPANEL_SIZE = {65 * 7 / 2, 65 * 6};
+    public static final int[] SIDEPANEL_SIZE = {65 * 7 / 2, 65 * 4};
     public static final int[] MESSAGE_PLACEMENT = {0, 2};
     public static final int MESSAGE_WIDTH = 2;
+    public static final int[] BUTTON_SIZE = {150, 28};
 
+    //these are from board renderer sizes and spacing
+    public static final int PIXELS_PER_COL = 60 + 5; 
+    public static final int PIXELS_PER_ROW = 60 + 5; 
 
     private JFrame f;
     private JLabel gameMessage;
@@ -66,15 +71,26 @@ public class connectFour implements Runnable {
 
     private Simulator simulator;
     private LinkedList<Simulator> undorecord = new LinkedList<Simulator>();
-    LinkedList<Player> players;
+    private LinkedList<Player> players;
     private int[] boardSize = {7, 6};
 
     @Override
     public void run() {
         System.out.println("RUNNING");
+        //set look and feel with a UI Manager
+        try{
+            /*DIFFERENT "LOOK AND FEEL"s*/
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+            //UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+            //UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+            //UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel");
+            //UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+        } catch (Exception e){
+            System.out.println("Setting look and feel failed");
+        }
+
         // Create the window
         f = new JFrame("Connect Four!");
-        // Add a layout manager so that the button is not placed on top of the label
         //reinitialise the JFrame for current use
         f.setLayout(new GridBagLayout());
         // Sets the behavior for when the window is closed
@@ -170,7 +186,7 @@ public class connectFour implements Runnable {
         
         undorecord = new LinkedList<Simulator>();
         
-        gameFrame();
+        initGameFrame();
         initBackend();
         simulator.gameUpdate();
     }
@@ -208,22 +224,22 @@ public class connectFour implements Runnable {
         f.add(sub,c);
 
         setEasyButton = new JButton("EASY");
-        setEasyButton.setPreferredSize(new Dimension (150,28));
+        setEasyButton.setPreferredSize(new Dimension (BUTTON_SIZE[x], BUTTON_SIZE[y]));
         c.gridy = c.gridy+1;
         f.add(setEasyButton, c);
 
         setMediumButton = new JButton("MEDIUM"); 
-        setMediumButton.setPreferredSize(new Dimension (150,28));
+        setMediumButton.setPreferredSize(new Dimension (BUTTON_SIZE[x],BUTTON_SIZE[y]));
         c.gridy = c.gridy+1;
         f.add(setMediumButton, c);
 
         setHardButton = new JButton("HARD");
-        setHardButton.setPreferredSize(new Dimension (150,28));
+        setHardButton.setPreferredSize(new Dimension (BUTTON_SIZE[x], BUTTON_SIZE[y]));
         c.gridy = c.gridy+1;
         f.add(setHardButton, c);
 
         setTwoPlayerButton = new JButton("2 PLAYER MODE");
-        setTwoPlayerButton.setPreferredSize(new Dimension (150,28));
+        setTwoPlayerButton.setPreferredSize(new Dimension (BUTTON_SIZE[x], BUTTON_SIZE[y]));
         c.gridy = c.gridy+1;
         f.add(setTwoPlayerButton,c);
         
@@ -249,7 +265,7 @@ public class connectFour implements Runnable {
         
         String[] items = {"4","5","6","7","8","9","10"};
         JComboBox<String> box_cols = new JComboBox<>(items);
-        box_cols.setSelectedIndex(boardSize[0]-4);
+        box_cols.setSelectedIndex(boardSize[0]-MIN_BOARDSIZE);
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(5,15,0,10);
         c.gridy = c.gridy+1;
@@ -258,13 +274,14 @@ public class connectFour implements Runnable {
         f.add(box_cols, c);
 
         JComboBox<String> box_rows = new JComboBox<>(items);
-        box_rows.setSelectedIndex(boardSize[1]-4);
+        box_rows.setSelectedIndex(boardSize[1]-MIN_BOARDSIZE); 
+
         c.anchor = GridBagConstraints.EAST;
         c.gridx = 0;
         f.add(box_rows, c);
 
         startButton = new JButton("Start");
-        startButton.setPreferredSize(new Dimension (150,28));
+        startButton.setPreferredSize(new Dimension (BUTTON_SIZE[x], BUTTON_SIZE[y]));
         c.anchor = GridBagConstraints.CENTER;
         c.gridy = c.gridy + 1;
         c.gridwidth = 2;
@@ -289,7 +306,7 @@ public class connectFour implements Runnable {
      * pre: the game frame so far has not been corrupted<br>
      * post: the game frame includes all the buttons and side pale
      */
-    private void gameFrame(){
+    private void initGameFrame(){
         f.getContentPane().removeAll();
         f.setMinimumSize(new Dimension(-1, -1));
 
@@ -307,8 +324,7 @@ public class connectFour implements Runnable {
      *  pre: the frame has not been corrupted so far<br>
      *  post: a board renderer and simulator has been created and included
      */
-    private void initBackend()
-    {
+    private void initBackend(){
         //initiate the simuator with players;
         simulator = new Simulator(players, boardSize[0], boardSize[1]);
         //clear all previuos simulators saved for the undo function
@@ -335,15 +351,15 @@ public class connectFour implements Runnable {
      *  pre: the frame has not been corrupted so far <br>
      *  post: the column buttons have been set in the frame
      */
-    public void setColumnButtons()
-    {
+    public void setColumnButtons(){
         //create a board panel and correct GridBagConstraints
         JPanel boardPanel = new JPanel();
         boardPanel.setLayout(new GridBagLayout());
 
-        //get the height and width of the board for here!
-        int width = 65 * boardSize[x];
-        int height = 65 * boardSize[y]; 
+        //get the height and width of the board
+        int width = boardSize[x] * PIXELS_PER_COL;
+        int height = boardSize[y] * PIXELS_PER_ROW; 
+
         boardPanel.setPreferredSize(new Dimension(width,height));
 
         //make the board panel invisible
@@ -382,9 +398,7 @@ public class connectFour implements Runnable {
      *  pre: the frame has not been corrupted so far<br>
      *  post: the side panel has been populated with the appropriate buttons
      */
-    public void setSidePanel()
-
-    {
+    public void setSidePanel(){
         // create a new JPanel and name set layout manager
         JPanel sidePanel = new JPanel();
         sidePanel.setLayout(new GridBagLayout());
@@ -401,23 +415,26 @@ public class connectFour implements Runnable {
         //create and add a quit button
         JButton b_restart = new JButton("RESTART");
         ConnectFourActionListener l_restart = new ConnectFourActionListener(f, START, this);
+        b_restart.setPreferredSize(new Dimension (BUTTON_SIZE[x], BUTTON_SIZE[y]));
         b_restart.addActionListener(l_restart);
 
         JButton b_undo = new JButton("UNDO");
         ConnectFourActionListener l_undo = new ConnectFourActionListener(f, UNDO, this);
+        b_undo.setPreferredSize(new Dimension (BUTTON_SIZE[x], BUTTON_SIZE[y]));
         b_undo.addActionListener(l_undo);
 
         JButton b_quit = new JButton("QUIT GAME");
         ConnectFourActionListener l_quit = new ConnectFourActionListener(f, QUIT_GAME, this);
+        b_quit.setPreferredSize(new Dimension (BUTTON_SIZE[x], BUTTON_SIZE[y]));
         b_quit.addActionListener(l_quit);
 
         JButton b_hint = new JButton("HINT");
         ConnectFourActionListener l_hint = new ConnectFourActionListener(f, HINT, this);
+        b_hint.setPreferredSize(new Dimension (BUTTON_SIZE[x], BUTTON_SIZE[y]));
         b_hint.addActionListener(l_hint);        
         
         //create new grid bag layout for the restart button and add to panel
         c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
         c.gridwidth = RESTART_BUTTON_WIDTH;
         c.gridy = RESTART_BUTTON_PLACEMENT[y];
         c.insets = new Insets(10,0,0,0);  //internal padding for buttons
@@ -434,6 +451,7 @@ public class connectFour implements Runnable {
         //create a game message object and add it to the panel
         gameMessage = new JLabel("");
         gameMessage.setFont(gameMessage.getFont().deriveFont(18.0f));
+        c.anchor = GridBagConstraints.CENTER;
         c.gridy = MESSAGE_PLACEMENT[y];
         c.gridwidth = MESSAGE_WIDTH;
         sidePanel.add(gameMessage, c);
@@ -448,8 +466,7 @@ public class connectFour implements Runnable {
      *  @param column will be a number from 0 to 6 indicating the column the human player wants to 
      *  drop a tile into
      */
-    public void humanPlayerMove(int column)
-    {
+    public void humanPlayerMove(int column){
         //get the current player
         int player = simulator.getCurrentPlayer();
         Player currPlayer = players.get(player);
@@ -472,8 +489,7 @@ public class connectFour implements Runnable {
      * pre: the game state is valid <br>
      * post: the simulator has been called to provie a hint to the player
      */
-    public void provideHint()
-    {
+    public void provideHint(){
         simulator.provideHint();
     }
 
