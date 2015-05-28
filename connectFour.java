@@ -148,77 +148,84 @@ public class connectFour implements Runnable {
         //remove everything from f to give the new perspective
         f.getContentPane().removeAll();
         width = 500;
-        height = 600;
-        f.getContentPane().setMinimumSize(new Dimension(width, height));
+        height = 550;
+        f.setMinimumSize(new Dimension(width, height));
 
         GridBagConstraints c = new GridBagConstraints();
-        JLabel title = new JLabel("<html>Connect Four</>");
-        title.setFont (title.getFont ().deriveFont (24.0f));
-        c.gridy = 8;
-        f.add(title); 
+        JLabel title = new JLabel("Connect Four");
+        title.setFont (title.getFont ().deriveFont(24.0f));
+        c.anchor = GridBagConstraints.CENTER;
+        c.gridy = 0; //insert at the top of the screen
+        c.gridwidth = 2;
+        c.insets = new Insets(5,0,0,0);  //top padding
+        f.add(title, c); 
 
         JLabel sub = new JLabel("Choose your game mode:");
         sub.setFont (sub.getFont ().deriveFont (22.0f));
-        c.gridy = 12;
-        c.gridx = 0;
-        c.gridwidth = 2;
+        c.gridy = c.gridy+1;
         f.add(sub,c);
 
         JButton b_e = new JButton("EASY");
         b_e.setPreferredSize(new Dimension (150,28));
-        c.ipady = 5;
-        c.gridy = 20;
+        c.gridy = c.gridy+1;
         f.add(b_e, c);
 
         JButton b_m = new JButton("MEDIUM"); 
         b_m.setPreferredSize(new Dimension (150,28));
-        c.gridy = 24;
-        c.gridx = 0;
+        c.gridy = c.gridy+1;
         f.add(b_m, c);
 
         JButton b_h = new JButton("HARD");
         b_h.setPreferredSize(new Dimension (150,28));
-        c.gridy = 30;
+        c.gridy = c.gridy+1;
         f.add(b_h, c);
 
         JButton b_2 = new JButton("2 PLAYER MODE");
         b_2.setPreferredSize(new Dimension (150,28));
-        c.gridy = 34;
+        c.gridy = c.gridy+1;
         f.add(b_2,c);
         
         JLabel selection = new JLabel("Select game size:");
         selection.setFont (selection.getFont ().deriveFont (16.0f));
-        c.gridy = 38;
+        c.gridwidth = 2;
+        c.gridy = c.gridy+1;
         f.add(selection,c);
 
-        JLabel row = new JLabel("Row:");
+        JLabel row = new JLabel("Row:   ");
         row.setFont (row.getFont ().deriveFont (14.0f));
-        c.gridy = 42;
+        c.anchor = GridBagConstraints.EAST;
+        c.insets = new Insets(5,10,0,10);
         c.gridwidth = 1;
+        c.gridy = c.gridy+1;
         f.add(row,c);
         String[] items = {"4","5","6","7","8","9","10"};
       
-        JComboBox<String> box_rows = new JComboBox<>(items);
-        box_rows.setSelectedIndex(1);
-        c.gridy = 46;
-        f.add(box_rows, c);
 
         JLabel col = new JLabel("Column:");
         col.setFont (col.getFont ().deriveFont (14.0f));
-        c.gridy = 42;
+        c.anchor = GridBagConstraints.WEST;
         c.gridx = 1;
         f.add(col,c);
         
         JComboBox<String> box_cols = new JComboBox<>(items);
         box_cols.setSelectedIndex(2);
-        c.gridy = 46;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(5,15,0,10);
+        c.gridy = c.gridy+1;
         c.gridx = 1;
+        c.weightx = width/2;
         f.add(box_cols, c);
+
+        JComboBox<String> box_rows = new JComboBox<>(items);
+        box_rows.setSelectedIndex(1);
+        c.anchor = GridBagConstraints.EAST;
+        c.gridx = 0;
+        f.add(box_rows, c);
 
         startButton = new JButton("Start");
         startButton.setPreferredSize(new Dimension (150,28));
-        c.gridy = 50;
-        c.gridx = 0;
+        c.anchor = GridBagConstraints.CENTER;
+        c.gridy = c.gridy + 1;
         c.gridwidth = 2;
         f.add(startButton,c);
   
@@ -236,7 +243,8 @@ public class connectFour implements Runnable {
     }
     
     /**
-     *  responsible for initialising the buttons, labels and panels used during game runtime
+     * Responsible for the initialisation of all User Interface objects
+     * used during the game
      */
     private void gameFrame()
     {
@@ -255,6 +263,8 @@ public class connectFour implements Runnable {
     {
         //initiate the simuator with players;
         simulator = new Simulator(players, boardSize[0], boardSize[1]);
+        //clear all previuos simulators saved for the undo function
+        LinkedList<Simulator> undorecord = new LinkedList<Simulator>();
         
         //render the start board
         //Create a board renderer and a new board
@@ -354,6 +364,7 @@ public class connectFour implements Runnable {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridwidth = RESTART_BUTTON_WIDTH;
         c.gridy = RESTART_BUTTON_PLACEMENT[y];
+        c.insets = new Insets(10,0,0,0);  //internal padding for buttons
         
         //add all the buttons underneath each other
         sidePanel.add(b_restart, c);
