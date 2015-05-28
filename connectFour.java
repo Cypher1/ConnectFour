@@ -38,7 +38,7 @@ public class connectFour implements Runnable {
     public static final int QUIT_GAME = -3;
     public static final int ROWS_IN = -4;
     public static final int COLS_IN = -5;
-
+    public static final int HINT = -6;
     //define the grid positions for buttons e.t.c.
     private static final int[] RESTART_BUTTON_PLACEMENT = {0, 7};
     private static final int RESTART_BUTTON_WIDTH = 2;
@@ -172,7 +172,7 @@ public class connectFour implements Runnable {
         //remove everything from f to give the new perspective
         f.getContentPane().removeAll();
         width = 500;
-        height = 550;
+        height = 500;
         f.setMinimumSize(new Dimension(width, height));
 
         GridBagConstraints c = new GridBagConstraints();
@@ -271,11 +271,14 @@ public class connectFour implements Runnable {
      */
     private void gameFrame()
     {
-        f.repaint();
+
+        f.getContentPane().removeAll();
+
         setColumnButtons();
         setSidePanel();
 
         f.pack();
+        f.repaint();
         f.setVisible(true);
     }
 
@@ -382,6 +385,10 @@ public class connectFour implements Runnable {
         JButton b_quit = new JButton("QUIT GAME");
         ConnectFourActionListener l_quit = new ConnectFourActionListener(f, QUIT_GAME, this);
         b_quit.addActionListener(l_quit);
+
+        JButton b_hint = new JButton("HINT");
+        ConnectFourActionListener l_hint = new ConnectFourActionListener(f, HINT, this);
+        b_quit.addActionListener(l_hint);        
         
         //create new grid bag layout for the restart button and add to panel
         c = new GridBagConstraints();
@@ -392,10 +399,12 @@ public class connectFour implements Runnable {
         
         //add all the buttons underneath each other
         sidePanel.add(b_restart, c);
-        c.gridy = c.gridy+2;
+        c.gridy = c.gridy+1;
         sidePanel.add(b_undo, c);
-        c.gridy = c.gridy+2;
+        c.gridy = c.gridy+1;
         sidePanel.add(b_quit, c);
+        c.gridy = c.gridy+1;
+        sidePanel.add(b_hint, c);
 
         //create a game message object and add it to the panel
         gameMessage = new JLabel("");
@@ -428,6 +437,14 @@ public class connectFour implements Runnable {
             human.makeMove(column);
         }
         simulator.gameUpdate();
+    }
+
+    /**
+     * A function which will ask the simulator to provide a hint for the human players next move
+     */
+    public void provideHint()
+    {
+        simulator.provideHint();
     }
 
     /**

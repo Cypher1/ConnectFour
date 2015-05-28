@@ -101,4 +101,17 @@ public class Simulator
         }                                    
         return sim;
     }
+
+    /**
+     * A function that will provide the human player with a hint for the next move. 
+     */
+    public void provideHint()
+    {
+        Player curr = players.get(currentPlayer);
+
+        if (curr instanceof HumanPlayer){
+            HumanPlayer human = (HumanPlayer)curr;
+            //int hintPos = curr.hintMove();
+        }
+    }
 }
