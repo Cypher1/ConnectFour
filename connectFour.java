@@ -271,9 +271,6 @@ public class connectFour implements Runnable {
      */
     private void gameFrame()
     {
-
-        f.getContentPane().removeAll();
-
         setColumnButtons();
         setSidePanel();
 
