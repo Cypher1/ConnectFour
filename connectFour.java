@@ -398,6 +398,9 @@ public class connectFour implements Runnable {
         if (currPlayer instanceof HumanPlayer){
             undorecord.add(simulator.clone());
             HumanPlayer human = (HumanPlayer)currPlayer;
+
+            System.out.println("HINT: "+human.hintMove(simulator.getBoard()));
+
             human.makeMove(column);
         }
         simulator.gameUpdate();
