@@ -228,21 +228,25 @@ public class connectFour implements Runnable {
         f.add(sub,c);
 
         setEasyButton = new JButton("EASY");
+        setEasyButton.setFocusPainted(false);
         setEasyButton.setPreferredSize(new Dimension (BUTTON_SIZE[x], BUTTON_SIZE[y]));
         c.gridy = c.gridy+1;
         f.add(setEasyButton, c);
 
         setMediumButton = new JButton("MEDIUM"); 
+        setMediumButton.setFocusPainted(false);
         setMediumButton.setPreferredSize(new Dimension (BUTTON_SIZE[x],BUTTON_SIZE[y]));
         c.gridy = c.gridy+1;
         f.add(setMediumButton, c);
 
         setHardButton = new JButton("HARD");
+        setHardButton.setFocusPainted(false);
         setHardButton.setPreferredSize(new Dimension (BUTTON_SIZE[x], BUTTON_SIZE[y]));
         c.gridy = c.gridy+1;
         f.add(setHardButton, c);
 
         setTwoPlayerButton = new JButton("2 PLAYER MODE");
+        setTwoPlayerButton.setFocusPainted(false);
         setTwoPlayerButton.setPreferredSize(new Dimension (BUTTON_SIZE[x], BUTTON_SIZE[y]));
         c.gridy = c.gridy+1;
         f.add(setTwoPlayerButton,c);
