@@ -239,17 +239,19 @@ class BoardRenderer extends JPanel implements ActionListener{
         }
 
         //create the message
-        String message;
+        String message = "<html><div style=\"text-align: center;\">";
         if (win != null){
-            message = colour + " player wins!!";
+            message += colour + " player<p>wins!!!";
             gameMessage.setFont(gameMessage.getFont().deriveFont(23.0f));
         }else{
-            message = colour + "'s turn";
+            message += colour + "'s<p>turn";
         }
 
         if(board.isFull()){
-            message = "Draw";
+            message += "Draw";
         }
+
+        message += "</div></html>";
 
         //add the message to the gameMessage JLabel
         gameMessage.setText(message);
