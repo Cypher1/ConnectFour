@@ -210,8 +210,12 @@ public class connectFour implements Runnable {
         f.setMinimumSize(new Dimension(width, height));
 
         GridBagConstraints c = new GridBagConstraints();
-        JLabel title = new JLabel("Connect Four");
-        title.setFont (title.getFont ().deriveFont(24.0f));
+        String titleText = "<html><div style=\"color: blue\"><b>";
+        titleText += "C<span style=\"color: #FF0000\">o</span>nnect F<span style=\"color: #EAFF00\">o</span>ur";
+        titleText += "</b></div></html>";
+
+        JLabel title = new JLabel(titleText);
+        title.setFont (title.getFont ().deriveFont(40.0f));
         c.anchor = GridBagConstraints.CENTER;
         c.gridy = 0; //insert at the top of the screen
         c.gridwidth = 2;
@@ -219,7 +223,7 @@ public class connectFour implements Runnable {
         f.add(title, c); 
 
         JLabel sub = new JLabel("Choose your game mode:");
-        sub.setFont (sub.getFont ().deriveFont (22.0f));
+        sub.setFont (sub.getFont ().deriveFont (20.0f));
         c.gridy = c.gridy+1;
         f.add(sub,c);
 
@@ -244,7 +248,7 @@ public class connectFour implements Runnable {
         f.add(setTwoPlayerButton,c);
         
         JLabel selection = new JLabel("Select game size:");
-        selection.setFont (selection.getFont ().deriveFont (16.0f));
+        selection.setFont (selection.getFont ().deriveFont (20.0f));
         c.gridwidth = 2;
         c.gridy = c.gridy+1;
         f.add(selection,c);
