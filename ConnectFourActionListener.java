@@ -87,6 +87,7 @@ public class ConnectFourActionListener implements ActionListener {
             game.setBoardWidth(cols);
 
         } else if (button == game.HINT){
+            System.out.println("Hint  button pressed");
             game.provideHint();
         }
     }

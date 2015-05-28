@@ -18,7 +18,6 @@ class BoardRenderer extends JPanel implements ActionListener{
     private int width;
     private int height;
 
-    
     private int startX = 10;
     private int startY = 10;
     
@@ -33,12 +32,16 @@ class BoardRenderer extends JPanel implements ActionListener{
     private LinkedList<Integer> lastYs = new LinkedList<>();
     private int dropDistance;
     private static int delay = 20;
+    private Integer hint = null;
 
     private Dimension offDimension;
     private Image offImage;
     private Graphics2D g2d;
     private Timer timer;
     private Long lastTime = null;
+
+    private static final int FLASH_SPEED = 30;
+    private int flashCounter = 0;
 
     public BoardRenderer(){
         super();
@@ -59,6 +62,7 @@ class BoardRenderer extends JPanel implements ActionListener{
         width = startX*2+(sizeX+spacing)*board.getWidth();
         height = startY*2+(sizeY+spacing)*board.getHeight();
         
+        hint = null;
         lastXs.add(board.getLastX());
         lastYs.add(board.getLastY());
 
@@ -97,9 +101,6 @@ class BoardRenderer extends JPanel implements ActionListener{
         if(getSize().width == 0 || getSize().height == 0){
             return;
         }
-
-        if(gameMessage != null)
-            updateGameMessage( board.getCurrentPlayer(), board.getWinner());
 
         if ( (g2d == null) || (!offDimension.equals(getSize()))) {
             offDimension = getSize();
@@ -159,9 +160,22 @@ class BoardRenderer extends JPanel implements ActionListener{
                 int lineWidth = 2;
                 g2d.setColor( Color.getHSBColor(0, 0, 0) );
                 g2d.fillOval(xPos-lineWidth, yPos-lineWidth, sizeX+2*lineWidth, sizeY+2*lineWidth); 
-                                
-                if(state != null && !hidden){
-                    if(board.isWin(x,y) == state){
+       
+                boolean flashing = false;
+                if(!dropping){
+                    if(state == null && hint != null && hint == x && (y+1 == height || board.getState(x,y+1) != null)){
+                        if(flashCounter < FLASH_SPEED){
+                            state = board.getCurrentPlayer();
+                            flashing = true;
+                        }
+                        if(flashCounter > 2*FLASH_SPEED){
+                            flashCounter = 0;
+                        }
+                    }
+                }
+
+                if(state != null && !hidden || flashing){
+                    if(board.isWin(x,y) == state || flashing){
                         g2d.setColor(Color.white);
                         g2d.fillOval(xPos, yPos, sizeX, sizeY);
                         g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
@@ -185,11 +199,12 @@ class BoardRenderer extends JPanel implements ActionListener{
                 }
             }
         }
-        g.drawImage(offImage, 0, 0, this); 
 
-        if(gameMessage != null){
+
+        if(gameMessage != null)
             updateGameMessage( board.getCurrentPlayer(), board.getWinner());
-        }
+
+        g.drawImage(offImage, 0, 0, this); 
    }
     
     @Override
@@ -210,7 +225,7 @@ class BoardRenderer extends JPanel implements ActionListener{
     /** 
     *    function responsible for updating play messages each turn
     */
-    private void updateGameMessage(int player, Integer win)
+    public void updateGameMessage(int player, Integer win)
     {
         //will be the opposite player if there is a winner
         if (win != null) player = (player + 1)%2;
@@ -235,8 +250,20 @@ class BoardRenderer extends JPanel implements ActionListener{
         if(board.isFull()){
             message = "Draw";
         }
+
         //add the message to the gameMessage JLabel
         gameMessage.setText(message);
+        
+    }
+
+    /**
+     * Responsible for updating the hint to be rendered as a suggestion to the human player.
+     * Should be called by the Board when a hint is requested 
+     * @param col : is the column of the hint 
+     */
+    public void provideHint(int col){
+        hint = col;
+        flashCounter = 0;
     }
 
     /**
@@ -244,6 +271,7 @@ class BoardRenderer extends JPanel implements ActionListener{
      */
     public void actionPerformed(ActionEvent ev){
         if(ev.getSource()==timer){
+            flashCounter++;
             render();// this will call at every 1 second
         }
     }

@@ -13,7 +13,7 @@ class Board implements Cloneable{
     private int winlen;
     private Integer lastX;
     private Integer lastY;
-
+    
     private LinkedList<BoardRenderer> renderers;
 
     /**
@@ -300,5 +300,17 @@ class Board implements Cloneable{
         newBoard.lastX = this.lastX;
         newBoard.lastY = this.lastY;
         return newBoard;
+    }
+
+    /**
+     * A function to tell the Board Renderer to update the game message to provide a
+     * hint to the current player 
+     * @param col : is the column of the hint 
+     */
+    public void provideHint(int col)
+    {
+        for(BoardRenderer render : renderers){
+            render.provideHint(col);
+        }
     }
 }

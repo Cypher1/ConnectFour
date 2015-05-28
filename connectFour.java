@@ -74,7 +74,6 @@ public class connectFour implements Runnable {
         System.out.println("RUNNING");
         // Create the window
         f = new JFrame("Connect Four!");
-        System.out.println("RUNNING");
         // Add a layout manager so that the button is not placed on top of the label
         //reinitialise the JFrame for current use
         f.setLayout(new GridBagLayout());
@@ -292,6 +291,8 @@ public class connectFour implements Runnable {
      */
     private void gameFrame(){
         f.getContentPane().removeAll();
+        f.setMinimumSize(new Dimension(-1, -1));
+
         setColumnButtons();
         setSidePanel();
 
@@ -341,8 +342,8 @@ public class connectFour implements Runnable {
         boardPanel.setLayout(new GridBagLayout());
 
         //get the height and width of the board for here!
-        int width = 65 * boardSize[x]; //!! change this to board 'rows'
-        int height = 65 * boardSize[y]; //!! change this to 'cols'
+        int width = 65 * boardSize[x];
+        int height = 65 * boardSize[y]; 
         boardPanel.setPreferredSize(new Dimension(width,height));
 
         //make the board panel invisible
@@ -358,7 +359,8 @@ public class connectFour implements Runnable {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridy = COL_BUTTON_PLACEMENT[y];
         c.weightx = COL_BUTTON_WEIGHTS[x];
-        c.ipady = COL_BUTTON_PADDING[y];
+        c.gridheight = GridBagConstraints.REMAINDER;
+        c.ipady = height;
 
         //create a button for each column
         for(int i = 0; i < boardSize[x]; i++){
@@ -411,7 +413,7 @@ public class connectFour implements Runnable {
 
         JButton b_hint = new JButton("HINT");
         ConnectFourActionListener l_hint = new ConnectFourActionListener(f, HINT, this);
-        b_quit.addActionListener(l_hint);        
+        b_hint.addActionListener(l_hint);        
         
         //create new grid bag layout for the restart button and add to panel
         c = new GridBagConstraints();
@@ -478,9 +480,9 @@ public class connectFour implements Runnable {
     /**
      * Undoes a move by resetting the Simulator to the old version <p>
      * pre: the game state is valid <br>
-     * post: the game has been reset to before the previous player 1's move, if no moves
-     * were yet made the game state has not changed, can also be called if a player has 
-     * already won, or the game ended in a draw
+     * post: The game has reverted to the state it was in before the last human move, if no
+     * moves were yet made the game state has not changed, can also be called if a player 
+     * has already won, or the game ended in a draw
      */
     public void undoSimulator(){
         if(undorecord.size() > 0){

@@ -108,10 +108,10 @@ public class Simulator
     public void provideHint()
     {
         Player curr = players.get(currentPlayer);
-
         if (curr instanceof HumanPlayer){
             HumanPlayer human = (HumanPlayer)curr;
-            //int hintPos = curr.hintMove();
+            int hintPos = human.hintMove(board);
+            board.provideHint(hintPos);
         }
     }
 }
