@@ -317,8 +317,8 @@ public class connectFour implements Runnable {
         boardPanel.setLayout(new GridBagLayout());
 
         //get the height and width of the board for here!
-        int width = 65 * boardSize[x]; //!! change this to board 'rows'
-        int height = 65 * boardSize[y]; //!! change this to 'cols'
+        int width = 65 * boardSize[x];
+        int height = 65 * boardSize[y]; 
         boardPanel.setPreferredSize(new Dimension(width,height));
 
         //make the board panel invisible
@@ -334,7 +334,8 @@ public class connectFour implements Runnable {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridy = COL_BUTTON_PLACEMENT[y];
         c.weightx = COL_BUTTON_WEIGHTS[x];
-        c.ipady = COL_BUTTON_PADDING[y];
+        c.gridheight = GridBagConstraints.REMAINDER;
+        c.ipady = height;
 
         //create a button for each column
         for(int i = 0; i < boardSize[x]; i++){
