@@ -53,31 +53,41 @@ public class ConnectFourActionListener implements ActionListener {
         if((button >= game.EASY) && (button <= game.HUMAN)){
             //set the game mode
             game.setGameMode(button);
+
         } else if (button == game.START){
             //initialise the game
             game.initGame(f);
+
         } else if (button == game.RESTART) {
             //Go back to the start screen
             game.startScreen(f);
+
         } else if(button == game.UNDO){
             //undo the last move made
             game.undoSimulator();
+
         } else if (button >= game.COL_BUTTON_START){
             //register the move that was made
             game.humanPlayerMove(button - game.COL_BUTTON_START);
+
         } else if (button == game.QUIT_GAME){
             //return to the start screen
             game.startScreen(f);
+
         } else if (button == game.ROWS_IN){
             //register the height of the board that was chosen
             String input = (String)comboBox.getSelectedItem();
             int rows = Integer.parseInt(input);
             game.setBoardHeight(rows);
+
         }  else if (button == game.COLS_IN){
             //register the width of the board that was chosen
             String input = (String)comboBox.getSelectedItem();
             int cols = Integer.parseInt(input);
             game.setBoardWidth(cols);
+
+        } else if (button == game.HINT){
+            game.provideHint();
         }
     }
 }

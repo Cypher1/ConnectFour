@@ -101,4 +101,12 @@ public class Simulator
         }                                    
         return sim;
     }
+
+    /**
+     * A function that will provide the human player with a hint for the next move. 
+     */
+    public void provideHint()
+    {
+           // int hintPos = curr.hintMove(board.clone());
+    }
 }
