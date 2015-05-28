@@ -271,6 +271,8 @@ public class connectFour implements Runnable {
      */
     private void gameFrame(){
         f.getContentPane().removeAll();
+        f.setMinimumSize(new Dimension(-1, -1));
+
         setColumnButtons();
         setSidePanel();
 
@@ -445,6 +447,8 @@ public class connectFour implements Runnable {
 
     /**
      *  Undoes a move by resetting the Simulator to the old version
+     *  pre: A move has been made in the current game
+     *  post: The game has reverted to the state it was in before the last human move
      */
     public void undoSimulator(){
         if(undorecord.size() > 0){
