@@ -23,6 +23,9 @@ public class connectFour implements Runnable {
 
     private static final int NUM_PLAYERS = 2;
     private static final int WINLEN = 4;
+    private static final int x = 0;
+    private static final int y = 1;
+    
     //define the buttons
     public static final int EASY = 0;
     public static final int MED = 1;
@@ -31,8 +34,10 @@ public class connectFour implements Runnable {
     public static final int START = 4;
     public static final int COL_BUTTON_START = 5;
     public static final int RESTART = -1;
-    public static final int QUIT_GAME = -3;
     public static final int UNDO = -2;
+    public static final int QUIT_GAME = -3;
+    public static final int ROWS_IN = -4;
+    public static final int COLS_IN = -5;
 
     //define the grid positions for buttons e.t.c.
     private static final int[] RESTART_BUTTON_PLACEMENT = {0, 7};
@@ -43,7 +48,6 @@ public class connectFour implements Runnable {
     private static final int[] COL_BUTTON_WEIGHTS = {2, 1};
     private static final int[] COL_BUTTON_PADDING = {10, 50*8};
     public static final int[] BOARD_PLACEMENT = {0, 1};
-    public static final int BOARD_WIDTH = 7; //Need to update this for further use
     public static final int[] SIDEPANEL_PLACEMENT = {1, 1};
     public static final int[] MESSAGE_PLACEMENT = {0, 2};
     public static final int MESSAGE_WIDTH = 2;
@@ -56,6 +60,7 @@ public class connectFour implements Runnable {
     private Simulator simulator;
     private LinkedList<Simulator> undorecord = new LinkedList<Simulator>();
     LinkedList<Player> players;
+    private int[] boardSize = {7, 6};
 
     @Override
     public void run() {
@@ -82,7 +87,30 @@ public class connectFour implements Runnable {
         startButton.setEnabled(true);
         gameMode = inputgameMode;
     }
+
+    /**
+     * A function that sets the width of the board, should be called by the action listener 
+     * when the number of columns is changed
+     * @param width: the desired number of columns on the board
+     */
+    public void setBoardWidth(int width){
+        this.boardSize[x] = width;
+    }
+
+    /**
+     * A function that sets the height of the board, should be called by the action listener 
+     * when the number of rows is changed
+     * @param height: the desired number of rows on the board
+     */
+    public void setBoardHeight(int height){
+        this.boardSize[y] = height;
+    }
     
+    /**
+    * Responsible for the initialisation of the game by creating players, updating the user
+    * interface for gameplay and creating all backend objects needed for game simulation
+    * @param f: is the frame the game will be displayed in
+    */
     public void initGame(JFrame f){
         //remove all current buttons etc from frame for the new perspective
         f.getContentPane().removeAll();
@@ -108,7 +136,9 @@ public class connectFour implements Runnable {
     }
 
     /**
-     *  Responsible for setting out and showing the buttons e.t.c. associated with the start screen
+     *  Responsible for constructing, setting out and showing all objects
+     *  in the start screen
+     *  @param f: the frame that the start screen will be shown in
      */
 
     public void startScreen(JFrame f){  
@@ -168,11 +198,10 @@ public class connectFour implements Runnable {
         f.add(row,c);
         String[] items = {"4","5","6","7","8","9","10"};
       
-        JComboBox<String> box = new JComboBox<>(items);
-        box.setSelectedIndex(1);
-        f.add(box);
+        JComboBox<String> box_rows = new JComboBox<>(items);
+        box_rows.setSelectedIndex(1);
         c.gridy = 46;
-        f.add(box, c);
+        f.add(box_rows, c);
 
         JLabel col = new JLabel("Column:");
         col.setFont (col.getFont ().deriveFont (14.0f));
@@ -180,12 +209,11 @@ public class connectFour implements Runnable {
         c.gridx = 1;
         f.add(col,c);
         
-        JComboBox<String> box1 = new JComboBox<>(items);
-        f.add(box1);
-        box1.setSelectedIndex(2);
+        JComboBox<String> box_cols = new JComboBox<>(items);
+        box_cols.setSelectedIndex(2);
         c.gridy = 46;
         c.gridx = 1;
-        f.add(box1, c);
+        f.add(box_cols, c);
 
         startButton = new JButton("Start");
         startButton.setPreferredSize(new Dimension (150,28));
@@ -198,7 +226,8 @@ public class connectFour implements Runnable {
         b_m.addActionListener(new ConnectFourActionListener(f, MED, this));
         b_h.addActionListener(new ConnectFourActionListener(f, HARD, this));
         b_2.addActionListener(new ConnectFourActionListener(f, HUMAN, this));
-
+        box_rows.addActionListener(new ConnectFourActionListener(f, ROWS_IN, this, box_rows));
+        box_cols.addActionListener(new ConnectFourActionListener(f, COLS_IN, this, box_cols));
         startButton.addActionListener(new ConnectFourActionListener(f, START, this));
         startButton.setEnabled(false);
 
@@ -224,10 +253,8 @@ public class connectFour implements Runnable {
      */
     private void initBackend()
     {
-        //initiate the simuator with players
-        int boardWidth = 7;
-        int boardHeight = 6;
-        simulator = new Simulator(players, boardWidth, boardHeight);
+        //initiate the simuator with players;
+        simulator = new Simulator(players, boardSize[0], boardSize[1]);
         
         //render the start board
         //Create a board renderer and a new board
@@ -255,8 +282,8 @@ public class connectFour implements Runnable {
         boardPanel.setLayout(new GridBagLayout());
 
         //get the height and width of the board for here!
-        int width = 65 * 7; //!! change this to board 'rows'
-        int height = 65 * 6; //!! change this to 'cols'
+        int width = 65 * boardSize[x]; //!! change this to board 'rows'
+        int height = 65 * boardSize[y]; //!! change this to 'cols'
         boardPanel.setPreferredSize(new Dimension(width,height));
 
         //make the board panel invisible
@@ -264,18 +291,18 @@ public class connectFour implements Runnable {
 
         //grid bag layout for panel within frame
         GridBagConstraints c = new GridBagConstraints();
-        c.gridy = BOARD_PLACEMENT[1];
-        c.gridx = BOARD_PLACEMENT[0];
+        c.gridy = BOARD_PLACEMENT[y];
+        c.gridx = BOARD_PLACEMENT[x];
         f.add(boardPanel, c);
 
         //Create grid bag layout columns buttons within panel
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridy = COL_BUTTON_PLACEMENT[0];
-        c.weightx = COL_BUTTON_WEIGHTS[0];
-        c.ipady = COL_BUTTON_PADDING[1];
+        c.gridy = COL_BUTTON_PLACEMENT[y];
+        c.weightx = COL_BUTTON_WEIGHTS[x];
+        c.ipady = COL_BUTTON_PADDING[y];
 
         //create a button for each column
-        for(int i = 0; i < BOARD_WIDTH; i++){
+        for(int i = 0; i < boardSize[x]; i++){
             //create button and set attributes
             JButton b_temp = new JButton("");
             ConnectFourActionListener l_temp = new ConnectFourActionListener(f, COL_BUTTON_START+i, this);
@@ -299,14 +326,14 @@ public class connectFour implements Runnable {
         sidePanel.setLayout(new GridBagLayout());
 
         //get the height and width of the board for here!
-        int width = 65 * 7 / 2; //!! change this to board 'rows'
-        int height = 65 * 6; //!! change this to 'cols'
+        int width = 65 * boardSize[x] / 2; //!! change this to board 'rows'
+        int height = 65 * boardSize[y]; //!! change this to 'cols'
         sidePanel.setPreferredSize(new Dimension(width,height));
 
         //grid bag layout for the side panel within the frame
         GridBagConstraints c = new GridBagConstraints();
-        c.gridy = SIDEPANEL_PLACEMENT[1];
-        c.gridx = SIDEPANEL_PLACEMENT[0];
+        c.gridy = SIDEPANEL_PLACEMENT[y];
+        c.gridx = SIDEPANEL_PLACEMENT[x];
         f.add(sidePanel, c);
 
         //create and add a quit button
@@ -326,7 +353,7 @@ public class connectFour implements Runnable {
         c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridwidth = RESTART_BUTTON_WIDTH;
-        c.gridy = RESTART_BUTTON_PLACEMENT[1];
+        c.gridy = RESTART_BUTTON_PLACEMENT[y];
         
         //add all the buttons underneath each other
         sidePanel.add(b_restart, c);
@@ -338,7 +365,7 @@ public class connectFour implements Runnable {
         //create a game message object and add it to the panel
         gameMessage = new JLabel("");
         gameMessage.setFont(gameMessage.getFont().deriveFont(18.0f));
-        c.gridy = MESSAGE_PLACEMENT[1];
+        c.gridy = MESSAGE_PLACEMENT[y];
         c.gridwidth = MESSAGE_WIDTH;
         sidePanel.add(gameMessage, c);
     }
@@ -369,7 +396,7 @@ public class connectFour implements Runnable {
     }
 
     /**
-     *  Undoes a move by reseting the Simulator to the old version
+     *  Undoes a move by resetting the Simulator to the old version
      */
     public void undoSimulator(){
         if(undorecord.size() > 0){
