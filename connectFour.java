@@ -49,6 +49,7 @@ public class connectFour implements Runnable {
     private static final int[] COL_BUTTON_PADDING = {10, 50*8};
     public static final int[] BOARD_PLACEMENT = {0, 1};
     public static final int[] SIDEPANEL_PLACEMENT = {1, 1};
+    public static final int[] SIDEPANEL_SIZE = {65 * 7 / 2, 65 * 6};
     public static final int[] MESSAGE_PLACEMENT = {0, 2};
     public static final int MESSAGE_WIDTH = 2;
 
@@ -269,8 +270,8 @@ public class connectFour implements Runnable {
      * Responsible for the initialisation of all User Interface objects
      * used during the game
      */
-    private void gameFrame()
-    {
+    private void gameFrame(){
+        f.getContentPane().removeAll();
         setColumnButtons();
         setSidePanel();
 
@@ -360,9 +361,7 @@ public class connectFour implements Runnable {
         sidePanel.setLayout(new GridBagLayout());
 
         //get the height and width of the board for here!
-        int width = 65 * boardSize[x] / 2; //!! change this to board 'rows'
-        int height = 65 * boardSize[y]; //!! change this to 'cols'
-        sidePanel.setPreferredSize(new Dimension(width,height));
+        sidePanel.setPreferredSize(new Dimension(SIDEPANEL_SIZE[x],SIDEPANEL_SIZE[y]));
 
         //grid bag layout for the side panel within the frame
         GridBagConstraints c = new GridBagConstraints();
@@ -452,17 +451,21 @@ public class connectFour implements Runnable {
             f.getContentPane().removeAll();
             simulator = undorecord.getLast().clone();
             undorecord.removeLast();
+
+            //set the side panel and content buttons
+            setColumnButtons();
+            setSidePanel();
+
             BoardRenderer renderer = new BoardRenderer(); 
             //initiate renderer attributes
             renderer.setBoard(simulator.getBoard());
             renderer.setFrame(f);
             renderer.render();
-            
-            //set game frame and add game message label to the renderer 
-            gameFrame();
             renderer.setGameMessage(gameMessage); 
             
             simulator.gameUpdate();
+
+            f.pack();
         }
     }
 }
