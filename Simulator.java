@@ -90,10 +90,6 @@ public class Simulator
     public Simulator clone(){
         Simulator sim = new Simulator(this.players, this.getBoard().getWidth(), this.getBoard().getHeight());
         sim.board = this.board.clone();
-        LinkedList<BoardRenderer> renderers = this.board.getRenderers();
-        for(BoardRenderer renderer : renderers){
-            sim.board.addRenderer(renderer);
-        }                                    
         return sim;
     }
 
