@@ -3,7 +3,7 @@ import java.util.Random;
 * An easy player which simply drops it's token in a random column
 */
 public class EasyPlayer implements Player {
-	Random generator;
+	private Random generator;
 
 	/**
 	* A constructor which creates a Random class
