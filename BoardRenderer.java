@@ -156,8 +156,9 @@ class BoardRenderer extends JPanel implements ActionListener{
                     }
                 }
 
+                int lineWidth = 2;
                 g2d.setColor( Color.getHSBColor(0, 0, 0) );
-                g2d.fillOval(xPos-1, yPos-1, sizeX+2, sizeY+2); 
+                g2d.fillOval(xPos-lineWidth, yPos-lineWidth, sizeX+2*lineWidth, sizeY+2*lineWidth); 
                                 
                 if(state != null && !hidden){
                     if(board.isWin(x,y) == state){
@@ -177,7 +178,7 @@ class BoardRenderer extends JPanel implements ActionListener{
                 if(dropping){
                     yPos -= dropDistance;
                     g2d.setColor( Color.getHSBColor(0, 0, 0) );
-                    g2d.fillOval(xPos-1, yPos-1, sizeX+2, sizeY+2); 
+                    g2d.fillOval(xPos-lineWidth, yPos-lineWidth, sizeX+2*lineWidth, sizeY+2*lineWidth); 
                     
                     g2d.setColor(Color.getHSBColor((float)((state)*0.18), (float)1.0, (float)1.0) );
                     g2d.fillOval(xPos, yPos, sizeX, sizeY);
