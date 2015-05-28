@@ -264,8 +264,10 @@ class BoardRenderer extends JPanel implements ActionListener{
      * @param col : is the column of the hint 
      */
     public void provideHint(int col){
-        hint = col;
-        flashCounter = 0;
+        if(!board.isFull() && board.getWinner() == null){
+            hint = col;
+            flashCounter = 0;
+        }
     }
 
     /**
