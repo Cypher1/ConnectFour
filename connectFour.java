@@ -74,7 +74,6 @@ public class connectFour implements Runnable {
         System.out.println("RUNNING");
         // Create the window
         f = new JFrame("Connect Four!");
-        System.out.println("RUNNING");
         // Add a layout manager so that the button is not placed on top of the label
         //reinitialise the JFrame for current use
         f.setLayout(new GridBagLayout());
