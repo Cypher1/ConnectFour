@@ -18,7 +18,6 @@ class BoardRenderer extends JPanel implements ActionListener{
     private int width;
     private int height;
 
-    
     private int startX = 10;
     private int startY = 10;
     
@@ -33,6 +32,7 @@ class BoardRenderer extends JPanel implements ActionListener{
     private LinkedList<Integer> lastYs = new LinkedList<>();
     private int dropDistance;
     private static int delay = 20;
+    private Integer hint = null;
 
     private Dimension offDimension;
     private Image offImage;
@@ -59,6 +59,7 @@ class BoardRenderer extends JPanel implements ActionListener{
         width = startX*2+(sizeX+spacing)*board.getWidth();
         height = startY*2+(sizeY+spacing)*board.getHeight();
         
+        hint = null;
         lastXs.add(board.getLastX());
         lastYs.add(board.getLastY());
 
@@ -234,6 +235,11 @@ class BoardRenderer extends JPanel implements ActionListener{
 
         //add the message to the gameMessage JLabel
         gameMessage.setText(message);
+        
+        if(hint != null){
+            provideHint(hint);
+        }
+
     }
 
     /**
@@ -243,9 +249,8 @@ class BoardRenderer extends JPanel implements ActionListener{
      */
     public void provideHint(int col)
     {
+        this.hint = col;
         String hint = "HINT: column " + col;
-        System.out.println("Sent to this.gameMessage: " + hint);
-        gameMessage.setFont(gameMessage.getFont().deriveFont(23.0f));
         gameMessage.setText(hint);
     }
 
