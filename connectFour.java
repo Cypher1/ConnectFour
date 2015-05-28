@@ -49,7 +49,7 @@ public class connectFour implements Runnable {
     private static final int[] COL_BUTTON_PADDING = {10, 50*8};
     public static final int[] BOARD_PLACEMENT = {0, 1};
     public static final int[] SIDEPANEL_PLACEMENT = {1, 1};
-    public static final int[] SIDEPANEL_SIZE = {65 * 7 / 2, 65 * 6};
+    public static final int[] SIDEPANEL_SIZE = {65 * 7 / 2, 65 * 4};
     public static final int[] MESSAGE_PLACEMENT = {0, 2};
     public static final int MESSAGE_WIDTH = 2;
     public static final int[] BUTTON_SIZE = {150, 28};
@@ -84,12 +84,22 @@ public class connectFour implements Runnable {
         startScreen(f);
     }
  
+    /**
+    * Sets up a new connectFour object and sets up a game window
+    */
     public static void main(String[] args) {
         connectFour gameWindow = new connectFour();
         // Schedules the application to be run at the correct time in the event queue.
         SwingUtilities.invokeLater(gameWindow);
     }
     
+    /**
+    * A setter function for the game modes of the connectFour object
+    * pre: the given game mode is a valid representation of one of the four game modes<br>
+    * post: the game mode has now been set to the given one
+    * @param inputgameMode: the int representation of the four different game modes:
+    * easy, medium, hard and human vs human
+    */
     public void setGameMode(int inputgameMode) {
         startButton.setEnabled(true);
         gameMode = inputgameMode;
@@ -113,7 +123,9 @@ public class connectFour implements Runnable {
 
     /**
      * A function that sets the width of the board, should be called by the action listener 
-     * when the number of columns is changed
+     * when the number of columns is changed <p>
+     * pre: the width given is in between the valid acceptable width<br>
+     * post: the board width has been set to the given width
      * @param width: the desired number of columns on the board
      */
     public void setBoardWidth(int width){
@@ -122,7 +134,9 @@ public class connectFour implements Runnable {
 
     /**
      * A function that sets the height of the board, should be called by the action listener 
-     * when the number of rows is changed
+     * when the number of rows is changed<p>
+     * pre: the height given is in between the valid acceptable heights<br>
+     * post: the board height has been set to the given height
      * @param height: the desired number of rows on the board
      */
     public void setBoardHeight(int height){
@@ -131,7 +145,9 @@ public class connectFour implements Runnable {
     
     /**
     * Responsible for the initialisation of the game by creating players, updating the user
-    * interface for gameplay and creating all backend objects needed for game simulation
+    * interface for gameplay and creating all backend objects needed for game simulation <p>
+    * pre: the given JFrame is valid <br>
+    * post: the game has been initialised with the given JFrame, the players have been set
     * @param f: is the frame the game will be displayed in
     */
     public void initGame(JFrame f){
@@ -162,7 +178,9 @@ public class connectFour implements Runnable {
 
     /**
      *  Responsible for constructing, setting out and showing all objects
-     *  in the start screen
+     *  in the start screen <p>
+     *  pre: the given JFrame is valid <br>
+     *  post: the screen has been set to the starting screen
      *  @param f: the frame that the start screen will be shown in
      */
 
@@ -241,13 +259,14 @@ public class connectFour implements Runnable {
         f.add(box_cols, c);
 
         JComboBox<String> box_rows = new JComboBox<>(items);
-        box_rows.setSelectedIndex(boardSize[1]-4);
+        box_rows.setSelectedIndex(boardSize[1]-4); 
+
         c.anchor = GridBagConstraints.EAST;
         c.gridx = 0;
         f.add(box_rows, c);
 
         startButton = new JButton("Start");
-        startButton.setPreferredSize(new Dimension (150,28));
+        startButton.setPreferredSize(new Dimension (BUTTON_SIZE[x], BUTTON_SIZE[y]));
         c.anchor = GridBagConstraints.CENTER;
         c.gridy = c.gridy + 1;
         c.gridwidth = 2;
@@ -268,7 +287,9 @@ public class connectFour implements Runnable {
     
     /**
      * Responsible for the initialisation of all User Interface objects
-     * used during the game
+     * used during the game <p>
+     * pre: the game frame so far has not been corrupted<br>
+     * post: the game frame includes all the buttons and side pale
      */
     private void gameFrame(){
         f.getContentPane().removeAll();
@@ -284,7 +305,9 @@ public class connectFour implements Runnable {
 
     /**
      *  Responsible for creating players, renderer, simulator for the game as well as 
-     *  starting the simulator thread that will run parallel to the GUI thread
+     *  starting the simulator thread that will run parallel to the GUI thread <p>
+     *  pre: the frame has not been corrupted so far<br>
+     *  post: a board renderer and simulator has been created and included
      */
     private void initBackend()
     {
@@ -310,7 +333,9 @@ public class connectFour implements Runnable {
 
     /**
      *  Responsible for making and setting out the buttons for each column of the connect four 
-     *  board
+     *  board <p>
+     *  pre: the frame has not been corrupted so far <br>
+     *  post: the column buttons have been set in the frame
      */
     public void setColumnButtons()
     {
@@ -354,7 +379,10 @@ public class connectFour implements Runnable {
     }
 
     /**
-     *  Responible for making and Laying out all attributes of the side panel present during game mode
+     *  Responible for making and Laying out all attributes of the side panel present 
+     *  during game mode <p>
+     *  pre: the frame has not been corrupted so far<br>
+     *  post: the side panel has been populated with the appropriate buttons
      */
     public void setSidePanel()
 
@@ -420,7 +448,9 @@ public class connectFour implements Runnable {
 
     /**
      *  Deals with human game moves. It will check the current player is a human before invoking
-     *  the makeMove function within the HumanPlayer class
+     *  the makeMove function within the HumanPlayer class <p>
+     *  pre: the column given is within the boundaries of the board<br>
+     *  post: the game has been updated to include the human players move
      *  @param column will be a number from 0 to 6 indicating the column the human player wants to 
      *  drop a tile into
      */
@@ -443,7 +473,10 @@ public class connectFour implements Runnable {
     }
 
     /**
-     * A function which will ask the simulator to provide a hint for the human players next move
+     * A function which will ask the simulator to provide a hint for the human
+     * players next move <p>
+     * pre: the game state is valid <br>
+     * post: the simulator has been called to provie a hint to the player
      */
     public void provideHint()
     {
@@ -451,7 +484,11 @@ public class connectFour implements Runnable {
     }
 
     /**
-     *  Undoes a move by resetting the Simulator to the old version
+     * Undoes a move by resetting the Simulator to the old version <p>
+     * pre: the game state is valid <br>
+     * post: The game has reverted to the state it was in before the last human move, if no
+     * moves were yet made the game state has not changed, can also be called if a player 
+     * has already won, or the game ended in a draw
      */
     public void undoSimulator(){
         if(undorecord.size() > 0){
