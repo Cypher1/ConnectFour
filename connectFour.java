@@ -54,6 +54,10 @@ public class connectFour implements Runnable {
     public static final int MESSAGE_WIDTH = 2;
     public static final int[] BUTTON_SIZE = {150, 28};
 
+    //these are from board renderer sizes and spacing
+    public static final int PIXELS_PER_COL = 60 + 5; 
+    public static final int PIXELS_PER_ROW = 60 + 5; 
+
 
     private JFrame f;
     private JLabel gameMessage;
@@ -343,9 +347,10 @@ public class connectFour implements Runnable {
         JPanel boardPanel = new JPanel();
         boardPanel.setLayout(new GridBagLayout());
 
-        //get the height and width of the board for here!
-        int width = 65 * boardSize[x];
-        int height = 65 * boardSize[y]; 
+        //get the height and width of the board
+        int width = boardSize[x] * PIXELS_PER_COL;
+        int height = boardSize[y] * PIXELS_PER_ROW; 
+
         boardPanel.setPreferredSize(new Dimension(width,height));
 
         //make the board panel invisible
