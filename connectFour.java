@@ -196,7 +196,7 @@ public class connectFour implements Runnable {
         c.gridy = 42;
         c.gridwidth = 1;
         f.add(row,c);
-        String[] items = {"4","6","7","8","9","10"};
+        String[] items = {"4","5","6","7","8","9","10"};
       
         JComboBox<String> box_rows = new JComboBox<>(items);
         box_rows.setSelectedIndex(1);
@@ -233,7 +233,7 @@ public class connectFour implements Runnable {
 
         f.pack();
         f.setVisible(true); 
-}
+    }
     
     /**
      *  responsible for initialising the buttons, labels and panels used during game runtime
@@ -251,7 +251,6 @@ public class connectFour implements Runnable {
      *  Responsible for creating players, renderer, simulator for the game as well as 
      *  starting the simulator thread that will run parallel to the GUI thread
      */
-
     private void initBackend()
     {
         //initiate the simuator with players;
@@ -378,7 +377,6 @@ public class connectFour implements Runnable {
      *  @param column will be a number from 0 to 6 indicating the column the human player wants to 
      *  drop a tile into
      */
-
     public void humanPlayerMove(int column)
     {
         //get the current player
