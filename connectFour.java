@@ -482,7 +482,7 @@ public class connectFour implements Runnable {
         Board board = simulator.getBoard();
         //check the current player is human and invoke a move
         if (currPlayer instanceof HumanPlayer){
-            if(!undorecord.contains(simulator) && board.isFull() && board.getWinner() == null){
+            if(!undorecord.contains(simulator) && !board.isFull() && board.getWinner() == null){
                 undorecord.add(simulator.clone());
             }
             HumanPlayer human = (HumanPlayer)currPlayer;
